@@ -1,5 +1,6 @@
 import React from 'react'
-import {Card, Col, Row, Radio, Icon, Button, Steps, message,BackTop} from 'antd'
+import { LoadingOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Radio, Button, Steps, message, BackTop } from 'antd';
 import CustomBreadcrumb from "../../../components/CustomBreadcrumb/index";
 import TypingCard from '../../../components/TypingCard'
 
@@ -100,12 +101,12 @@ class StepsDemo extends React.Component {
             </Card>
             <Card bordered={false} className='card-item' title='带图标'>
               <Steps>
-                <Step status="finish" title="Login" icon={<Icon type="user"/>}/>
+                <Step status="finish" title="Login" icon={<UserOutlined />}/>
                 <Step status="finish" title="Verification"
-                      icon={<Icon type="solution"/>}/>
+                      icon={<SolutionOutlined />}/>
                 <Step status="process" title="Pay"
-                      icon={<Icon type="loading"/>}/>
-                <Step status="wait" title="Done" icon={<Icon type="smile-o"/>}/>
+                      icon={<LoadingOutlined />}/>
+                <Step status="wait" title="Done" icon={<SmileOutlined />}/>
               </Steps>
             </Card>
             <Card bordered={false} className='card-item' title='点状步骤条'>
@@ -119,7 +120,7 @@ class StepsDemo extends React.Component {
         </Row>
         <BackTop visibilityHeight={200} style={{right: 50}}/>
       </div>
-    )
+    );
   }
 }
 

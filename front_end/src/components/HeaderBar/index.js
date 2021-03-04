@@ -1,5 +1,7 @@
 import React from 'react'
-import { Icon, Badge, Dropdown, Menu, Modal } from 'antd'
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { NotificationOutlined } from '@ant-design/icons';
+import { Badge, Dropdown, Menu, Modal } from 'antd';
 import screenfull from 'screenfull'
 import { inject, observer } from 'mobx-react'
 import { Link, withRouter } from 'react-router-dom'
@@ -69,16 +71,16 @@ class HeaderBar extends React.Component {
     )
     return (
       <div id='headerbar'>
-        <Icon
+        <LegacyIcon
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           className='trigger'
           onClick={this.toggle}/>
         <div style={{lineHeight: '64px', float: 'right'}}>
           <ul className='header-ul'>
-            <li><Icon type={icon} onClick={this.screenfullToggle}/></li>
+            <li><LegacyIcon type={icon} onClick={this.screenfullToggle}/></li>
             <li onClick={() => this.setState({count: 0})}>
               <Badge count={appStore.isLogin ? count : 0} overflowCount={99} style={{marginRight: -17}}>
-                <Icon type="notification"/>
+                <NotificationOutlined />
               </Badge>
             </li>
             <li>
@@ -94,7 +96,7 @@ class HeaderBar extends React.Component {
           <img src={avatar} alt="" width='100%'/>
         </Modal>
       </div>
-    )
+    );
   }
 }
 

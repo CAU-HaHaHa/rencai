@@ -1,5 +1,7 @@
 import React from 'react'
-import {Card, Col, Row, Icon, Upload, message, Button, Modal,BackTop} from 'antd'
+import { InboxOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Card, Col, Row, Upload, message, Button, Modal, BackTop } from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb'
 import TypingCard from '../../../components/TypingCard'
 
@@ -118,7 +120,7 @@ class UploadDemo extends React.Component {
   render() {
     const uploadButton = (
       <div>
-        <Icon type="plus"/>
+        <PlusOutlined />
         <div className="ant-upload-text">Upload</div>
       </div>
     );
@@ -136,7 +138,7 @@ class UploadDemo extends React.Component {
           <Col span={12}>
             <Card bordered={false} className='card-item' title='基本用法'>
               <Upload {...props}>
-                <Button><Icon type="upload"/>Upload</Button>
+                <Button><UploadOutlined />Upload</Button>
               </Upload>
             </Card>
             <Card bordered={false} style={{...styles.colItem, minHeight: 255}} title='照片墙'>
@@ -166,7 +168,7 @@ class UploadDemo extends React.Component {
                     onChange={this.handleChange}
                     listType="picture-card">
                     <div>
-                      <Icon type={this.state.loading ? 'loading' : 'plus'}/>
+                      <LegacyIcon type={this.state.loading ? 'loading' : 'plus'}/>
                       <div className="ant-upload-text">Upload</div>
                     </div>
                   </Upload>
@@ -179,7 +181,7 @@ class UploadDemo extends React.Component {
             <Card bordered={false} className='card-item' title='拖拽上传'>
               <Dragger {...props2}>
                 <p className="ant-upload-drag-icon">
-                  <Icon type="inbox"/>
+                  <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">点击或拖拽到此处完成上传</p>
                 <p className="ant-upload-hint">支持单个或批量上传。严禁上传公司数据或其他带文件</p>
@@ -189,7 +191,7 @@ class UploadDemo extends React.Component {
         </Row>
         <BackTop visibilityHeight={200} style={{right: 50}}/>
       </div>
-    )
+    );
   }
 }
 

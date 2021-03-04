@@ -2,7 +2,9 @@ import React from 'react'
 import { randomNum, calculateWidth } from '../../utils/utils'
 import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
-import { Form, Input, Row, Col } from 'antd'
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Input, Row, Col } from 'antd';
 import PromptBox from '../../components/PromptBox'
 
 

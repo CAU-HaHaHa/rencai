@@ -1,5 +1,6 @@
 import React from 'react'
-import {Icon, Card, BackTop, Anchor, Affix} from 'antd'
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Card, BackTop, Anchor, Affix, Space } from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
@@ -36,6 +37,16 @@ class JiangchengDemo extends React.Component {
           </ul>`
     return (
       <div>
+        <Space direction="vertical">
+          <Card title="Card" style={{ width: 300 }}>
+            <p>Card content</p>
+            <p>Card content</p>
+          </Card>
+          <Card title="Card" style={{ width: 300 }}>
+            <p>Card content</p>
+            <p>Card content</p>
+          </Card>
+        </Space>
         <CustomBreadcrumb arr={['员工档案管理','员工奖惩']}/>
         <TypingCard title='如何使用' source={cardContent} id='howUse'/>
         <TypingCard title='图标的命名规范' id='standard' source={cardContent2} height={206}/>
@@ -47,13 +58,13 @@ class JiangchengDemo extends React.Component {
                   item.list.map(icon => {
                     return (
                       <Card.Grid style={styles.gridItem} key={icon}>
-                        <Icon type={icon} style={styles.icon}/><span>{icon}</span>
+                        <LegacyIcon type={icon} style={styles.icon}/><span>{icon}</span>
                       </Card.Grid>
-                    )
+                    );
                   })
                 }
               </Card>
-            )
+            );
           })
         }
         <BackTop visibilityHeight={200} style={{right: 50}}/>
@@ -68,7 +79,7 @@ class JiangchengDemo extends React.Component {
           </Anchor>
         </Affix>
       </div>
-    )
+    );
   }
 }
 

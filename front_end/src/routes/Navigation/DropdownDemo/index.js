@@ -1,5 +1,6 @@
 import React from 'react'
-import {Card, Menu, Row, Col, Dropdown, Icon, message, Button} from 'antd'
+import { DownOutlined } from '@ant-design/icons';
+import { Card, Menu, Row, Col, Dropdown, message, Button } from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
@@ -39,23 +40,23 @@ class DropdownDemo extends React.Component {
         <Row gutter={16}>
           <Col span={12}>
             <Card bordered={false} className='card-item'>
-              <Dropdown overlay={menu}><a>hover me <Icon type='down'/></a></Dropdown>&emsp;
-              <Dropdown overlay={menu}><Button>Button<Icon type='down'/></Button></Dropdown>&emsp;
-              <Dropdown overlay={menu} trigger={['click']}><a>click me <Icon type='down'/></a></Dropdown>&emsp;
+              <Dropdown overlay={menu}><a>hover me <DownOutlined /></a></Dropdown>&emsp;
+              <Dropdown overlay={menu}><Button>Button<DownOutlined /></Button></Dropdown>&emsp;
+              <Dropdown overlay={menu} trigger={['click']}><a>click me <DownOutlined /></a></Dropdown>&emsp;
             </Card>
             <Card bordered={false} className='card-item'>
               <Dropdown overlay={menu2} trigger={['click']}>
-                <a href="">click menu <Icon type="down"/></a>
+                <a href="">click menu <DownOutlined /></a>
               </Dropdown>&emsp;&emsp;
               <Dropdown overlay={menu2} trigger={['click']}>
-                <Button>click menu <Icon type="down"/></Button>
+                <Button>click menu <DownOutlined /></Button>
               </Dropdown>
             </Card>
           </Col>
           <Col span={12}>
             <Card bordered={false} className='card-item'>
-              <Dropdown overlay={menu2}><a href="">Cascading menu <Icon type="down"/></a></Dropdown>&emsp;&emsp;
-              <Dropdown overlay={menu2}><Button>Cascading menu <Icon type="down"/></Button></Dropdown>
+              <Dropdown overlay={menu2}><a href="">Cascading menu <DownOutlined /></a></Dropdown>&emsp;&emsp;
+              <Dropdown overlay={menu2}><Button>Cascading menu <DownOutlined /></Button></Dropdown>
             </Card>
             <Card bordered={false} className='card-item'>
               <p>
@@ -72,7 +73,7 @@ class DropdownDemo extends React.Component {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

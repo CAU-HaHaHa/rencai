@@ -1,5 +1,6 @@
 import React from 'react'
-import {Icon, Card, BackTop, Anchor, Affix} from 'antd'
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Card, BackTop, Anchor, Affix } from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
@@ -47,13 +48,13 @@ class JixiaoDemo extends React.Component {
                   item.list.map(icon => {
                     return (
                       <Card.Grid style={styles.gridItem} key={icon}>
-                        <Icon type={icon} style={styles.icon}/><span>{icon}</span>
+                        <LegacyIcon type={icon} style={styles.icon}/><span>{icon}</span>
                       </Card.Grid>
-                    )
+                    );
                   })
                 }
               </Card>
-            )
+            );
           })
         }
         <BackTop visibilityHeight={200} style={{right: 50}}/>
@@ -68,7 +69,7 @@ class JixiaoDemo extends React.Component {
           </Anchor>
         </Affix>
       </div>
-    )
+    );
   }
 }
 

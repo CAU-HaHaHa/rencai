@@ -1,5 +1,8 @@
 import React from 'react'
-import {Card, Alert, Divider, Select, Steps, Input, Button, Form,Icon,BackTop} from 'antd'
+import { CheckCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Card, Alert, Divider, Select, Steps, Input, Button, BackTop } from 'antd';
 import {inject,observer} from 'mobx-react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import './css/formDeni2.css'
@@ -101,7 +104,7 @@ class Step1 extends React.Component{
         </div>
         <BackTop visibilityHeight={200} style={{right: 50}}/>
       </div>
-    )
+    );
   }
 }
 
@@ -183,7 +186,7 @@ class Step3 extends React.Component{
       <div id='step3'>
         <div>
           <div className='icon-box'>
-            <Icon type='check-circle'/>
+            <CheckCircleOutlined />
           </div>
           <div>
             <h3 className='success'>操作成功</h3>
@@ -211,7 +214,7 @@ class Step3 extends React.Component{
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

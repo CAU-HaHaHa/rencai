@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link,withRouter} from 'react-router-dom'
-import {Menu, Icon} from 'antd'
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+import { Menu } from 'antd';
 
 //此组件的意义就是将数据抽离出来，通过传递数据去渲染
 @withRouter
@@ -74,22 +75,22 @@ class CustomMenu extends React.Component {
     return (
       <Menu.Item key={key}>
         <Link to={key}>
-          {icon && <Icon type={icon}/>}
+          {icon && <LegacyIcon type={icon}/>}
           <span>{title}</span>
         </Link>
       </Menu.Item>
-    )
+    );
   }
   renderSubMenu = ({key, icon, title, subs}) => {
     return (
-      <Menu.SubMenu key={key} title={<span>{icon && <Icon type={icon}/>}<span>{title}</span></span>}>
+      <Menu.SubMenu key={key} title={<span>{icon && <LegacyIcon type={icon}/>}<span>{title}</span></span>}>
         {
           subs && subs.map(item => {
             return item.subs && item.subs.length > 0 ? this.renderSubMenu(item) : this.renderMenuItem(item)
           })
         }
       </Menu.SubMenu>
-    )
+    );
   }
 
   render() {

@@ -1,5 +1,13 @@
 import React from 'react'
-import {Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message} from 'antd'
+import {
+  DownloadOutlined,
+  DownOutlined,
+  LeftOutlined,
+  PoweroffOutlined,
+  RightOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import { Button, Row, Col, Card, Radio, Dropdown, Menu, message } from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
@@ -54,13 +62,13 @@ class ListDemo extends React.Component {
                 <Button type="danger" size={size}>Danger</Button>
               </p>
               <p>
-                <Button shape='circle' type='primary' icon="download" size={size}/>&emsp;
-                <Button type="primary" icon="download" size={size}>Download</Button>
+                <Button shape='circle' type='primary' icon={<DownloadOutlined />} size={size}/>&emsp;
+                <Button type="primary" icon={<DownloadOutlined />} size={size}>Download</Button>
               </p>
               <div>
                 <Button.Group size={size}>
-                  <Button><Icon type="left"/>Backward</Button>&emsp;
-                  <Button>Forward<Icon type="right"/></Button>
+                  <Button><LeftOutlined />Backward</Button>&emsp;
+                  <Button>Forward<RightOutlined /></Button>
                 </Button.Group>
               </div>
             </Card>
@@ -68,23 +76,23 @@ class ListDemo extends React.Component {
           <Col span={12}>
             <Card bordered={false} className='card-item'>
               <p>
-                <Button type="primary" shape="circle" icon="search"/>&emsp;
-                <Button type="primary" icon="search">Search</Button>&emsp;
-                <Button shape="circle" icon="search"/>&emsp;
-                <Button icon="search">Search</Button>&emsp;
+                <Button type="primary" shape="circle" icon={<SearchOutlined />}/>&emsp;
+                <Button type="primary" icon={<SearchOutlined />}>Search</Button>&emsp;
+                <Button shape="circle" icon={<SearchOutlined />}/>&emsp;
+                <Button icon={<SearchOutlined />}>Search</Button>&emsp;
               </p>
               <p style={{marginBottom: 0}}>
-                <Button shape="circle" icon="search"/>&emsp;
-                <Button icon="search">Search</Button>&emsp;
-                <Button type="dashed" shape="circle" icon="search"/>&emsp;
-                <Button type="dashed" icon="search">Search</Button>
+                <Button shape="circle" icon={<SearchOutlined />}/>&emsp;
+                <Button icon={<SearchOutlined />}>Search</Button>&emsp;
+                <Button type="dashed" shape="circle" icon={<SearchOutlined />}/>&emsp;
+                <Button type="dashed" icon={<SearchOutlined />}>Search</Button>
               </p>
             </Card>
             <Card bordered={false} className='card-item'>
               <Button type="primary">primary</Button>&emsp;
               <Button>secondary</Button>&emsp;
               <Dropdown overlay={menu}>
-                <Button>Button<Icon type='down'/></Button>
+                <Button>Button<DownOutlined /></Button>
               </Dropdown>
             </Card>
             <Card bordered={false} className='card-item'>
@@ -94,14 +102,14 @@ class ListDemo extends React.Component {
               </p>
               <div>
                 <Button loading={loading} onClick={() => this.setState({loading: true})}>Click me</Button>&emsp;
-                <Button loading={iconLoading} onClick={() => this.setState({iconLoading: true})} icon='poweroff'>Click
+                <Button loading={iconLoading} onClick={() => this.setState({iconLoading: true})} icon={<PoweroffOutlined />}>Click
                   me</Button>
               </div>
             </Card>
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

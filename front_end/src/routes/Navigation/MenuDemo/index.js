@@ -1,5 +1,6 @@
 import React from 'react'
-import {Card, Col, Row, Menu, Icon, Switch} from 'antd'
+import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Menu, Switch } from 'antd';
 import CustomBreadcrumb from "../../../components/CustomBreadcrumb/index";
 import TypingCard from '../../../components/TypingCard'
 
@@ -33,14 +34,14 @@ class MenuDemo extends React.Component {
               <Row type='flex' align='middle'>
                 <Col span={12}>
                   <Menu mode="inline" style={{width: 200}}>
-                    <Menu.SubMenu key='mail' title={<span><Icon type='mail'/><span>Navigation One</span></span>}>
+                    <Menu.SubMenu key='mail' title={<span><MailOutlined /><span>Navigation One</span></span>}>
                       <Menu.Item>subItem1</Menu.Item>
                       <Menu.Item>subItem2</Menu.Item>
                       <Menu.Item>subItem3</Menu.Item>
                       <Menu.Item>subItem4</Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.Item key="app" disabled><Icon type="appstore"/>Navigation Two</Menu.Item>
-                    <Menu.SubMenu key='set' title={<span><Icon type='setting'/><span>Navigation Three</span></span>}>
+                    <Menu.Item key="app" disabled><AppstoreOutlined />Navigation Two</Menu.Item>
+                    <Menu.SubMenu key='set' title={<span><SettingOutlined /><span>Navigation Three</span></span>}>
                       <Menu.Item>subItem1</Menu.Item>
                       <Menu.Item>subItem2</Menu.Item>
                       <Menu.Item>subItem3</Menu.Item>
@@ -62,14 +63,14 @@ class MenuDemo extends React.Component {
                     style={{width: 200}}
                     openKeys={[this.state.openKey]}
                     onOpenChange={(keys) => this.setState({openKey: keys[keys.length - 1]})}>
-                    <Menu.SubMenu key='sub1' title={<span><Icon type='mail'/><span>Navigation One</span></span>}>
+                    <Menu.SubMenu key='sub1' title={<span><MailOutlined /><span>Navigation One</span></span>}>
                       <Menu.Item>subItem1</Menu.Item>
                       <Menu.Item>subItem2</Menu.Item>
                       <Menu.Item>subItem3</Menu.Item>
                       <Menu.Item>subItem4</Menu.Item>
                     </Menu.SubMenu>
-                    <Menu.Item key="app" disabled><Icon type="appstore"/>Navigation Two</Menu.Item>
-                    <Menu.SubMenu key='sub2' title={<span><Icon type='setting'/><span>Navigation Three</span></span>}>
+                    <Menu.Item key="app" disabled><AppstoreOutlined />Navigation Two</Menu.Item>
+                    <Menu.SubMenu key='sub2' title={<span><SettingOutlined /><span>Navigation Three</span></span>}>
                       <Menu.Item>subItem1</Menu.Item>
                       <Menu.Item>subItem2</Menu.Item>
                       <Menu.Item>subItem3</Menu.Item>
@@ -87,14 +88,14 @@ class MenuDemo extends React.Component {
           <Col span={12}>
             <Card bordered={false} style={styles.Item}>
               <Menu mode="horizontal">
-                <Menu.SubMenu key='mail' title={<span><Icon type='mail'/><span>Navigation One</span></span>}>
+                <Menu.SubMenu key='mail' title={<span><MailOutlined /><span>Navigation One</span></span>}>
                   <Menu.Item>subItem1</Menu.Item>
                   <Menu.Item>subItem2</Menu.Item>
                   <Menu.Item>subItem3</Menu.Item>
                   <Menu.Item>subItem4</Menu.Item>
                 </Menu.SubMenu>
-                <Menu.Item key="app" disabled><Icon type="appstore"/>Navigation Two</Menu.Item>
-                <Menu.SubMenu key='set' title={<span><Icon type='setting'/><span>Navigation Three</span></span>}>
+                <Menu.Item key="app" disabled><AppstoreOutlined />Navigation Two</Menu.Item>
+                <Menu.SubMenu key='set' title={<span><SettingOutlined /><span>Navigation Three</span></span>}>
                   <Menu.Item>subItem1</Menu.Item>
                   <Menu.Item>subItem2</Menu.Item>
                   <Menu.Item>subItem3</Menu.Item>
@@ -108,7 +109,7 @@ class MenuDemo extends React.Component {
                 <Switch size='small' onChange={this.changeTheme}/> Change Theme
               </p>
               <Menu mode={this.state.mode} theme={this.state.theme} ref='menu'>
-                <Menu.SubMenu key='sub1' title={<span><Icon type='mail'/><span>Navigation One</span></span>}>
+                <Menu.SubMenu key='sub1' title={<span><MailOutlined /><span>Navigation One</span></span>}>
                   <Menu.Item>subItem1</Menu.Item>
                   <Menu.SubMenu title='subItem2'>
                     <Menu.Item>sub-subItem1</Menu.Item>
@@ -119,8 +120,8 @@ class MenuDemo extends React.Component {
                   <Menu.Item>subItem4</Menu.Item>
 
                 </Menu.SubMenu>
-                <Menu.Item key="app"><Icon type="appstore"/>Navigation Two</Menu.Item>
-                <Menu.SubMenu key='sub2' title={<span><Icon type='setting'/><span>Navigation Three</span></span>}>
+                <Menu.Item key="app"><AppstoreOutlined />Navigation Two</Menu.Item>
+                <Menu.SubMenu key='sub2' title={<span><SettingOutlined /><span>Navigation Three</span></span>}>
                   <Menu.Item>subItem1</Menu.Item>
                   <Menu.Item>subItem2</Menu.Item>
                   <Menu.SubMenu title='subItem3'>
@@ -133,7 +134,7 @@ class MenuDemo extends React.Component {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 

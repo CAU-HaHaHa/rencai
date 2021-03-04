@@ -1,5 +1,20 @@
 import React from 'react'
-import {Card, Cascader, Tooltip, Icon, Form, Checkbox, Select, Input, Button, Col, Row, message, BackTop} from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+  Card,
+  Cascader,
+  Tooltip,
+  Checkbox,
+  Select,
+  Input,
+  Button,
+  Col,
+  Row,
+  message,
+  BackTop,
+} from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
@@ -208,7 +223,7 @@ class FormDemo1 extends React.Component {
               <span>
                 昵称&nbsp;
                 <Tooltip title='请输入您的昵称'>
-                  <Icon type='question-circle-o'/>
+                  <QuestionCircleOutlined />
                 </Tooltip>
               </span>
             )}>
@@ -293,7 +308,7 @@ class FormDemo1 extends React.Component {
         </Card>
         <BackTop visibilityHeight={200} style={{right: 50}}/>
       </div>
-    )
+    );
   }
 }
 
