@@ -20,6 +20,34 @@ class Person(db.Model):
     postcode = db.Column(db.String(255))
     workaddress = db.Column(db.String(255))
 
+    name_register = dict(
+        user_id=user_id,
+        username=username,
+        password=password,
+        name=name,
+        sex=sex,
+        identitycard=identitycard,
+        tags=tags,
+        edubackground=edubackground,
+        briefintro=briefintro,
+        tel=tel,
+        email=email,
+        politicsstatus=politicsstatus,
+        address=address,
+        postcode=postcode,
+        workaddress=workaddress
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Person.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, username, password, name="", sex=0,
                  identitycard="000000000000000000",
                  tags="", edubackground="", briefintro="", tel="", email="",
