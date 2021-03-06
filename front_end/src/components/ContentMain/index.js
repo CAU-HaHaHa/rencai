@@ -10,6 +10,8 @@ const Home = LoadableComponent(()=>import('../../routes/Home/index'))  //参数�
 const ListDemo = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/index'))
 const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/index'))
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
+const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
+
 
 //导航组件Demo
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
@@ -56,6 +58,7 @@ class ContentMain extends React.Component {
           <PrivateRoute exact path='/home/dangan/list' component={ListDemo}/>
           <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
           <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
+          <PrivateRoute exact path='/home/dangan/jiangcheng/view' component={JiangchengviweDemo}/>
 
           <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
           <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
