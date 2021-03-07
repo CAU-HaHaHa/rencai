@@ -160,7 +160,7 @@ export default class Reward extends React.Component {
         width: '20%',
       },
       {
-        title: '操作',
+        title: '',
         key: 'action',
         render: (text, record) => (
           <div>
