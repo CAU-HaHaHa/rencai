@@ -1,12 +1,20 @@
 import React from 'react'
-import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List } from 'antd'
+import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer } from 'antd'
 import axios from 'axios'
+
+// new
+// import detailInfo from './detailInfo'
 
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
 class ListDemo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setDrawerVisible = this.setDrawerVisible.bind(this);
+  }
   state = {
+    drawerVisible: false,
     searchContent: "",
     size: 'default',
     dataSource: [],
@@ -16,6 +24,7 @@ class ListDemo extends React.Component {
     searchName: "",
     searchPhone: "",
     searchCity: "",
+    detailRow: {},
     columns: [
       {
         title: 'ID',
@@ -37,10 +46,22 @@ class ListDemo extends React.Component {
         dataIndex: 'City',
         key: 'City',
       },
+      {
+        title: '操作',
+        key: 'operation',
+        render: (row) => (
+          // 这里OnClick中不加()=>会导致无限循环，具体原因可查阅错误：
+          // This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. 
+          // React limits the number of nested updates to prevent infinite loops.
+          <Button type="primary" onClick={() => this.showDrawer(row)}>
+            查看详情
+          </Button>)
+      }
     ],
   }
 
   componentDidMount() {
+
     const _this = this;
     axios.get('https://6040a18af34cf600173c87a7.mockapi.io/search/UserInfo')
       .then(function (response) {
@@ -145,7 +166,21 @@ class ListDemo extends React.Component {
     })
     console.log(this.state.dataSpecific)
   }
+  // new
+  showDrawer(row) {
+    console.log(row)
+    this.setState({
+      detailRow: Object.assign({}, row)
+    })
+    this.setDrawerVisible()
+  }
+  // new
+  setDrawerVisible = () => {
+    this.setState({
+      drawerVisible: !this.state.drawerVisible
+    })
 
+  }
   // new
   onClick = (event) => {
     let newdata = []
@@ -179,10 +214,10 @@ class ListDemo extends React.Component {
       </Menu>
     );
     const { Search } = Input
-    const cardContent = `太对了哥儿哥儿太对了哥儿哥儿太对了哥儿哥儿太对`
+    const cardContent = `欢迎来到员工信息查询页面`
     return (
       <div>
-        <CustomBreadcrumb arr={['太对', '了哥儿']} />
+        <CustomBreadcrumb arr={['员工档案管理', '员工列表']} />
         <TypingCard source={cardContent} />
         <Row gutter={16}>
           <Col span={12}>
@@ -192,6 +227,28 @@ class ListDemo extends React.Component {
                 total: 80,
                 pageSize: 12,
               }} />
+              <Drawer
+                title="详细信息"
+                placement="right"
+                closable
+                width={600}
+                // 这里也要加()=>，不然也会报错，具体信息参考state中的标注
+                onClose={() => this.setDrawerVisible()}
+                visible={this.state.drawerVisible}
+              >
+                <div>
+                  {
+                    Object.keys(this.state.detailRow).map((key) => {
+                      return <p >{key}:{this.state.detailRow[key]}</p>
+                    })
+                  }
+                </div>
+                {/* <div>ID:{this.state.detailRow.id}</div>
+                <div>Name:{this.state.detailRow.Name}</div>
+                <div>Phone:{this.state.detailRow.Phone}</div>
+                <div>City:{this.state.detailRow.City}</div> */}
+                {/* <detailInfo></detailInfo> */}
+              </Drawer>
             </Card>
           </Col>
           <Col span={12}>
@@ -241,7 +298,8 @@ class ListDemo extends React.Component {
               </Row>
               <Row>
                 <Col span={8}>
-                  <Button type="primary" icon="Search" onClick={this.onClick}>      
+                  <Button type="primary" onClick={this.onClick}>
+                    查询
                   </Button>
                 </Col>
               </Row>
@@ -250,24 +308,7 @@ class ListDemo extends React.Component {
                 pageSize: 5,
               }} />
             </Card>
-            {/* <Card bordered={false} className='card-item'>
-              <Button type="primary">primary</Button>&emsp;
-              <Button>secondary</Button>&emsp;
-              <Dropdown overlay={menu}>
-                <Button>Button<Icon type='down' /></Button>
-              </Dropdown>
-            </Card>
-            <Card bordered={false} className='card-item'>
-              <p>
-                <Button loading type='primary'>Loading</Button>&emsp;
-                <Button type='primary' loading shape='circle' />
-              </p>
-              <div>
-                <Button loading={loading} onClick={() => this.setState({ loading: true })}>Click me</Button>&emsp;
-                <Button loading={iconLoading} onClick={() => this.setState({ iconLoading: true })} icon='poweroff'>Click
-                  me</Button>
-              </div>
-            </Card> */}
+
           </Col>
         </Row>
       </div >

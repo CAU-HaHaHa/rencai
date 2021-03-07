@@ -20,6 +20,9 @@ const StepsDemo = LoadableComponent(()=>import('../../routes/Navigation/StepsDem
 const FormDemo1 = LoadableComponent(()=>import('../../routes/Entry/FormDemo/FormDemo1'))
 const FormDemo2 = LoadableComponent(()=>import('../../routes/Entry/FormDemo/FormDemo2'))
 const UploadDemo = LoadableComponent(()=>import('../../routes/Entry/UploadDemo/index'))
+//new
+const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
+
 
 // //显示组件Demo
 // const CarouselDemo = LoadableComponent(()=>import('../../routes/Display/CarouselDemo/index'))
@@ -64,6 +67,9 @@ class ContentMain extends React.Component {
           <PrivateRoute exact path='/home/entry/form/basic-form' component={FormDemo1}/>
           <PrivateRoute exact path='/home/entry/form/step-form' component={FormDemo2}/>
           <PrivateRoute exact path='/home/entry/upload' component={UploadDemo}/>
+
+          {/* new */}
+          <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
 
           {/* <PrivateRoute exact path='/home/display/carousel' component={CarouselDemo}/>
           <PrivateRoute exact path='/home/display/collapse' component={CollapseDemo}/>
