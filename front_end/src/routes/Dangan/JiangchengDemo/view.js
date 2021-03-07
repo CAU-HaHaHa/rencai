@@ -5,7 +5,26 @@ import { List, Row, Col, Card, Space, Avatar } from 'antd';
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 
 export default class Reward extends React.Component {
+
+    state = {
+        user_id: '',
+        user_name: '',
+    };
+
     render() {
+        
+        let { location : { state : params } } = this.props;
+        
+        if(!params) {
+            params = JSON.parse(sessionStorage.getItem('view_page'));
+        } else {
+            sessionStorage.getItem('view_page',JSON.stringify(params));
+        }
+        this.setState({
+            user_id: params.key.user_id,
+            user_name: params.key.user_name,
+        });
+
         const listData = [];
         for (let i = 0; i < 23; i++) {
             listData.push({
@@ -26,7 +45,7 @@ export default class Reward extends React.Component {
                     {/* 员工信息卡片 */}
                     <Col span={12}>
                         <Card title="宋小花" bordered={false}>
-                            <p>ID：123456</p>
+                            <p>员工ID：{this.state.user_id}</p>
                             <p>性别：女</p>
                             <p>入职日期：2021-1-1</p>
                         </Card>

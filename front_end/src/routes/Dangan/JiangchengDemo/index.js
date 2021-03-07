@@ -1,7 +1,8 @@
 import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card } from 'antd';
-import { PlusOutlined, SearchOutlined} from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import Text from 'antd/lib/typography/Text';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -64,6 +65,8 @@ export default class Reward extends React.Component {
     visible: false,
     confirmLoading: false,
     modalText: 'Content of the modal',
+    user_id: '',
+    user_name: '',
   };
 
   setVisible = (e) => {
@@ -88,7 +91,11 @@ export default class Reward extends React.Component {
     this.setVisible(true);
   };
 
-  ClickAddHandle = () => {
+  ClickAddHandle = (e) => {
+    this.setState({
+      user_id: e.ID,
+      user_name: e.name
+    });
     this.setVisible(true);
   }
 
@@ -105,8 +112,13 @@ export default class Reward extends React.Component {
     this.setVisible(false);
   };
 
-  ClickViewHandle = () => {
-    this.props.history.push('./jiangcheng/view')
+  ClickViewHandle = (e) => {
+    let key = {
+      user_name: e.name,
+      user_id: e.ID
+    }
+    sessionStorage.setItem("view_page", key);
+    this.props.history.push({ pathname: './jiangcheng/view' , state: { key }})
   }
 
   render() {
@@ -114,7 +126,7 @@ export default class Reward extends React.Component {
     for (let i = 0; i < 23; i++) {
       data.push({
         key: i,
-        ID: "123456",
+        ID: "123456789  ",
         name: '宋小花',
         sex: '女',
         date: '2019-01-01',
@@ -154,41 +166,11 @@ export default class Reward extends React.Component {
           <div>
             <Space size={[8, 16]} wrap>
               {/* 增添按钮 */}
-              <Button type="primary" icon={<PlusOutlined />} onClick={this.ClickAddHandle} shape="round">
+              <Button type="primary" icon={<PlusOutlined />} onClick={this.ClickAddHandle.bind(this, record)} shape="round">
                 新增
               </Button>
-              {/* 增添模态框 */}
-              <Modal
-                title="添加奖惩记录"
-                visible={this.state.visible}
-                onOk={this.handleOk}
-                confirmLoading={this.state.confirmLoading}
-                onCancel={this.handleCancel}
-              >
-                <Form
-                  labelCol={{ span: 4, }}
-                  wrapperCol={{ span: 14, }}
-                  layout="horizontal"
-                >
-                  <Form.Item label="奖惩类型">
-                    <Select placeholder="请选择奖惩类型">
-                      <Option value="Reward">奖励</Option>
-                      <Option value="Punishment">惩罚</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item label="奖惩名称">
-                    <Input placeholder="请输入奖惩名称"/>
-                  </Form.Item>
-                  <Form.Item label="奖惩时间">
-                    <DatePicker />
-                  </Form.Item>
-                  <Form.Item label="详细说明">
-                    <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />
-                  </Form.Item>
-                </Form>
-              </Modal>
               {/* 查看按钮 */}
-              <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle} shape="round">
+              <Button type="primary"  icon={<SearchOutlined />} onClick={this.ClickViewHandle.bind(this, record)} shape="round">
                 查看
               </Button>
             </Space>
@@ -207,6 +189,53 @@ export default class Reward extends React.Component {
         </Card>
         {/* 展示数据的表格 */}
         <Table columns={columns} dataSource={data} pagination={{ position: 'bottomCenter' }} />;
+        {/* 增添模态框 */}
+        <Modal
+          title="添加奖惩记录"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          confirmLoading={this.state.confirmLoading}
+          onCancel={this.handleCancel}
+        >
+          <Form
+            labelCol={{ span: 4, }}
+            wrapperCol={{ span: 16, }}
+            layout="horizontal"
+          >
+            <Row >
+              <Col span={12}>
+                <Form.Item label="ID">
+                  <Text>
+                    {this.state.user_id}
+                  </Text>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="姓名">
+                  <Text>
+                    {this.state.user_name}
+                  </Text>
+                </Form.Item>
+              </Col>           
+            </Row>
+            
+            <Form.Item label="奖惩类型">
+              <Select placeholder="请选择奖惩类型">
+                <Option value="Reward">奖励</Option>
+                <Option value="Punishment">惩罚</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="奖惩名称">
+              <Input placeholder="请输入奖惩名称" />
+            </Form.Item>
+            <Form.Item label="奖惩时间">
+              <DatePicker />
+            </Form.Item>
+            <Form.Item label="详细说明">
+              <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     )
   }
