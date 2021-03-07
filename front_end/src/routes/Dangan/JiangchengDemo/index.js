@@ -1,106 +1,215 @@
 import React from 'react'
-import { Icon as LegacyIcon } from '@ant-design/compatible';
-import { Card, BackTop, Anchor, Affix, Space } from 'antd';
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import TypingCard from '../../../components/TypingCard'
+import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card } from 'antd';
+import { PlusOutlined, SearchOutlined} from '@ant-design/icons';
 
-const icons = [
-  {
-    title: '方向性图标',
-    anchor: 'direction',
-    list: ["step-backward", "step-forward", "fast-backward", "fast-forward", "shrink", "arrows-alt", "down", "up", "left", "right", "caret-up", "caret-down", "caret-left", "caret-right", "up-circle", "down-circle", "left-circle", "right-circle", "up-circle-o", "down-circle-o", "right-circle-o", "left-circle-o", "double-right", "double-left", "verticle-left", "verticle-right", "forward", "backward", "rollback", "enter", "retweet", "swap", "swap-left", "swap-right", "arrow-up", "arrow-down", "arrow-left", "arrow-right", "play-circle", "play-circle-o", "up-square", "down-square", "left-square", "right-square", "up-square-o", "down-square-o", "left-square-o", "right-square-o", "login", "logout", "menu-fold", "menu-unfold"],
-  },
-  {
-    title: '提示建议性图标',
-    anchor: 'suggestion',
-    list: ["question", "question-circle-o", "question-circle", "plus", "plus-circle-o", "plus-circle", "pause", "pause-circle-o", "pause-circle", "minus", "minus-circle-o", "minus-circle", "plus-square", "plus-square-o", "minus-square", "minus-square-o", "info", "info-circle-o", "info-circle", "exclamation", "exclamation-circle-o", "exclamation-circle", "close", "close-circle", "close-circle-o", "close-square", "close-square-o", "check", "check-circle", "check-circle-o", "check-square", "check-square-o", "clock-circle-o", "clock-circle"],
-  },
-  {
-    title: '网站通用图标',
-    anchor: 'logo',
-    list: ["lock", "unlock", "area-chart", "pie-chart", "bar-chart", "dot-chart", "bars", "book", "calendar", "cloud", "cloud-download", "code", "code-o", "copy", "credit-card", "delete", "desktop", "download", "edit", "ellipsis", "file", "file-text", "file-unknown", "file-pdf", "file-excel", "file-jpg", "file-ppt", "file-add", "folder", "folder-open", "folder-add", "hdd", "frown", "frown-o", "meh", "meh-o", "smile", "smile-o", "inbox", "laptop", "appstore-o", "appstore", "line-chart", "link", "mail", "mobile", "notification", "paper-clip", "picture", "poweroff", "reload", "search", "setting", "share-alt", "shopping-cart", "tablet", "tag", "tag-o", "tags", "tags-o", "to-top", "upload", "user", "video-camera", "home", "loading", "loading-3-quarters", "cloud-upload-o", "cloud-download-o", "cloud-upload", "cloud-o", "star-o", "star", "heart-o", "heart", "environment", "environment-o", "eye", "eye-o", "camera", "camera-o", "save", "team", "solution", "phone", "filter", "exception", "export", "customer-service", "qrcode", "scan", "like", "like-o", "dislike", "dislike-o", "message", "pay-circle", "pay-circle-o", "calculator", "pushpin", "pushpin-o", "bulb", "select", "switcher", "rocket", "bell", "disconnect", "database", "compass", "barcode", "hourglass", "key", "flag", "layout", "printer", "sound", "usb", "skin", "tool", "sync", "wifi", "car", "schedule", "user-add", "user-delete", "usergroup-add", "usergroup-delete", "man", "woman", "shop", "gift", "idcard", "medicine-box", "red-envelope", "coffee", "copyright", "trademark", "safety", "wallet", "bank", "trophy", "contacts", "global", "shake", "api"]
-  },
-  {
-    title: '品牌和标识',
-    anchor: 'other',
-    list: ["android", "android-o", "apple", "apple-o", "windows", "windows-o", "ie", "chrome", "github", "aliwangwang", "aliwangwang-o", "dingding", "dingding-o"],
+const { Option } = Select;
+const { TextArea } = Input;
+const { RangePicker } = DatePicker;
+
+const dateFormat = 'YYYY/MM/DD';
+
+const AdvancedSearchForm = () => {
+  const [form] = Form.useForm();
+
+  const onFinish = (values) => {
+    console.log('Received values of form: ', values);
+  };
+
+  return (
+    <Form
+      form={form}
+      name="advanced_search"
+      className="ant-advanced-search-form"
+      onFinish={onFinish}
+    >
+      <Row gutter={12}>
+        <Col span={5} key={1}>
+          <Form.Item name="ID" label="员工ID">
+            <Input placeholder="请输入员工ID" />
+          </Form.Item>
+        </Col>
+        <Col span={4} key={2}>
+          <Form.Item name="name" label="姓名">
+            <Input placeholder="请输入员工姓名" />
+          </Form.Item>
+        </Col>
+        <Col span={5} key={3}>
+          <Form.Item name="ID" label="员工性别">
+            <Select placeholder="请选择员工性别">
+              <Option value="man">男</Option>
+              <Option value="woman">女</Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={6} key={4}>
+          <Form.Item name="date" label="入职日期">
+            <RangePicker format={dateFormat} />
+          </Form.Item>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right', }}>
+          <Button type="primary" htmlType="submit"> Search </Button>
+          <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}>
+            Clear
+          </Button>
+        </Col>
+      </Row>
+    </Form>
+  );
+};
+
+export default class Reward extends React.Component {
+
+  state = {
+    visible: false,
+    confirmLoading: false,
+    modalText: 'Content of the modal',
+  };
+
+  setVisible = (e) => {
+    this.setState({
+      visible: e
+    });
   }
-];
 
-class JiangchengDemo extends React.Component {
+  setModalText = (e) => {
+    this.setState({
+      modalText: e
+    })
+  }
+
+  setConfirmLoading = (e) => {
+    this.setState({
+      confirmLoading: e
+    })
+  }
+
+  showModal = () => {
+    this.setVisible(true);
+  };
+
+  ClickAddHandle = () => {
+    this.setVisible(true);
+  }
+
+  handleOk = () => {
+    this.setModalText('The modal will be closed after two seconds');
+    this.setConfirmLoading(true);
+    setTimeout(() => {
+      this.setVisible(false);
+      this.setConfirmLoading(false);
+    }, 2000);
+  };
+
+  handleCancel = () => {
+    this.setVisible(false);
+  };
+
+  ClickViewHandle = () => {
+    this.props.history.push('./jiangcheng/view')
+  }
+
   render() {
-    const cardContent = '使用Icon标签声明组件，指定图标对应的 type 属性。'
-    const cardContent2 = `我们为每个图标赋予了语义化的命名，命名规则如下:
-          <ul class="card-ul">
-            <li>实心和描线图标保持同名，用 -o 来区分，比如 question-circle（实心） 和 question-circle-o（描线）；</li>
-            <li>命名顺序：[图标名]-[形状?]-[描线?]-[方向?]。</li>
-          </ul>`
+    const data = []
+    for (let i = 0; i < 23; i++) {
+      data.push({
+        key: i,
+        ID: "123456",
+        name: '宋小花',
+        sex: '女',
+        date: '2019-01-01',
+      })
+    }
+
+    // 列数据，包含两个操作按钮
+    const columns = [
+      {
+        title: '员工ID',
+        dataIndex: 'ID',
+        key: 'ID',
+        width: '20%',
+      },
+      {
+        title: '姓名',
+        dataIndex: 'name',
+        key: 'name',
+        width: '20%',
+      },
+      {
+        title: '性别',
+        dataIndex: 'sex',
+        key: 'sex',
+        width: '20%'
+      },
+      {
+        title: '入职日期',
+        dataIndex: 'date',
+        key: 'date',
+        width: '20%',
+      },
+      {
+        title: '操作',
+        key: 'action',
+        render: (text, record) => (
+          <div>
+            <Space size={[8, 16]} wrap>
+              {/* 增添按钮 */}
+              <Button type="primary" icon={<PlusOutlined />} onClick={this.ClickAddHandle} shape="round">
+                新增
+              </Button>
+              {/* 增添模态框 */}
+              <Modal
+                title="添加奖惩记录"
+                visible={this.state.visible}
+                onOk={this.handleOk}
+                confirmLoading={this.state.confirmLoading}
+                onCancel={this.handleCancel}
+              >
+                <Form
+                  labelCol={{ span: 4, }}
+                  wrapperCol={{ span: 14, }}
+                  layout="horizontal"
+                >
+                  <Form.Item label="奖惩类型">
+                    <Select placeholder="请选择奖惩类型">
+                      <Option value="Reward">奖励</Option>
+                      <Option value="Punishment">惩罚</Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item label="奖惩名称">
+                    <Input placeholder="请输入奖惩名称"/>
+                  </Form.Item>
+                  <Form.Item label="奖惩时间">
+                    <DatePicker />
+                  </Form.Item>
+                  <Form.Item label="详细说明">
+                    <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />
+                  </Form.Item>
+                </Form>
+              </Modal>
+              {/* 查看按钮 */}
+              <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle} shape="round">
+                查看
+              </Button>
+            </Space>
+          </div>
+        ),
+      }
+    ];
+
     return (
       <div>
-        <Space direction="vertical">
-          <Card title="Card" style={{ width: 300 }}>
-            <p>Card content</p>
-            <p>Card content</p>
-          </Card>
-          <Card title="Card" style={{ width: 300 }}>
-            <p>Card content</p>
-            <p>Card content</p>
-          </Card>
-        </Space>
-        <CustomBreadcrumb arr={['员工档案管理','员工奖惩']}/>
-        <TypingCard title='如何使用' source={cardContent} id='howUse'/>
-        <TypingCard title='图标的命名规范' id='standard' source={cardContent2} height={206}/>
-        {
-          icons.map(item => {
-            return (
-              <Card title={item.title} bordered={false} className='card-item' key={item.title} id={item.anchor}>
-                {
-                  item.list.map(icon => {
-                    return (
-                      <Card.Grid style={styles.gridItem} key={icon}>
-                        <LegacyIcon type={icon} style={styles.icon}/><span>{icon}</span>
-                      </Card.Grid>
-                    );
-                  })
-                }
-              </Card>
-            );
-          })
-        }
-        <BackTop visibilityHeight={200} style={{right: 50}}/>
-        <Affix style={styles.affixBox}>
-          <Anchor offsetTop={50} affix={false}>
-            <Anchor.Link href='#howUse' title='如何使用'/>
-            <Anchor.Link href='#standard' title='图标的命名规范'/>
-            <Anchor.Link href='#direction' title='方向性图标'/>
-            <Anchor.Link href='#suggestion' title='提示建议性图标'/>
-            <Anchor.Link href='#logo' title='网站通用图标'/>
-            <Anchor.Link href='#other' title='品牌和标识'/>
-          </Anchor>
-        </Affix>
+        {/* 顶部导航信息 */}
+        <CustomBreadcrumb arr={['员工档案管理', '员工奖惩']} />
+        {/* 高级搜索框 */}
+        <Card hoverable bordered={false} className='card-item' title="搜索栏">
+          <AdvancedSearchForm />
+        </Card>
+        {/* 展示数据的表格 */}
+        <Table columns={columns} dataSource={data} pagination={{ position: 'bottomCenter' }} />;
       </div>
-    );
+    )
   }
+
 }
 
-const styles = {
-  gridItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
-    width: '17%'
-  },
-  icon: {
-    fontSize: 18,
-    marginBottom: 10
-  },
-  affixBox: {
-    position: 'absolute',
-    top: 100,
-    right: 50,
-    with: 170
-  }
-}
-
-export default JiangchengDemo
