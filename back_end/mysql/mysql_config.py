@@ -5,7 +5,7 @@ USERNAME = 'root'
 PASSWORD = '123456'
 HOST = '20.46.117.148'
 PORT = '3306'
-DATABASE = 'cau4'
+DATABASE = 'cau5'
 """
 DIALECT = 'mysql'
 DRIVER = 'pymysql'

@@ -15,13 +15,14 @@ class Corporation(db.Model):
     website = db.Column(db.String(255), comment="公司网址")
     location = db.Column(db.String(255), comment="公司地址")
     requirementinfo = db.Column(db.String(255), comment="公司招聘信息")
+    structure = db.Column(db.Text, comment="公司架构，广义表形式")
     overall_depart = db.Column(db.String(255), comment="公司的全部部门，暂不使用，用;分割，部门不能包含分号")
     otherinfo = db.Column(db.String(255), comment="公司其他信息，比如签名")
     is_register = db.Column(db.Boolean, comment="公司是否审核通过，0表示正在审核")
     is_delete = db.Column(db.Boolean, comment="公司是否注销，1表示注销")
 
     def __init__(self, corporation_id, name, registeredcapital=0, legalrepresentative="",
-                 registrationdate=datetime.now, tel="", email="", website="",
+                 registrationdate=datetime.now, tel="", email="", website="", structure="",
                  location="", requirementinfo="", otherinfo="", is_register=0,
                  is_delete=0):
         self.corporation_id = corporation_id
@@ -35,6 +36,7 @@ class Corporation(db.Model):
         self.tel = tel
         self.email = email
         self.location = location
+        self.structure = structure
         self.requirementinfo = requirementinfo
         self.otherinfo = otherinfo
         self.is_register = is_register

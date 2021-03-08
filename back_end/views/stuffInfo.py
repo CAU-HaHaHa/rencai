@@ -8,7 +8,7 @@ user_blueprint = Blueprint(blue_print_name, __name__)
 
 
 @user_blueprint.route('/', methods=['GET', 'POST'])
-def create_db():
+def stuffInfo():
     try:
         if request.method == "POST":
             raise Exception("method must be get")
@@ -17,7 +17,7 @@ def create_db():
                          "briefintro", "tel", "email", "politicsstatus", "address",
                          "postcode", "workaddress"]
         querylist = Person.get_obj(retrieve_list)
-        msg = db.session.query(*querylist).all()
+        msg = db.session.query(*querylist)
         return_msg = []
         for line in msg:
             temp = zip(retrieve_list, line)

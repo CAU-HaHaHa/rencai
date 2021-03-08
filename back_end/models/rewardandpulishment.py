@@ -10,12 +10,35 @@ class Rewardandpulishment(db.Model):
     user_id = db.Column(db.Integer, comment="被记录者的用户id")
     user_name = db.Column(db.Integer, comment="被记录者的用户名")
     user_depart = db.Column(db.Integer, comment="用户所属的部门")
+    user_job = db.Column(db.Integer, comment="用户所属的部门")
     hr_id = db.Column(db.Integer, comment="记录内容的hr的id")
-    value = db.Column(db.Integer, comment="评价值，整型数据")
-    reward_num = db.Column(db.Integer, comment="奖励次数，整形数据")
-    pulish_num = db.Column(db.Integer, comment="惩罚次数，整形数据")
+    rew_or_pun = db.Column(db.Boolean, comment="是否是奖励，0是惩罚，1是奖励")
+    reward_pun_name = db.Column(db.String(255), comment="奖惩名称")
     description = db.Column(db.Text, comment="描述信息")
-    registerdate = db.Column(db.DateTime, default=datetime.now, comment="填写日期")
+    registerdate = db.Column(db.DateTime, default=datetime.now, comment="奖罚时间")
+
+    name_register = dict(
+        rnp_id=rnp_id,
+        corporation_id=corporation_id,
+        user_id=user_id,
+        user_name=user_name,
+        user_depart=user_depart,
+        hr_id=hr_id,
+        rew_or_pun=rew_or_pun,
+        reward_pun_name=reward_pun_name,
+        description=description,
+        registerdate=registerdate
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Rewardandpulishment.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
 
     def __init__(self, corporation_id, user_id, hr_id, value=0,
                  reward_num=0, pulish_num=0,
