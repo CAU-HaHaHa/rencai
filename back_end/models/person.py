@@ -31,6 +31,7 @@ class Person(db.Model):
         sex=sex,
         identitycard=identitycard,
         tags=tags,
+        eduschool=eduschool,
         edubackground=edubackground,
         briefintro=briefintro,
         tel=tel,
@@ -53,7 +54,7 @@ class Person(db.Model):
 
     def __init__(self, username, password, name="", sex=0,
                  identitycard="000000000000000000",
-                 tags="", edubackground="", briefintro="", tel="", email="",
+                 tags="", edubackground="", eduschool="", briefintro="", tel="", email="",
                  politicsstatus="", address="", postcode="", workaddress=""):
         self.username = username
         self.password = password
@@ -61,6 +62,7 @@ class Person(db.Model):
         self.sex = sex
         self.identitycard = identitycard
         self.tags = tags
+        self.eduschool = eduschool
         self.edubackground = edubackground
         self.briefintro = briefintro
         self.tel = tel
@@ -69,6 +71,7 @@ class Person(db.Model):
         self.address = address
         self.postcode = postcode
         self.workaddress = workaddress
+
 
     def save(self):
         db.session.add(self)

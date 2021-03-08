@@ -10,7 +10,7 @@ def create_app():
 
     # 设置执行sql语句不产生警告提示
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+    app.config['JSON_AS_ASCII'] = False
     # db初始化flask
     # db的操作要在flask服务器运行状态下才可以执行，因为db的操作需要上下文支持
     db.init_app(app)

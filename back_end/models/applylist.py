@@ -10,7 +10,6 @@ class Applylist(db.Model):
                                comment="招募信息id，用于唯一确定招募项目")
     user_id = db.Column(db.Integer, nullable=False, comment="职位申请者的id")
     description = db.Column(db.String(255), comment="申请陈述")
-    description = db.Column(db.String(255), comment="申请陈述")
     registrationdate = db.Column(db.DateTime, default=datetime.now, comment="发布时间")
     get_offer = db.Column(db.Integer, comment="用户是否接收到了offer，用于向用户反馈，"
                                               "0表示hr没看到，1表示接受，2表示拒绝")
