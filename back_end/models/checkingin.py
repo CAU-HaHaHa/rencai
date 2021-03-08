@@ -12,6 +12,24 @@ class Checkingin(db.Model):
     record = db.Column(db.String(255), comment="编码形式，长度31，每个位代表一天，"
                                                "0表示缺勤，1表示签到，2表示迟到")
 
+    name_register = dict(
+        checkingin_id=checkingin_id,
+        corporation_id=corporation_id,
+        user_id=user_id,
+        recordmonth=recordmonth,
+        record=record,
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Checkingin.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, corporation_id, user_id,
                  recordmonth=0, record="0000000000000000000000000000000"):
         self.corporation_id = corporation_id

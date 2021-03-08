@@ -13,6 +13,26 @@ class Performance(db.Model):
     description = db.Column(db.Text, comment="绩效描述")
     registerdate = db.Column(db.DateTime, default=datetime.now, comment="绩效等级日期")
 
+    name_register = dict(
+        performance_id=performance_id,
+        corporation_id=corporation_id,
+        user_id=user_id,
+        hr_id=hr_id,
+        value=value,
+        description=description,
+        registerdate=registerdate
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Applylist.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, corporation_id, user_id, hr_id, value=0,
                  description="", registerdate=datetime.now):
         self.corporation_id = corporation_id

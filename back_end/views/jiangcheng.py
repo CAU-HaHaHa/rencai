@@ -19,8 +19,8 @@ def search():
         name = request.values.get("name", "")
         dep = request.values.get("dep", "")
         duty = request.values.get("duty", "")
-        page_size = request.values.get("page_size", 10000)
-        page_num = request.values.get("page_num", 0)
+        page_size = int(request.values.get("page_size", 10000))
+        page_num = int(request.values.get("page_num", 0))
 
         retrieve_list = ["stafflist_id", "corporation_id", "user_or_hr", "user_id", "hr_id",
                          "user_name", "transferreason", "lastcorporation_id", "hiredate",

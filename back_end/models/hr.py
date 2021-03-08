@@ -15,6 +15,28 @@ class Hr(db.Model):
     is_register = db.Column(db.Boolean, comment="hr注册是否过审，1表示过审")
     is_delete = db.Column(db.Boolean, comment="hr账号是否被注销，1表示注销状态")
 
+    name_register = dict(
+        hr_id=hr_id,
+        corporation_id=corporation_id,
+        username=username,
+        password=password,
+        name=name,
+        sex=sex,
+        identitycard=identitycard,
+        is_register=is_register,
+        is_delete=is_delete,
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Hr.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, username, password, corporation_id, name, sex=0,
                  identitycard="000000000000000000", is_register=0,
                  is_delete=0):

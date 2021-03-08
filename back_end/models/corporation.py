@@ -21,6 +21,34 @@ class Corporation(db.Model):
     is_register = db.Column(db.Boolean, comment="公司是否审核通过，0表示正在审核")
     is_delete = db.Column(db.Boolean, comment="公司是否注销，1表示注销")
 
+    name_register = dict(
+        corporation_id=corporation_id,
+        name=name,
+        registeredcapital=registeredcapital,
+        legalrepresentative=legalrepresentative,
+        registrationdate=registrationdate,
+        tel=tel,
+        email=email,
+        website=website,
+        location=location,
+        requirementinfo=requirementinfo,
+        structure=structure,
+        overall_depart=overall_depart,
+        otherinfo=otherinfo,
+        is_register=is_register,
+        is_delete=is_delete
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Corporation.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, corporation_id, name, registeredcapital=0, legalrepresentative="",
                  registrationdate=datetime.now, tel="", email="", website="", structure="",
                  location="", requirementinfo="", otherinfo="", is_register=0,

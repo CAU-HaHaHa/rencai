@@ -15,6 +15,7 @@ class Demo(db.Model):
     title = db.Column(db.String(100), nullable=False, comment="demo title")
     content = db.Column(db.Text, nullable=False, comment="demo content")
 
+
     def __init__(self, id):
         self.id = id
 

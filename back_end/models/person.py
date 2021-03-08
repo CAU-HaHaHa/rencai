@@ -17,6 +17,8 @@ class Person(db.Model):
     briefintro = db.Column(db.String(255), comment="用户自我简介")
     tel = db.Column(db.String(255), comment="用户电话，只能有一个")
     email = db.Column(db.String(255), comment="用户邮箱，只能记录一个")
+    emailstate = db.Column(db.Boolean, comment="用户邮箱是否激活，1表示激活")
+    emailcheck = db.Column(db.String(255), comment="用户邮箱验证码")
     politicsstatus = db.Column(db.String(255), comment="用户政治背景，0为群众，1为共产党员，"
                                                        "2为预备党员，3为共青团员，4为其他")
     address = db.Column(db.String(255), comment="用户家庭住址")
@@ -39,7 +41,9 @@ class Person(db.Model):
         politicsstatus=politicsstatus,
         address=address,
         postcode=postcode,
-        workaddress=workaddress
+        workaddress=workaddress,
+        emailstate=emailstate,
+        emailcheck=emailcheck
     )
 
     @staticmethod
@@ -55,7 +59,8 @@ class Person(db.Model):
     def __init__(self, username, password, name="", sex=0,
                  identitycard="000000000000000000",
                  tags="", edubackground="", eduschool="", briefintro="", tel="", email="",
-                 politicsstatus="", address="", postcode="", workaddress=""):
+                 politicsstatus="", address="", postcode="", workaddress="", emailstate=0,
+                 emailcheck=""):
         self.username = username
         self.password = password
         self.name = name
@@ -71,7 +76,8 @@ class Person(db.Model):
         self.address = address
         self.postcode = postcode
         self.workaddress = workaddress
-
+        self.emailstate = emailstate
+        self.emailcheck = emailcheck
 
     def save(self):
         db.session.add(self)

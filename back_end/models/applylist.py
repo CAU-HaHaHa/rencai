@@ -14,6 +14,25 @@ class Applylist(db.Model):
     get_offer = db.Column(db.Integer, comment="用户是否接收到了offer，用于向用户反馈，"
                                               "0表示hr没看到，1表示接受，2表示拒绝")
 
+    name_register = dict(
+        applylist_id=applylist_id,
+        recruitpost_id=recruitpost_id,
+        user_id=user_id,
+        description=description,
+        registrationdate=registrationdate,
+        get_offer=get_offer
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Applylist.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, recruitpost_id, user_id, description="",
                  registrationdate=datetime.now, get_offer=0):
         self.recruitpost_id = recruitpost_id

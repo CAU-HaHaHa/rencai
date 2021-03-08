@@ -10,6 +10,23 @@ class Resignlist(db.Model):
     description = db.Column(db.Text, comment="辞职信息描述")
     registerdate = db.Column(db.DateTime, default=datetime.now, comment="递交辞职信息的日期")
 
+    name_register = dict(
+        resignlist_id=resignlist_id,
+        user_id=user_id,
+        description=description,
+        registerdate=registerdate
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Resignlist.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, user_id, description="",
                  registerdate=datetime.now):
         self.user_id = user_id

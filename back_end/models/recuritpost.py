@@ -14,6 +14,27 @@ class Recruitpost(db.Model):
     isposted = db.Column(db.Boolean, comment="是否公开该招募信息")
     registerdate = db.Column(db.DateTime, default=datetime.now, comment="招募公开日期")
 
+    name_register = dict(
+        recruitpost_id=recruitpost_id,
+        corporation_id=corporation_id,
+        department=department,
+        posttype=posttype,
+        number=number,
+        description=description,
+        isposted=isposted,
+        registerdate=registerdate
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Recruitpost.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, corporation_id, department="",
                  number=0, description="", isposted=0, registerdate=datetime.now):
         self.corporation_id = corporation_id

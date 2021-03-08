@@ -3,11 +3,21 @@ from flaskapp.create_flask import app
 from models.person import Person
 import tools.valid as valid
 from mysql.create_db import db
-
+from tools.mail.sendvalidcheck import Sendcheck
 
 
 blue_print_name = "/develop"
 person_blueprint = Blueprint(blue_print_name, __name__)
+
+
+@person_blueprint.route('/send', methods=['GET', 'POST'])
+def send():
+    mail = request.values.get("mail", "")
+    config = app.config['SERVER_INI']
+    config["to_mail"] = mail
+    sender = Sendcheck(config)
+    mes = sender.send()
+    return mes
 
 
 @person_blueprint.route('/', methods=['GET', 'POST'])

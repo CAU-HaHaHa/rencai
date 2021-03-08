@@ -13,6 +13,26 @@ class Stafftrack(db.Model):
     dutytype = db.Column(db.String(255), comment="用户的在职时期的职位类型")
     description = db.Column(db.String(255), comment="基本描述信息")
 
+    name_register = dict(
+        stafftrack_id=stafftrack_id,
+        corporation_id=corporation_id,
+        user_id=user_id,
+        arrivetime=arrivetime,
+        departtime=departtime,
+        dutytype=dutytype,
+        description=description
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Stafftrack.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
     def __init__(self, corporation_id, user_id,
                  arrivetime=datetime.now, departtime=datetime.now,
                  dutytype="", description=""):
