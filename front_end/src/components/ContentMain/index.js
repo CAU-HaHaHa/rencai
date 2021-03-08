@@ -12,6 +12,7 @@ const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 
 //导航组件Demo
+const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
 const MenuDemo = LoadableComponent(()=>import('../../routes/Navigation/MenuDemo/index'))
 const StepsDemo = LoadableComponent(()=>import('../../routes/Navigation/StepsDemo/index'))
@@ -60,6 +61,7 @@ class ContentMain extends React.Component {
           <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
           <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
 
+          <PrivateRoute exact path='/home/navigation/rencai' component={RencaiDemo}/>
           <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
           <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
           <PrivateRoute exact path='/home/navigation/steps' component={StepsDemo}/>
