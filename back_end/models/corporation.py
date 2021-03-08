@@ -4,19 +4,21 @@ from mysql.create_db import db
 
 class Corporation(db.Model):
     __tablename__ = 'corporation'
-    corporation_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), unique=True, nullable=False)
-    registeredcapital = db.Column(db.Integer)
-    legalrepresentative = db.Column(db.String(255))
-    registrationdate = db.Column(db.DateTime, default=datetime.now)
-    tel = db.Column(db.String(255))
-    email = db.Column(db.String(255))
-    website = db.Column(db.String(255))
-    location = db.Column(db.String(255))
-    requirementinfo = db.Column(db.String(255))
-    otherinfo = db.Column(db.String(255))
-    is_register = db.Column(db.Boolean)
-    is_delete = db.Column(db.Boolean)
+    corporation_id = db.Column(db.Integer, primary_key=True, autoincrement=True,
+                               comment="公司id，公司仅用于显示信息，不提供登录功能")
+    name = db.Column(db.String(255), unique=True, nullable=False, comment="公司名")
+    registeredcapital = db.Column(db.Integer, comment="公司的注册资本")
+    legalrepresentative = db.Column(db.String(255), comment="公司的法律代表人")
+    registrationdate = db.Column(db.DateTime, default=datetime.now, comment="公司登记日期")
+    tel = db.Column(db.String(255), comment="公司电话，多个电话用;分割")
+    email = db.Column(db.String(255), comment="公司邮箱，多个邮箱用;分割")
+    website = db.Column(db.String(255), comment="公司网址")
+    location = db.Column(db.String(255), comment="公司地址")
+    requirementinfo = db.Column(db.String(255), comment="公司招聘信息")
+    overall_depart = db.Column(db.String(255), comment="公司的全部部门，暂不使用，用;分割，部门不能包含分号")
+    otherinfo = db.Column(db.String(255), comment="公司其他信息，比如签名")
+    is_register = db.Column(db.Boolean, comment="公司是否审核通过，0表示正在审核")
+    is_delete = db.Column(db.Boolean, comment="公司是否注销，1表示注销")
 
     def __init__(self, corporation_id, name, registeredcapital=0, legalrepresentative="",
                  registrationdate=datetime.now, tel="", email="", website="",
