@@ -4,16 +4,67 @@ import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col,
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
 
-const { Option } = Select;
 const { TextArea } = Input;
-const { RangePicker } = DatePicker;
+const { Option } = Select;
 
-const dateFormat = 'YYYY/MM/DD';
+const deptData = ['市场部', '研发部', '业务部', '综合部'];
+const dutyData = {
+  市场部: ['项目经理', '销售人员'],
+  研发部: ['前端开发', '后端开发', '技术中台'],
+  业务部: ['业务主管'],
+  综合部: ['后勤主管'],
+};
 
+// 搜索栏
 const AdvancedSearchForm = () => {
+
+  // 搜索表单
   const [form] = Form.useForm();
 
+  // 职责列表
+  const [duties, setDuties] = React.useState(dutyData[deptData[0]]);
+  // 职责
+  const [secondDuty, setsecondDuty] = React.useState(dutyData[deptData[0]][0]);
+
+  // 选择部门
+  const handleDeptChange = value => {
+    setDuties(dutyData[value]);
+    setsecondDuty(dutyData[value][0]);
+  };
+
+  // 选择职能
+  const onSecondDutyChange = value => {
+    setsecondDuty(value);
+    form
+  };
+
   const onFinish = (values) => {
+
+    let request_string = "http://http://127.0.0.1:5000/jiangcheng/search?"
+    request_string = request_string + "crop_id=&id=" + values.ID + "&name=" + values.name
+    request_string = request_string + "&dep=" + values.deptment + "&duty="+ values.duty
+    request_string = request_string + "&page_size=10" + "&page_num=1"
+    console.log('Received values of form: ', request_string);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", request_string, true)
+    xhr.send()
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status == 200) {
+          //你当然可以用其他方法编码你的返回信息，但是对于js的世界来说，还有什么比json更方便呢？
+          let gotServices = JSON.parse(xhr.responseText)
+          //好了，我们获得了service列表，使用setState方法覆盖当前元素的services数据
+          this.setState({
+            services: gotServices
+          })
+        }
+      } else {
+        alert("ajax失败了")
+      }
+    }
+
     console.log('Received values of form: ', values);
   };
 
@@ -30,28 +81,34 @@ const AdvancedSearchForm = () => {
             <Input placeholder="请输入员工ID" />
           </Form.Item>
         </Col>
-        <Col span={4} key={2}>
+        <Col span={5} key={2}>
           <Form.Item name="name" label="姓名">
             <Input placeholder="请输入员工姓名" />
           </Form.Item>
         </Col>
-        <Col span={5} key={3}>
-          <Form.Item name="ID" label="员工性别">
-            <Select placeholder="请选择员工性别">
-              <Option value="man">男</Option>
-              <Option value="woman">女</Option>
+        <Col span={4} key={3}>
+          <Form.Item name="department" label="员工部门">
+            <Select defaultValue={deptData[0]} onChange={handleDeptChange}>
+              {deptData.map(deptment => (
+                <Option key={deptment}>{deptment}</Option>
+              ))}
             </Select>
           </Form.Item>
         </Col>
-        <Col span={6} key={4}>
-          <Form.Item name="date" label="入职日期">
-            <RangePicker format={dateFormat} />
+        <Col span={4} key={4}>
+          <Form.Item name="dutytype" label="员工职位">
+            <Select value={secondDuty} onChange={onSecondDutyChange}>
+              {duties.map(dutytype => (
+                <Option key={dutytype}>{dutytype}</Option>
+              ))}
+            </Select>
           </Form.Item>
         </Col>
         <Col span={4} style={{ textAlign: 'right', }}>
           <Button type="primary" htmlType="submit"> Search </Button>
+          {/* 鼠标点击清除事件 */}
           <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}>
-            Clear
+            清除
           </Button>
         </Col>
       </Row>
@@ -112,13 +169,8 @@ export default class Reward extends React.Component {
     this.setVisible(false);
   };
 
-  ClickViewHandle = (e) => {
-    let key = {
-      user_name: e.name,
-      user_id: e.ID
-    }
-    sessionStorage.setItem("view_page", key);
-    this.props.history.push({ pathname: './jiangcheng/view' , state: { key }})
+  ClickViewHandle = (type) => {
+    this.props.history.push({ pathname: './jiangcheng/view/' + type.ID })
   }
 
   render() {
@@ -138,7 +190,7 @@ export default class Reward extends React.Component {
       {
         title: '员工ID',
         dataIndex: 'ID',
-        key: 'ID',
+        key: 'id',
         width: '20%',
       },
       {
@@ -160,7 +212,7 @@ export default class Reward extends React.Component {
         width: '20%',
       },
       {
-        title: '',
+        title: '操作',
         key: 'action',
         render: (text, record) => (
           <div>
@@ -170,7 +222,7 @@ export default class Reward extends React.Component {
                 新增
               </Button>
               {/* 查看按钮 */}
-              <Button type="primary"  icon={<SearchOutlined />} onClick={this.ClickViewHandle.bind(this, record)} shape="round">
+              <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle.bind(this, record)} shape="round">
                 查看
               </Button>
             </Space>
@@ -216,9 +268,8 @@ export default class Reward extends React.Component {
                     {this.state.user_name}
                   </Text>
                 </Form.Item>
-              </Col>           
+              </Col>
             </Row>
-            
             <Form.Item label="奖惩类型">
               <Select placeholder="请选择奖惩类型">
                 <Option value="Reward">奖励</Option>

@@ -7,7 +7,11 @@ app = create_app()
 # python main.py runserver
 @app.route('/')
 def hello_world():
+<<<<<<< HEAD
     db.create_all()
+=======
+    # db.create_all()
+>>>>>>> temp
     return 'Hello, World!'
 
 

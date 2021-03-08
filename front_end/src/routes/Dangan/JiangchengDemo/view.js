@@ -6,25 +6,14 @@ import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 
 export default class Reward extends React.Component {
 
-    state = {
-        user_id: '',
-        user_name: '',
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            user_id: this.props.match.params.id,
+        };
+    }
 
     render() {
-        
-        let { location : { state : params } } = this.props;
-        
-        if(!params) {
-            params = JSON.parse(sessionStorage.getItem('view_page'));
-        } else {
-            sessionStorage.getItem('view_page',JSON.stringify(params));
-        }
-        this.setState({
-            user_id: params.key.user_id,
-            user_name: params.key.user_name,
-        });
-
         const listData = [];
         for (let i = 0; i < 23; i++) {
             listData.push({

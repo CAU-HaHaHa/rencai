@@ -1,75 +1,289 @@
 import React from 'react'
-import { Icon as LegacyIcon } from '@ant-design/compatible';
-import { Card, BackTop, Anchor, Affix } from 'antd';
+import {BackTop} from 'antd'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import TypingCard from '../../../components/TypingCard'
+import { Table, Space ,Col,Row} from 'antd';
+import { Button,Modal,InputNumber,Card } from 'antd';
+import './ui.less'
+import { Input } from 'antd';
+import { DatePicker} from 'antd';
+import axios from 'axios';
+const { RangePicker } = DatePicker;
+const { TextArea } = Input;
+const { Column, ColumnGroup } = Table;
 
-const icons = [
-  {
-    title: '方向性图标',
-    anchor: 'direction',
-    list: ["step-backward", "step-forward", "fast-backward", "fast-forward", "shrink", "arrows-alt", "down", "up", "left", "right", "caret-up", "caret-down", "caret-left", "caret-right", "up-circle", "down-circle", "left-circle", "right-circle", "up-circle-o", "down-circle-o", "right-circle-o", "left-circle-o", "double-right", "double-left", "verticle-left", "verticle-right", "forward", "backward", "rollback", "enter", "retweet", "swap", "swap-left", "swap-right", "arrow-up", "arrow-down", "arrow-left", "arrow-right", "play-circle", "play-circle-o", "up-square", "down-square", "left-square", "right-square", "up-square-o", "down-square-o", "left-square-o", "right-square-o", "login", "logout", "menu-fold", "menu-unfold"],
-  },
-  {
-    title: '提示建议性图标',
-    anchor: 'suggestion',
-    list: ["question", "question-circle-o", "question-circle", "plus", "plus-circle-o", "plus-circle", "pause", "pause-circle-o", "pause-circle", "minus", "minus-circle-o", "minus-circle", "plus-square", "plus-square-o", "minus-square", "minus-square-o", "info", "info-circle-o", "info-circle", "exclamation", "exclamation-circle-o", "exclamation-circle", "close", "close-circle", "close-circle-o", "close-square", "close-square-o", "check", "check-circle", "check-circle-o", "check-square", "check-square-o", "clock-circle-o", "clock-circle"],
-  },
-  {
-    title: '网站通用图标',
-    anchor: 'logo',
-    list: ["lock", "unlock", "area-chart", "pie-chart", "bar-chart", "dot-chart", "bars", "book", "calendar", "cloud", "cloud-download", "code", "code-o", "copy", "credit-card", "delete", "desktop", "download", "edit", "ellipsis", "file", "file-text", "file-unknown", "file-pdf", "file-excel", "file-jpg", "file-ppt", "file-add", "folder", "folder-open", "folder-add", "hdd", "frown", "frown-o", "meh", "meh-o", "smile", "smile-o", "inbox", "laptop", "appstore-o", "appstore", "line-chart", "link", "mail", "mobile", "notification", "paper-clip", "picture", "poweroff", "reload", "search", "setting", "share-alt", "shopping-cart", "tablet", "tag", "tag-o", "tags", "tags-o", "to-top", "upload", "user", "video-camera", "home", "loading", "loading-3-quarters", "cloud-upload-o", "cloud-download-o", "cloud-upload", "cloud-o", "star-o", "star", "heart-o", "heart", "environment", "environment-o", "eye", "eye-o", "camera", "camera-o", "save", "team", "solution", "phone", "filter", "exception", "export", "customer-service", "qrcode", "scan", "like", "like-o", "dislike", "dislike-o", "message", "pay-circle", "pay-circle-o", "calculator", "pushpin", "pushpin-o", "bulb", "select", "switcher", "rocket", "bell", "disconnect", "database", "compass", "barcode", "hourglass", "key", "flag", "layout", "printer", "sound", "usb", "skin", "tool", "sync", "wifi", "car", "schedule", "user-add", "user-delete", "usergroup-add", "usergroup-delete", "man", "woman", "shop", "gift", "idcard", "medicine-box", "red-envelope", "coffee", "copyright", "trademark", "safety", "wallet", "bank", "trophy", "contacts", "global", "shake", "api"]
-  },
-  {
-    title: '品牌和标识',
-    anchor: 'other',
-    list: ["android", "android-o", "apple", "apple-o", "windows", "windows-o", "ie", "chrome", "github", "aliwangwang", "aliwangwang-o", "dingding", "dingding-o"],
-  }
-];
+function onChange(value, dateString) {
+  console.log('Selected Time: ', value);
+  console.log('Formatted Selected Time: ', dateString);
+}
+function onOk(value) {
+  console.log('onOk: ', value);
+}
+function onChange(value) {
+  console.log('changed', value);
+}
 
+// //数据库插入信息语句（插入绩效信息）
+// router.post("/",(req,res) =>{
+//   const { errors,isValid } = validatorInput(req.body);
+//   // 接受数据库语句
+//   var sql = "insert into user values (?,?,?,?,?,?,?)";
+//   var arr = [req.body.performance_id,req.body.corporation_id,req.body.user_id,req.body.hr_id,req.body.value,req.body.description,req.body.registerdate];
+//   if(isValid){
+//       sqlFn(sql,arr,function(data){
+//           if(data.affectedRows){
+//               res.send({success:true})
+//           }else{
+//               res.status(400).json({error:'插入失败'});
+//           }
+//       })
+//   }else{
+//       res.status(400).json(errors);
+//   }
+// })
+
+
+//开始
 class JixiaoDemo extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      modalAddInfoVisible: false, //新增信息Modal的显示属性
+      dataselect:[],
+      searchid: "",
+      searchname: "",
+      searchage: "",
+      searchposition: "",
+      adddate:"",
+      adddescription:"",
+      addvalue:"",
+      addid:"",
+      addname:"",
+      addposition:"",
+      addage:""
+    }
+    this.handleclickbtn = this.handleclickbtn.bind(this);
+  }
+
+  //查看详情按钮事件——点击跳转并传参
+  handleclickbtn= (type)=>{
+    this.props.history.push({pathname:'/add/'+type});
+  }
+
+  //设置一个弹出框可见,type为传入的变量，用于标识点了哪个按钮,并记录基本信息
+  openModalAddInfo = (type,record)=>{
+    this.setState({[type+"Visible"]: true})
+    this.setState({
+      addid:record.id,
+      addage:record.age,
+      addname:record.name,
+      addposition:record.position
+    })
+  }
+
+  //获取添加绩效框中填写的数据
+  inputChange1 = (event, flag) => {
+    console.log(event, "***", flag)
+    if (flag == "regisdates")
+      this.setState({
+        adddate: event.target.value
+      })
+    else if (flag == "value")
+      this.setState({
+        addvalue: event.target.value
+      })
+    else if (flag == "description")
+      this.setState({
+        adddescription: event.target.value
+      })
+    else
+      alert("Wrong input!")
+  }
+   // 获取检索条目
+   inputChange = (event, flag) => {
+    console.log(event, "***", flag)
+    if (flag == "id")
+      this.setState({
+        searchid: event.target.value
+      })
+    else if (flag == "name")
+      this.setState({
+        searchname: event.target.value
+      })
+    else if (flag == "age")
+      this.setState({
+        searchage: event.target.value
+      })
+    else if (flag == "position")
+      this.setState({
+        searchposition: event.target.value
+      })
+    else
+      alert("Wrong input!")
+  } 
+ //点击查询按钮，进行多条件检索
+  Search = (event) => {
+    let testdata = []
+    for (const temp of this.state.dataSource) {
+      if (temp.id == this.state.searchid || this.state.searchid == "") {
+        if (temp.name == this.state.searchname || this.state.searchname == "")
+          if (temp.age == this.state.searchage || this.state.searchage == "")
+            if (temp.position == this.state.searchposition || this.state.searchposition == "") {
+              console.log(temp)
+              testdata.push({
+                id: temp.id,
+                name: temp.name,
+                age: temp.age,
+                position: temp.position
+              })
+            }
+      }
+      this.setState({
+        dataselect: testdata
+      })
+      console.log(this.state.dataselect)
+    }
+  }
+
+  //添加到数据库
+  add(){
+// //数据库插入信息语句（插入绩效信息）
+// router.post("/",(req,res) =>{
+//   const { errors,isValid } = validatorInput(req.body);
+//   // 接受数据库语句
+//   var sql = "insert into user values (?,?,?,?)";
+//   var arr = [addid,addvalue,adddescription,adddate];
+//   if(isValid){
+//       sqlFn(sql,arr,function(data){
+//           if(data.affectedRows){
+//               res.send({success:true})
+//           }else{
+//               res.status(400).json({error:'插入失败'});
+//           }
+//       })
+//   }else{
+//       res.status(400).json(errors);
+//   }
+// })
+  }
+  
+  //api
+  componentDidMount() {
+    const _this = this;
+    axios.get('https://60418bef7f50e000173aa942.mockapi.io/api/vi/dataSource')
+    .then(function(response) {
+        _this.setState({
+            dataSource: response.data,
+            isLoaded: true
+        });
+    });
+  } 
+
   render() {
-    const cardContent = '使用Icon标签声明组件，指定图标对应的 type 属性。'
-    const cardContent2 = `我们为每个图标赋予了语义化的命名，命名规则如下:
-          <ul class="card-ul">
-            <li>实心和描线图标保持同名，用 -o 来区分，比如 question-circle（实心） 和 question-circle-o（描线）；</li>
-            <li>命名顺序：[图标名]-[形状?]-[描线?]-[方向?]。</li>
-          </ul>`
+    const {
+      dataSource,
+    } = this.state;
     return (
       <div>
         <CustomBreadcrumb arr={['员工档案管理','绩效评价']}/>
-        <TypingCard title='如何使用' source={cardContent} id='howUse'/>
-        <TypingCard title='图标的命名规范' id='standard' source={cardContent2} height={206}/>
-        {
-          icons.map(item => {
-            return (
-              <Card title={item.title} bordered={false} className='card-item' key={item.title} id={item.anchor}>
-                {
-                  item.list.map(icon => {
-                    return (
-                      <Card.Grid style={styles.gridItem} key={icon}>
-                        <LegacyIcon type={icon} style={styles.icon}/><span>{icon}</span>
-                      </Card.Grid>
-                    );
-                  })
-                }
-              </Card>
-            );
-          })
-        }
-        <BackTop visibilityHeight={200} style={{right: 50}}/>
-        <Affix style={styles.affixBox}>
-          <Anchor offsetTop={50} affix={false}>
-            <Anchor.Link href='#howUse' title='如何使用'/>
-            <Anchor.Link href='#standard' title='图标的命名规范'/>
-            <Anchor.Link href='#direction' title='方向性图标'/>
-            <Anchor.Link href='#suggestion' title='提示建议性图标'/>
-            <Anchor.Link href='#logo' title='网站通用图标'/>
-            <Anchor.Link href='#other' title='品牌和标识'/>
-          </Anchor>
-        </Affix>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Card bordered={false} className='card-item'>
+              <h1  > 绩效总览：</h1>
+              <Table dataSource={dataSource}>
+                <Column title="Name" dataIndex="name" key="name" />
+                <Column title="ID" dataIndex="id" key="id" />
+                <Column title="Age" dataIndex="age" key="age" />
+                <Column title="Position" dataIndex="position" key="position" />
+                <Column
+                  title="Action"
+                  key="action"
+                  render={(text, record) => (
+                    <Space size="middle">
+                      <Button type="primary" onClick={()=>this.openModalAddInfo("modalAddInfo",record)}>增加绩效</Button>
+                      <Button type="primary" onClick={()=>this.handleclickbtn(record.id)}>查看绩效</Button>
+                    </Space>
+                  )}
+                />
+              <BackTop visibilityHeight={200} style={{right: 50}}/>
+              </Table>
+            </Card>
+          </Col>
+        
+        <Col span={12}>
+            <Card bordered={false} className='card-item'>
+              <p>
+                <Row>
+                <Col span={12}>
+                    <Input addonBefore="根据ID查询:" placeholder="请输入ID" onChange={(event) => { this.inputChange(event, "id") }} />
+                </Col>
+                <Col span={12}>
+                    <Input addonBefore="根据姓名查询：" placeholder="请输入姓名" onChange={(event) => { this.inputChange(event, "name") }} />
+                </Col>
+                <Col span={12}>
+                    <Input addonBefore="根据年龄查询" placeholder="请输入年龄" onChange={(event) => { this.inputChange(event, "age") }} />
+                </Col>
+                <Col span={12}>
+                    <Input addonBefore="根据职位查询" placeholder="请输入职位" onChange={(event) => { this.inputChange(event, "position") }} />
+                </Col>
+                </Row>
+                <Space size="middle">
+                  <Button type="primary" icon="查询" onClick={this.Search}></Button>
+                </Space>
+                <Table dataSource={this.state.dataselect}>
+                    <Column title="Name" dataIndex="name" key="name" />
+                    <Column title="ID" dataIndex="id" key="id" />
+                    <Column title="Age" dataIndex="age" key="age" />
+                    <Column title="Position" dataIndex="position" key="position" />
+                    <Column
+                      title="Action"
+                      key="action"
+                      render={(text, record) => (
+                        <Space size="middle">
+                          <Button type="primary" onClick={()=>this.openModalAddInfo("modalAddInfo",record)}>增加绩效</Button>
+                          <Button type="primary" onClick={()=>this.handleclickbtn(record.id)}>查看绩效</Button>
+                        </Space>
+                      )}
+                    />
+                <BackTop visibilityHeight={200} style={{right: 50}}/>
+                </Table>       
+            </p>
+            </Card>
+        </Col>
+        </Row>
+        <Modal title="增加绩效"
+                visible={this.state.modalAddInfoVisible}
+                wrapClassName="vertical-center-modal"
+                onCancel={()=>{
+                this. setState({modalAddInfoVisible: false})
+                }} 
+                //onOk={()=>this. add} 
+                onOk={()=>{
+                  this. setState({modalAddInfoVisible: false}) + this.add
+                }} 
+        >
+          <Space direction="vertical" size={12}>
+          <span>填写时间：</span><DatePicker showTime onChange={onChange} onOk={onOk} />
+          {/* <span>填写时间：</span><DatePicker showTime onChange={(event) => { this.inputChange1(event, "regisdates") }} onOk={onOk} /> */}
+          <span>绩效评定起止时间：</span>
+            <RangePicker
+              showTime={{ format: 'HH:mm' }}
+              format="YYYY-MM-DD HH:mm"
+              onChange={onChange}
+              onOk={onOk}
+              //onChange={(event) => { this.inputChange(event, "dates") }}
+            />
+          </Space>
+          <br />
+          <br />
+          <span>绩效评分：</span><InputNumber min={1} max={10} defaultValue={3} onChange={onChange} />
+          {/* <span>绩效评分：</span><InputNumber min={1} max={10} defaultValue={3} onChange={(event) => { this.inputChange1(event, "value") }} /> */}
+          <br />
+          <span>绩效描述：</span><TextArea rows={4} />
+          {/* <span>绩效描述：</span><TextArea rows={4} onChange={(event) => { this.inputChange1(event, "description") }} /> */}
+        </Modal> 
       </div>
-    );
+    )
   }
 }
 
