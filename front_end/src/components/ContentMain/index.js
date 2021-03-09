@@ -24,6 +24,7 @@ const UploadDemo = LoadableComponent(()=>import('../../routes/Entry/UploadDemo/i
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
 const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
+const RencaiPersonDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/person'))
 
 
 // //显示组件Demo
@@ -74,6 +75,7 @@ class ContentMain extends React.Component {
           {/* new */}
           <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
           <PrivateRoute exact path='/home/navigation/rencai/view' component={RencaiViewDemo}/>
+          <PrivateRoute exact path='/home/navigation/rencai/person' component={RencaiPersonDemo}/>
 
           {/* <PrivateRoute exact path='/home/display/carousel' component={CarouselDemo}/>
           <PrivateRoute exact path='/home/display/collapse' component={CollapseDemo}/>
