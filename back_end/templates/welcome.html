@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于哈哈哈的研究小组的后端</title>
+    <h4>已经实现的地址访问如下所示</h4>
+    <ul>
+        <li>/demo</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/create_db &ensp;
+            get方法访问，用于创建数据库：
+            <a href="/demo/create_db">
+                /demo/create_db
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/getvar &ensp;
+            用于测试会话变量的设置，设置一个变量：
+            <a href="/demo/getvar">
+                /demo/getvar
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/setvar &ensp;
+            用于测试会话变量的设置，获取一个变量：
+            <a href="/demo/setvar">
+                /demo/setvar
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/getpost &ensp;
+            用于测试请求类型
+            <a href="/demo/getpost">
+                /demo/getpost
+            </a>
+        </div>
+    </ul>
+    <ul>
+        <li>/develop</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/send &ensp;
+            get方法访问，用于发送邮箱验证码，该功能尚不完整，需要拼接mail后面的字符串发送邮件：
+            <a href="/develop/send?mail=youremail@test.com">
+                /develop/send?mail=youremail@test.com
+            </a>
+        </div>
+    </ul>
+    <ul>
+        <li>/StuffInfo</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/&ensp;
+            get方法访问，用于获取全部的person表信息
+            <a href="/StuffInfo">
+                /StuffInfo
+            </a>
+        </div>
+    </ul>
+    <ul>
+        <li>/dangan</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/performance/dataSource &ensp;
+            get方法，获取performance表全部信息，示例：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/dangan/performance/dataSource">
+                /dangan/performance/dataSource
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/performance/newdataSource &ensp;
+            get方法，获取performance表每一位员工最近一次的数据，示例：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/dangan/performance/newdataSource">
+                /dangan/performance/newdataSource
+            </a>
+        </div>
+
+    </ul>
+    <ul>
+        <li>/jiangcheng</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/search &ensp;
+            get方法，按条件检索stafflist表的数据，采用拼接字符串的方式传递参数，不填写参数或参数为空
+            则跳过该信息过滤条件，所有数据库中varchar类型均以模糊搜索的方式检索，int类型直接匹配，示例：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/jiangcheng/search?corp_id=&id=&name=&dep=部&duty=端&page_size=8&page_num=0">
+                /jiangcheng/search?corp_id=&id=&name=&dep=部&duty=端&page_size=8&page_num=0
+            </a>
+        </div>
+
+    </ul>
+</head>
+<body>
+
+</body>
+</html>

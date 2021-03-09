@@ -26,7 +26,7 @@ def stuffInfo():
         return dict(
             status=1,
             message="success",
-            data=str(return_msg)
+            data=return_msg
         )
     except Exception as e:
         return dict(

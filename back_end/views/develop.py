@@ -5,7 +5,6 @@ import tools.valid as valid
 from mysql.create_db import db
 from tools.mail.sendvalidcheck import Sendcheck
 
-
 blue_print_name = "/develop"
 person_blueprint = Blueprint(blue_print_name, __name__)
 
@@ -23,12 +22,13 @@ def send():
 @person_blueprint.route('/', methods=['GET', 'POST'])
 def default():
     return dict(
-            status=0,
-            message="this module only use for develop.  "
-                    "please use /develop/create_random_data or develop/retrieve_sql"
-                    " or develop/delete_data",
-            data="none"
-        )
+        status=0,
+        message="this module only use for develop.  "
+                "please use /develop/create_random_data or develop/retrieve_sql"
+                " or develop/delete_data",
+        data="none"
+    )
+
 
 @person_blueprint.route('/delete_data', methods=['GET', 'POST'])
 def delete_data():
@@ -46,6 +46,7 @@ def delete_data():
         message="delete success",
         data="none"
     )
+
 
 @person_blueprint.route('/create_random_data', methods=['GET', 'POST'])
 def create_random_data():
@@ -70,7 +71,7 @@ def create_random_data():
                 password=str(random.randint(0, 10000000)),
                 name=str(random.randint(0, 10000000)),
                 sex=random.randint(0, 1),
-                identitycard =str(random.randint(0, 10000000)),
+                identitycard=str(random.randint(0, 10000000)),
                 tags=str(random.randint(0, 10000000)),
                 edubackground=str(random.randint(0, 10000000)),
                 briefintro=str(random.randint(0, 10000000)),
@@ -92,10 +93,10 @@ def create_random_data():
             data="none"
         )
     return dict(
-            status=1,
-            message="create successfully",
-            data="none"
-        )
+        status=1,
+        message="create successfully",
+        data="none"
+    )
 
 
 @person_blueprint.route('/retrieve_sql', methods=['GET', 'POST'])
@@ -128,10 +129,10 @@ def retrieve():
             data="none"
         )
     ret = dict(
-            status=0,
-            message="success",
-            data=str(msg)
-        )
+        status=0,
+        message="success",
+        data=str(msg)
+    )
     return str(ret)
 
 

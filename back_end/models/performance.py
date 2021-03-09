@@ -12,6 +12,8 @@ class Performance(db.Model):
     value = db.Column(db.Integer, comment="绩效数值，整数型")
     description = db.Column(db.Text, comment="绩效描述")
     registerdate = db.Column(db.DateTime, default=datetime.now, comment="绩效等级日期")
+    department = db.Column(db.String(255), comment="员工部门")
+    post = db.Column(db.String(255), comment="职位信息")
 
     name_register = dict(
         performance_id=performance_id,
@@ -20,27 +22,31 @@ class Performance(db.Model):
         hr_id=hr_id,
         value=value,
         description=description,
-        registerdate=registerdate
+        registerdate=registerdate,
+        department=department,
+        post=post
     )
 
     @staticmethod
     def get_obj(namelist):
         obj_list = []
         for name in namelist:
-            obj = Applylist.name_register.get(name, 0)
+            obj = Performance.name_register.get(name, 0)
             if obj == 0:
                 raise Exception("column name not found: " + name)
             obj_list.append(obj)
         return obj_list
 
     def __init__(self, corporation_id, user_id, hr_id, value=0,
-                 description="", registerdate=datetime.now):
+                 description="", registerdate=datetime.now, department="", post=""):
         self.corporation_id = corporation_id
         self.user_id = user_id
         self.hr_id = hr_id
         self.value = value
         self.description = description
         self.registerdate = registerdate
+        self.department = department
+        self.post = post
 
     def save(self):
         db.session.add(self)

@@ -5,6 +5,15 @@ from flaskapp.create_flask import app
 def page_not_found(e):
     return dict(
             status=0,
-            message="url not found, please check your address",
+            message=str(e),
+            data="none"
+        )
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return dict(
+            status=0,
+            message=str(e),
             data="none"
         )
