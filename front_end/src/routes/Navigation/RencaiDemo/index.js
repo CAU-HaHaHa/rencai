@@ -8,7 +8,7 @@ import axios from 'axios'
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'YYYY-MM-DD';
 
 export default class RencaiDemo extends React.Component {
 
@@ -20,7 +20,6 @@ export default class RencaiDemo extends React.Component {
         dataSpecific: [],
         searchdepartment: "",
         searchposttype: "",
-        searchregisterdate: "",
         searchnumber: "",
         detailRow: {},
         columns: [
@@ -35,14 +34,14 @@ export default class RencaiDemo extends React.Component {
             key: 'posttype',
           },
           {
-            title: '发布日期',
-            dataIndex: 'registerdate',
-            key: 'registerdate',
-          },
-          {
             title: '拟录人数',
             dataIndex: 'number',
             key: 'number',
+          },
+          {
+            title: '发布日期',
+            dataIndex: 'registerdate',
+            key: 'registerdate',
           },
           {
             key: 'action',
@@ -84,10 +83,6 @@ export default class RencaiDemo extends React.Component {
           this.setState({
             searchposttype: event.target.value
           })
-        else if (flag == "registerdate")
-          this.setState({
-            searchregisterdate: event.target.value
-          })
           else if (flag == "number")
           this.setState({
             searchnumber: event.target.value
@@ -106,7 +101,6 @@ export default class RencaiDemo extends React.Component {
         for (const temp of this.state.dataSource) {
           if (temp.department == this.state.searchdepartment || this.state.searchdepartment == "") {
             if (temp.posttype == this.state.searchposttype || this.state.searchposttype == "")
-              if (temp.registerdate == this.state.searchregisterdate || this.state.searchregisterdate == "")
                 if (temp.number == this.state.searchnumber || this.state.searchnumber == "") {
                   console.log(temp)
                   testdata.push({
@@ -130,34 +124,30 @@ export default class RencaiDemo extends React.Component {
           {/* 导航 */}
           <CustomBreadcrumb arr={['人才招聘工作台', '备选人才']} />
           {/* 招募人搜索框 */}
-          <Card hoverable bordered={false} className='card-item' title="搜索">
+          <Card hoverable bordered={false} className='card-item'>
               <Form>
           <Row gutter={12}>
-            <Col span={4} key={1}>
+            <Col span={5} key={1}>
               <Form.Item name="department" label="部门">
               <Input placeholder="请输入部门" onChange={(event) => { this.inputChange(event, "department") }}/>
               </Form.Item>
             </Col>
-            <Col span={4} key={2}>
+            <Col span={5} key={2}>
               <Form.Item name="posttype" label="岗位">
                 <Input placeholder="请输入岗位" onChange={(event) => { this.inputChange(event, "posttype") }}/>
               </Form.Item>
-            </Col>
-            <Col span={5} key={3}>
-                <Form.Item name="registerdate" label="发布日期">
-                    <DatePicker  format={dateFormat}  onChange={(event) => { this.inputChange(event, "registerdate") }}/>
-                </Form.Item>
             </Col>
             <Col span={6} key={4}>
             <Form.Item name="number" label="拟录人数">
                 <Input placeholder="请输入拟录人数" onChange={(event) => { this.inputChange(event, "number") }}/>
               </Form.Item>
             </Col>
-            <Col span={2} style={{ textAlign: 'right', }}>
-              <Button type="primary" htmlType="submit" onClick={this.Search}> 查询 </Button>
+            <Col  style={{ textAlign: 'right', }}>
+
+              <Button  type="primary" htmlType="submit" onClick={this.Search}>  &nbsp; 查&nbsp;&nbsp;询 &nbsp;  </Button>
             </Col>
-            <Col span={2} style={{ textAlign: 'right', }}>
-              <Button type="primary" htmlType="submit" onClick={this.Clear}> 取消 </Button>
+            <Col  style={{ textAlign: 'right', }}>            
+              <Button  type="primary" htmlType="submit" onClick={this.Clear}>   &nbsp;取&nbsp;&nbsp;消 &nbsp;  </Button>
             </Col>
           </Row>
           </Form>
