@@ -1,31 +1,80 @@
 import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import TypingCard from '../../../components/TypingCard'
 import { List, Row, Col, Card, Space, Avatar } from 'antd';
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
+import moment from 'moment'
+import axios from "axios"
+
+axios.defaults.timeout = 30000;
+axios.defaults.baseURL = "http://45.76.99.155"
 
 export default class Reward extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
+        //初始化状态
         this.state = {
-            user_id: this.props.match.params.id,
+            user_id: '',
+            user_name: '',
+            department: '',
+            dutytype: '',
+            listData: [],
+            reward_count: 0,
+            punishment_count: 0
         };
+        //保存this指针，防止被覆盖
+        const _this = this
+        //发送get请求动态添加员工的基本信息
+        axios.get('/jiangcheng/search', {
+            params: {
+                id: _this.props.match.params.id
+            }
+        })
+            .then(function (response) {
+                _this.setState({
+                    user_id: response.data.data[0].user_id,
+                    user_name: response.data.data[0].user_name,
+                    department: response.data.data[0].department,
+                    dutytype: response.data.data[0].dutytype
+                })
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
+        // 发送get请求
+        axios.get('/reward/search', {
+            params: {
+                user_id: _this.props.match.params.id
+            }
+        })
+            .then(function (response) {
+                // 将拿到的奖惩数据放入list中
+                _this.setState({
+                    listData: response.data.message
+                })
+                // 遍历所有的数据，统计奖励和惩罚的数目
+                let reward_count = 0
+                let punishment_count = 0
+                for (let i = 0; i < response.data.message.length; i++) {
+                    if (response.data.message[i].rew_or_pun) {
+                        reward_count += 1;
+                    }
+                    else {
+                        punishment_count += 1;
+                    }
+                }
+                // 将统计结果传入state
+                _this.setState({
+                    reward_count: reward_count,
+                    punishment_count: punishment_count
+                })
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
 
     render() {
-        const listData = [];
-        for (let i = 0; i < 23; i++) {
-            listData.push({
-                type: `奖励`,
-                name: "学习优秀三等奖学金",
-                avatar: '../../../assets/img/惩罚.svg',
-                date: "2020-01-01", 
-                hr_id: "123456",
-                description:'为了贯彻我国有关来华留学生教育的方针政策，促进留学生综合素质的全面提高，培养高素质人才，根据国家和江苏省有关规定，特设立学习优秀奖学金。学习优秀奖学金评定主要依据三方面情况：基本素质、学习成绩和创新能力测评。基本素质测评分为：学习态度、身心健康、文明行为等三个方面。',
-            });
-        }
-
         return (
             <div>
                 {/* 顶部导航信息 */}
@@ -33,18 +82,18 @@ export default class Reward extends React.Component {
                 <Row gutter={[16, 16]}>
                     {/* 员工信息卡片 */}
                     <Col span={12}>
-                        <Card title="宋小花" bordered={false}>
+                        <Card title={this.state.user_name} bordered={false}>
                             <p>员工ID：{this.state.user_id}</p>
-                            <p>性别：女</p>
-                            <p>入职日期：2021-1-1</p>
+                            <p>员工部门：{this.state.department}</p>
+                            <p>员工职位：{this.state.dutytype}</p>
                         </Card>
                     </Col>
                     {/* 奖惩统计卡片 */}
                     <Col span={12}>
                         <Card title="奖惩统计" bordered={false}>
-                            <p>奖励总次数：12</p>
-                            <p>惩罚总次数：2</p>
-                            <p>奖励占比：85.7%</p>
+                            <p>奖励总次数：{this.state.reward_count}</p>
+                            <p>惩罚总次数：{this.state.punishment_count}</p>
+                            <p>奖励占比：{this.state.reward_count / (this.state.reward_count + this.state.punishment_count)}</p>
                         </Card>
                     </Col>
                     {/* 详细记录 */}
@@ -53,24 +102,21 @@ export default class Reward extends React.Component {
                             itemLayout="vertical"
                             size="large"
                             pagination={{
-                                onChange: page => {
-                                    console.log(page);
-                                },
                                 pageSize: 3,
                             }}
-                            dataSource={listData}
+                            dataSource={this.state.listData}
                             renderItem={item => (
-                                <List.Item key={item.title}>
+                                <List.Item key={item.reward_pun_name}>
                                     <List.Item.Meta
                                         // 奖励 / 惩罚 图标
-                                        avatar={<Avatar src={item.avatar} />}
+                                        avatar={<Avatar src={item.rew_or_pun ? require('./img/奖励.png') : require('./img/惩罚.png')} />}
                                         // 奖励类型
-                                        title={item.name}
+                                        title={item.reward_pun_name}
                                         description={
                                             // 奖励时间和hr_id
-                                            <Space> 
-                                                <text>{item.date}</text> 
-                                                <text>{"记录员编号："+item.hr_id}</text>  
+                                            <Space>
+                                                <text>{moment(item.registerdate).format("YYYY-MM-DD") }</text>
+                                                <text>{"记录员编号：" + item.hr_id}</text>
                                             </Space>}
                                     />
                                     {/* 详细描述 */}

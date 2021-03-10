@@ -20,8 +20,6 @@ class Person(db.Model):
     postcode = db.Column(db.String(255))
     workaddress = db.Column(db.String(255))
 
-<<<<<<< HEAD
-=======
     name_register = dict(
         user_id=user_id,
         username=username,
@@ -50,7 +48,6 @@ class Person(db.Model):
             obj_list.append(obj)
         return obj_list
 
->>>>>>> temp
     def __init__(self, username, password, name="", sex=0,
                  identitycard="000000000000000000",
                  tags="", edubackground="", briefintro="", tel="", email="",

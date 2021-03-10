@@ -3,10 +3,7 @@ from flaskapp.create_flask import app
 from models.person import Person
 import tools.valid as valid
 from mysql.create_db import db
-<<<<<<< HEAD
-=======
 
->>>>>>> temp
 """
 本程序包含以下路由：
 /person/create, post方法, 创建员工
@@ -16,17 +13,10 @@ from mysql.create_db import db
 /person/delete, get方法, 删除信息
 """
 
-<<<<<<< HEAD
-
-blue_print_name = "/person"
-person_blueprint = Blueprint(blue_print_name, __name__)
-
-=======
 blue_print_name = "/person"
 person_blueprint = Blueprint(blue_print_name, __name__)
 
 
->>>>>>> temp
 @person_blueprint.route('/create/', methods=['GET', 'POST'])
 def create():
     """
@@ -37,11 +27,7 @@ def create():
     if request.method == 'GET':
         return dict(
             status=0,
-<<<<<<< HEAD
-            message="method must be get",
-=======
             message="method must be post",
->>>>>>> temp
             data="none"
         )
     try:
@@ -87,16 +73,8 @@ def create():
 
         # 如果上面的检查有任意一项没有通过就返回注册页面,并提示响应的信息
         if not flag:
-<<<<<<< HEAD
-            return dict(
-                status=0,
-                message=msg,
-                data="none"
-            )
-=======
             raise Exception(msg)
 
->>>>>>> temp
         # 上面的验证全部通过后就开始创建新用户
         person = Person(username=username, password=username, name=name, sex=sex,
                         identitycard=identitycard, tags=tags, edubackground=edubackground,
@@ -117,16 +95,6 @@ def create():
             data="none"
         )
 
-<<<<<<< HEAD
-# 下面的函数正在测试
-@person_blueprint.route('/retrieve/all', methods=['GET', 'POST'])
-def insert():
-    try:
-        msg = db.session.query(Person.user_id, Person.name,).all()
-    except Exception as e:
-        msg = e
-    return str(msg)
-=======
 
 @person_blueprint.route('/create_random_data', methods=['GET', 'POST'])
 def create_random_data():
@@ -215,6 +183,5 @@ def retrieve():
         )
     return str(ret)
 
->>>>>>> temp
 
 app.register_blueprint(blueprint=person_blueprint, url_prefix=blue_print_name)

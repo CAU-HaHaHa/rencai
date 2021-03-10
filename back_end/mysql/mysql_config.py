@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> temp
 DIALECT = 'mysql'
 DRIVER = 'pymysql'
 USERNAME = 'root'

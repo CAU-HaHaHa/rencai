@@ -1,71 +1,92 @@
 import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card } from 'antd';
+import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card, Cascader, ConfigProvider } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
+import axios from "axios"
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const deptData = ['市场部', '研发部', '业务部', '综合部'];
-const dutyData = {
-  市场部: ['项目经理', '销售人员'],
-  研发部: ['前端开发', '后端开发', '技术中台'],
-  业务部: ['业务主管'],
-  综合部: ['后勤主管'],
-};
+axios.defaults.timeout = 30000;
+axios.defaults.baseURL = "http://45.76.99.155"
 
 // 搜索栏
-const AdvancedSearchForm = () => {
+const AdvancedSearchForm = (props) => {
 
   // 搜索表单
   const [form] = Form.useForm();
 
-  // 职责列表
-  const [duties, setDuties] = React.useState(dutyData[deptData[0]]);
-  // 职责
-  const [secondDuty, setsecondDuty] = React.useState(dutyData[deptData[0]][0]);
-
-  // 选择部门
-  const handleDeptChange = value => {
-    setDuties(dutyData[value]);
-    setsecondDuty(dutyData[value][0]);
-  };
-
-  // 选择职能
-  const onSecondDutyChange = value => {
-    setsecondDuty(value);
-    form
-  };
-
-  const onFinish = (values) => {
-
-    let request_string = "http://http://127.0.0.1:5000/jiangcheng/search?"
-    request_string = request_string + "crop_id=&id=" + values.ID + "&name=" + values.name
-    request_string = request_string + "&dep=" + values.deptment + "&duty="+ values.duty
-    request_string = request_string + "&page_size=10" + "&page_num=1"
-    console.log('Received values of form: ', request_string);
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", request_string, true)
-    xhr.send()
-
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-        if (xhr.status == 200) {
-          //你当然可以用其他方法编码你的返回信息，但是对于js的世界来说，还有什么比json更方便呢？
-          let gotServices = JSON.parse(xhr.responseText)
-          //好了，我们获得了service列表，使用setState方法覆盖当前元素的services数据
-          this.setState({
-            services: gotServices
-          })
+  // 部门数据
+  const options = [
+    {
+      value: '市场部',
+      label: '市场部',
+      children: [
+        {
+          value: '项目经理',
+          label: '项目经理',
+        },
+        {
+          value: '销售人员',
+          label: '销售人员',
         }
-      } else {
-        alert("ajax失败了")
-      }
+      ],
+    },
+    {
+      value: '研发部',
+      label: '研发部',
+      children: [
+        {
+          value: '前端开发',
+          label: '前端开发',
+        },
+        {
+          value: '后端开发',
+          label: '后端开发'
+        },
+        {
+          value: '技术中台',
+          label: '技术中台'
+        }
+      ],
+    },
+    {
+      value: '业务部',
+      label: '业务部',
+      children: [
+        {
+          value: '业务主管',
+          label: '业务主管',
+        },
+      ],
+    },
+    {
+      value: '综合部',
+      label: '综合部',
+      children: [
+        {
+          value: '后勤主管',
+          label: '后勤主管',
+        },
+      ],
     }
+  ];
 
-    console.log('Received values of form: ', values);
+  // 两个属性
+  let dept = '';
+  let duty = '';
+
+  // 选择栏保存事件
+  function onChange(value) {
+    dept = value[0];
+    duty = value[1];
+  }
+
+  // 点击提交搜索表单事件
+  const onFinish = (values) => {
+    // get请求
+    props.SetTableData(values.ID, values.name, dept, duty)
   };
 
   return (
@@ -77,35 +98,22 @@ const AdvancedSearchForm = () => {
     >
       <Row gutter={12}>
         <Col span={5} key={1}>
-          <Form.Item name="ID" label="员工ID">
+          <Form.Item name="ID" label="员工ID" defaults="">
             <Input placeholder="请输入员工ID" />
           </Form.Item>
         </Col>
         <Col span={5} key={2}>
-          <Form.Item name="name" label="姓名">
+          <Form.Item name="name" label="姓名" defaults="">
             <Input placeholder="请输入员工姓名" />
           </Form.Item>
         </Col>
-        <Col span={4} key={3}>
-          <Form.Item name="department" label="员工部门">
-            <Select defaultValue={deptData[0]} onChange={handleDeptChange}>
-              {deptData.map(deptment => (
-                <Option key={deptment}>{deptment}</Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col span={4} key={4}>
-          <Form.Item name="dutytype" label="员工职位">
-            <Select value={secondDuty} onChange={onSecondDutyChange}>
-              {duties.map(dutytype => (
-                <Option key={dutytype}>{dutytype}</Option>
-              ))}
-            </Select>
+        <Col span={8} key={3}>
+          <Form.Item name="depandduty" label="员工部门/职位">
+            <Cascader options={options} onChange={onChange} />,
           </Form.Item>
         </Col>
         <Col span={4} style={{ textAlign: 'right', }}>
-          <Button type="primary" htmlType="submit"> Search </Button>
+          <Button type="primary" htmlType="submit"> 搜索 </Button>
           {/* 鼠标点击清除事件 */}
           <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}>
             清除
@@ -118,97 +126,149 @@ const AdvancedSearchForm = () => {
 
 export default class Reward extends React.Component {
 
-  state = {
-    visible: false,
-    confirmLoading: false,
-    modalText: 'Content of the modal',
-    user_id: '',
-    user_name: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,         // 模态框可见？
+      user_id: '',            // 
+      user_name: '',          // 
+      department: '',
+      dutytype: '',
+      tabledata: [],          // 表格数据
+      tableloading: false     // 表格的数据是否加载
+    }
+    this.SetTableData();
+    this.form = React.createRef();
+  }
 
+  // 设置模态框可见
   setVisible = (e) => {
     this.setState({
       visible: e
     });
   }
 
-  setModalText = (e) => {
-    this.setState({
-      modalText: e
-    })
-  }
-
-  setConfirmLoading = (e) => {
-    this.setState({
-      confirmLoading: e
-    })
-  }
-
+  // 展示模态框
   showModal = () => {
     this.setVisible(true);
   };
 
-  ClickAddHandle = (e) => {
-    this.setState({
-      user_id: e.ID,
-      user_name: e.name
-    });
-    this.setVisible(true);
+  // 添加奖惩记录
+  AddRewardAPI = (value) => {
+    var params = new URLSearchParams();
+    params.append('corp_id', 1);
+    params.append('user_id', this.state.user_id);
+    params.append('hr_id', 1);
+    params.append('user_name', this.state.user_name);
+    params.append('department', this.state.department)
+    params.append('dutytype', this.state.dutytype)
+    var rewordtype = (value.rewardTpye == "reward" ? 1 : 0);
+    params.append('rewardTpye', rewordtype);
+    params.append('rewardName', value.rewardName);
+    var rewardTime = value.rewardTime.format('YYYY-MM-DD');
+    params.append('description', value.detial);
+    params.append('rewardTime', rewardTime);
+    console.log(axios.post("/reward/add", params));
   }
 
+  // 点击模态框的提交按钮
   handleOk = () => {
-    this.setModalText('The modal will be closed after two seconds');
-    this.setConfirmLoading(true);
+    this.form.current.validateFields().then(value => this.AddRewardAPI(value));
     setTimeout(() => {
       this.setVisible(false);
-      this.setConfirmLoading(false);
-    }, 2000);
+      this.form.current.resetFields();
+    }, 1000);
   };
 
+  // 点击模态框的取消按钮
   handleCancel = () => {
     this.setVisible(false);
   };
 
+  // 点击添加按钮
+  ClickAddHandle = (e) => {
+    this.setState({
+      user_id: e.user_id,
+      user_name: e.user_name,
+      department: e.department,
+      dutytype: e.dutytype
+    });
+    this.setVisible(true);
+  }
+
+
+  // 点击表格每列数据的查看按钮
   ClickViewHandle = (type) => {
-    this.props.history.push({ pathname: './jiangcheng/view/' + type.ID })
+    this.props.history.push({ pathname: './jiangcheng/view/' + type.user_id})
+  }
+
+  // 从里面搜索数据
+  SetTableData = (id, name, dept, duty) => {
+    // 防止undifine
+    id = (id ? id : '')
+    name = (name ? name : '')
+    dept = (dept ? dept : '')
+    duty = (duty ? duty : '')
+    console.log(id, name, dept, duty)
+
+    // 查询前表格显示加载中。。。
+    this.setState({
+      tableloading: true
+    })
+
+    // 保存this指针，防止箭头函数将this覆盖
+    const _this = this
+
+    // 发送get请求，从后端读取数据
+    axios.get('/jiangcheng/search', {
+      params: {
+        id: id,
+        name: name,
+        dept: dept,
+        duty: duty,
+      }
+    })
+      .then(function (response) {
+        console.log(response.data.data)
+        _this.setState({
+          tabledata: response.data.data
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    // 查询后取消加载中标识
+    this.setState({
+      tableloading: false
+    })
   }
 
   render() {
-    const data = []
-    for (let i = 0; i < 23; i++) {
-      data.push({
-        key: i,
-        ID: "123456789  ",
-        name: '宋小花',
-        sex: '女',
-        date: '2019-01-01',
-      })
-    }
-
     // 列数据，包含两个操作按钮
     const columns = [
       {
         title: '员工ID',
-        dataIndex: 'ID',
-        key: 'id',
+        dataIndex: 'user_id',
+        key: 'user_id',
         width: '20%',
       },
       {
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
+        title: '员工姓名',
+        dataIndex: 'user_name',
+        key: 'user_name',
         width: '20%',
       },
       {
-        title: '性别',
-        dataIndex: 'sex',
-        key: 'sex',
+        title: '员工部门',
+        dataIndex: 'department',
+        key: 'department',
         width: '20%'
       },
       {
-        title: '入职日期',
-        dataIndex: 'date',
-        key: 'date',
+        title: '员工职位',
+        dataIndex: 'dutytype',
+        key: 'dutytype',
         width: '20%',
       },
       {
@@ -237,22 +297,31 @@ export default class Reward extends React.Component {
         <CustomBreadcrumb arr={['员工档案管理', '员工奖惩']} />
         {/* 高级搜索框 */}
         <Card hoverable bordered={false} className='card-item' title="搜索栏">
-          <AdvancedSearchForm />
+          <AdvancedSearchForm SetTableData={this.SetTableData} />
         </Card>
         {/* 展示数据的表格 */}
-        <Table columns={columns} dataSource={data} pagination={{ position: 'bottomCenter' }} />;
+        <Table columns={columns} dataSource={this.state.tabledata} loading={this.state.tableloading} />;
         {/* 增添模态框 */}
         <Modal
           title="添加奖惩记录"
           visible={this.state.visible}
-          onOk={this.handleOk}
           confirmLoading={this.state.confirmLoading}
-          onCancel={this.handleCancel}
+          onCancel={
+            () => {
+              this.setState({ visible: false });
+            }
+          }
+          footer={[
+            <Button type="primary" onClick={this.handleOk} key={'submit'}>
+              提交
+            </Button>
+          ]}
         >
           <Form
             labelCol={{ span: 4, }}
             wrapperCol={{ span: 16, }}
             layout="horizontal"
+            ref={this.form}
           >
             <Row >
               <Col span={12}>
@@ -270,19 +339,19 @@ export default class Reward extends React.Component {
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="奖惩类型">
+            <Form.Item label="奖惩类型" name='rewardTpye'>
               <Select placeholder="请选择奖惩类型">
                 <Option value="Reward">奖励</Option>
                 <Option value="Punishment">惩罚</Option>
               </Select>
             </Form.Item>
-            <Form.Item label="奖惩名称">
+            <Form.Item label="奖惩名称" name='rewardName'>
               <Input placeholder="请输入奖惩名称" />
             </Form.Item>
-            <Form.Item label="奖惩时间">
-              <DatePicker />
+            <Form.Item label="奖惩时间" name="rewardTime">
+              <DatePicker format="YYYY-MM-DD" />
             </Form.Item>
-            <Form.Item label="详细说明">
+            <Form.Item label="详细说明" name='detial'>
               <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />
             </Form.Item>
           </Form>
@@ -290,6 +359,5 @@ export default class Reward extends React.Component {
       </div>
     )
   }
-
 }
 
