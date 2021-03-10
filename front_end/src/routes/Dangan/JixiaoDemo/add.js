@@ -21,10 +21,9 @@ class JixiaoAddDemo extends React.Component {
             dataSelect : [],
             dataSourcep : [],
             columns: [{
-                    title: 'ID',
-                    dataIndex: 'id',
-                    key: 'id',
-                    render: text => <a>{text}</a>
+                    title: '用户ID',
+                    dataIndex: 'user_id',
+                    key: 'user_id'
                 },{
                     title: '评价HR',
                     dataIndex: 'hr_id',
@@ -34,14 +33,28 @@ class JixiaoAddDemo extends React.Component {
                     dataIndex: 'value',
                     key: 'value'
                 },{
-                    title: '评价时间',
-                    dataIndex: 'time',
-                    key: 'time'
+                    title: '部门',
+                    dataIndex: 'department',
+                    key: 'department',
+                },{
+                    title: '职位',
+                    dataIndex: 'post',
+                    key: 'post',
+                },{
+                    title: '记录时间',
+                    dataIndex: 'registerdate',
+                    key: 'registerdate',
                 }]
+
         }
         this.Searchjixiao = this.Searchjixiao.bind(this);
+        this.handleclickbtn = this.handleclickbtn.bind(this);
     }
 
+  //点击返回按钮事件——点击跳转
+  handleclickbtn(){
+    this.props.history.push({pathname:'/home/dangan/jixiao'});
+  }
 
   Searchjixiao(){
     // this.setState({
@@ -55,15 +68,17 @@ class JixiaoAddDemo extends React.Component {
     {
         console.log(6666666)
         console.log(temp.id)
-        if (temp.id == this.props.match.params.id) {
+        if (temp.user_id == this.props.match.params.id) {
         //   console.log(temp)
         //   console.log(this.props.match.params.id)
         testdata.push({
-            id: temp.id,
             hr_id: temp.hr_id,
+            user_id: temp.user_id,
+            department: temp.department,
             value: temp.value,
-            time: temp.time,
-            reason: temp.reason
+            post: temp.post,
+            description: temp.description,
+            registerdate:temp.registerdate
           })
         }
     }
@@ -76,10 +91,11 @@ class JixiaoAddDemo extends React.Component {
    //api
     componentDidMount() {
         const _this = this;
-        axios.get('https://60418bef7f50e000173aa942.mockapi.io/api/vi/dataSourcep')
+        //https://60418bef7f50e000173aa942.mockapi.io/api/vi/dataSourcep
+        axios.get('http://45.76.99.155/dangan/performance/dataSource')
         .then(function(response) {
             _this.setState({
-                dataSourcep: response.data,
+                dataSourcep: response.data.data,
                 isLoaded: true
             });
         });
@@ -98,11 +114,12 @@ class JixiaoAddDemo extends React.Component {
             <div>
                 <CustomBreadcrumb arr={['员工档案管理','绩效评价' ,'绩效详情查看']}/>
                  <Button type="primary" onClick={this.Searchjixiao}>点击查询</Button> 
+                 <Button type="primary" onClick={this.handleclickbtn}>点击返回</Button> 
                  <Table
                   columns={columns}
                   expandable={{
-                    expandedRowRender: record => <p style={{ margin: 0 }}>{record.reason}</p>,
-                    rowExpandable: record => record.id !== 'Not Expandable',
+                    expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                    rowExpandable: record => record.user_id!== 'Not Expandable',
                     }}
                   dataSource={this.state.dataSelect}
                  ></Table>  
@@ -112,19 +129,3 @@ class JixiaoAddDemo extends React.Component {
 }
 export default JixiaoAddDemo;
 
-
-                {/* <Modal title="绩效详情"
-                        visible={this.state.modalCheckInfoVisible}
-                        wrapClassName="vertical-center-modal"
-                        onCancel={()=>{
-                        this. setState({modalCheckInfoVisible: false})
-                        }} >
-                    <Space direction="vertical" size={12}>
-                    <span>填写时间：</span><DatePicker showTime onChange={onChange} onOk={onOk}/>
-                    </Space>
-                    <br />
-                    <br />
-                    <span>绩效评分：</span><InputNumber min={1} max={10} defaultValue={3} onChange={onChange} />
-                    <br />
-                    <span>绩效描述：</span><TextArea rows={4} />
-                </Modal>  */}

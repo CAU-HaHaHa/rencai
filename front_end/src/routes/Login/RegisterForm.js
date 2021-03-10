@@ -37,7 +37,7 @@ class RegisterForm extends React.Component {
           password: values.registerPassword
         }]
         localStorage.setItem('users', JSON.stringify(obj))
-        this.props.appStore.initUsers()
+        // this.props.appStore.initUsers()
         message.success('注册成功')
       }
     })
