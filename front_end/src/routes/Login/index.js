@@ -9,6 +9,7 @@ import {preloadingImages} from '../../utils/utils'
 import 'animate.css'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
+import StaffLoginForm from './staffLogin'
 
 const url = 'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
 const imgs = [
@@ -49,7 +50,7 @@ class Login extends React.Component {
     this.setState({
       loading:true
     })
-    this.props.appStore.initUsers()
+    // this.props.appStore.initUsers()
     this.loadImageAsync(url).then(url=>{
       this.setState({
         loading:false,
@@ -103,8 +104,8 @@ class Login extends React.Component {
                 <LoginForm
                   className={showBox === 'login' ? 'box showBox' : 'box hiddenBox'}
                   switchShowBox={this.switchShowBox}/>
-                <RegisterForm
-                  className={showBox === 'register' ? 'box showBox' : 'box hiddenBox'}
+                <StaffLoginForm
+                  className={showBox === 'stafflogin' ? 'box showBox' : 'box hiddenBox'}
                   switchShowBox={this.switchShowBox}/>
               </div>
             </div>

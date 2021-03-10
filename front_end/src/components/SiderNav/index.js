@@ -1,11 +1,14 @@
 import React from 'react'
 import CustomMenu from "../CustomMenu/index";
+import { withRouter } from 'react-router-dom'
+import { inject, observer } from 'mobx-react/index'
+import { getCookie } from '../../utils/Session'
 
-const menus = [
+const menus1 = [
   {
-    title: '首页',
+    title: 'HR首页',
     icon: 'home',
-    key: '/home'
+    key: '/homeHr'
   },
   {
     title: '员工档案管理',
@@ -44,42 +47,6 @@ const menus = [
       {key: '/home/entry/upload', title: '上传', icon: ''},
     ]
   },
-  // {
-  //   title: '显示组件',
-  //   icon: 'desktop',
-  //   key: '/home/display',
-  //   subs: [
-  //     {key: '/home/display/carousel', title: '轮播图', icon: ''},
-  //     {key: '/home/display/collapse', title: '折叠面板', icon: ''},
-  //     {key: '/home/display/list', title: '列表', icon: ''},
-  //     {key: '/home/display/table', title: '表格', icon: ''},
-  //     {key: '/home/display/tabs', title: '标签页', icon: '',},
-  //   ]
-  // },
-  // {
-  //   title: '反馈组件',
-  //   icon: 'message',
-  //   key: '/home/feedback',
-  //   subs: [
-  //     {key: '/home/feedback/modal', title: '对话框', icon: '',},
-  //     {key: '/home/feedback/notification', title: '通知提醒框', icon: ''},
-  //     {key: '/home/feedback/spin', title: '加载中', icon: '',}
-  //   ]
-  // },
-  // {
-  //   title: '其它',
-  //   icon: 'bulb',
-  //   key: '/home/other',
-  //   subs:[
-  //     {key: '/home/other/animation', title: '动画', icon: '',},
-  //     {key: '/home/other/gallery', title: '画廊', icon: '',},
-  //     {key:'/home/other/draft',title:'富文本',icon:''},
-  //     {key:'/home/other/chart',title:'图表',icon:''},
-  //     {key:'/home/other/loading',title:'加载动画',icon:''},
-  //     {key:'/home/other/404',title:'404',icon:''},
-  //     {key:'/home/other/springText',title:'弹性文字',icon:''},
-  //   ]
-  // },
   {
     title: '关于',
     icon: 'info-circle-o',
@@ -87,16 +54,42 @@ const menus = [
   }
 ]
 
+const menus2 = [
+  {
+    title: '员工首页',
+    icon: 'home',
+    key: '/homeStaff'
+  },
+  {
+    title: 'test',
+    icon: 'laptop',
+    key: '/home/test',
+    subs: [
+      {key: '/home/test/test1', title: 'test1', icon: '',},
+      {key: '/home/test/test2', title: 'test2', icon: '',},
+    ]
+  },
+]
 
+@withRouter @inject('appStore') @observer
 class SiderNav extends React.Component {
   render() {
-
-    return (
-      <div style={{height: '100vh',overflowY:'scroll'}}>
-        <div style={styles.logo}></div>
-        <CustomMenu menus={menus}/>
-      </div>
-    )
+    if(getCookie()[2]=="1"){
+      return (
+        <div style={{height: '100vh',overflowY:'scroll'}}>
+          <div style={styles.logo}></div>
+          <CustomMenu menus={menus1}/>
+        </div>
+      )
+    }
+    else{
+      return (
+        <div style={{height: '100vh',overflowY:'scroll'}}>
+          <div style={styles.logo}></div>
+          <CustomMenu menus={menus2}/>
+        </div>
+      )
+    }
   }
 }
 

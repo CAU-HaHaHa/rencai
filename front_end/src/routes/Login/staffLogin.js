@@ -4,17 +4,17 @@ import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Row, Col, Select,Modal, Button  } from 'antd';
+import { Input, Row, Col,Modal, Button, Form as Form4, Radio   } from 'antd';
 import PromptBox from '../../components/PromptBox'
 import loginRequest from '../../api/loginRequest'
 import axios from "axios";
 
 @withRouter @inject('appStore') @observer @Form.create()
-class LoginForm extends React.Component {
+class StaffLoginForm extends React.Component {
   state = {
     focusItem: -1,   //保存当前聚焦的input
     code: '',         //验证码
-    usertype: "1"    // 用户类型
+    usertype: "2"    // 用户类型
   }
 
   componentDidMount () {
@@ -137,23 +137,16 @@ class LoginForm extends React.Component {
     })
   }
   register = () => {
-    this.props.switchShowBox('stafflogin')
+    this.props.switchShowBox('login')
     setTimeout(() => this.props.form.resetFields(), 500)
   }
-
-  // handleChange = (value) =>{
-  //   this.setState({
-  //     usertype: value
-  //   })
-  // }
 
   render () {
     const {getFieldDecorator, getFieldError} = this.props.form
     const {focusItem, code} = this.state
-    const { Option } = Select;
     return (
       <div className={this.props.className}>
-        <h3 className='title'>HR登录</h3>
+        <h3 className='title'>员工登录</h3>
         <Form onSubmit={this.loginSubmit}>
           <Form.Item help={getFieldError('username') &&
           <PromptBox info={getFieldError('username')} width={calculateWidth(getFieldError('username'))}/>}>
@@ -214,20 +207,14 @@ class LoginForm extends React.Component {
               </Row>
             )}
           </Form.Item>
-          {/* <Select defaultValue="1" className='selectBtn' style={{ width: 120, color: "#4FA1D9" }} onChange={this.handleChange}>
-            <Option value="1">HR</Option>
-            <Option value="2">员工</Option>
-          </Select> */}
           <div className='bottom'>
             <input className='loginBtn' type="submit" value='登录'/>
-            <span className='registerBtn' onClick={this.register}>转员工登录</span>
+            <span className='registerBtn' onClick={this.register}>转HR登录</span>
           </div>
         </Form>
         <div className='bottom'>
-          <App1 />
-          <App2 />
+            <CollectionsPage />
         </div>
-        
         
         {/* <div className='footer'>
           <div>欢迎登陆后台管理系统</div>
@@ -237,51 +224,88 @@ class LoginForm extends React.Component {
   }
 }
 
-const App1 = () => {
-  const [visible, setVisible] = useState(false);
-  return (
-    <div>
-      <Button type="primary" onClick={() => setVisible(true)}>
-        公司注册
-      </Button>
-      <Modal
-        title="Modal 1000px width"
-        centered
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
-    </div>
-  );
-};
+const CollectionsPage = () => {
+    const [visible, setVisible] = useState(false);
+  
+    const onCreate = (values) => {
+      console.log('Received values of form: ', values);
+      setVisible(false);
+    };
+  
+    return (
+      <div>
+        <Button type="primary" onClick={() => { setVisible(true);}}>
+          员工注册
+        </Button>
+        <CollectionCreateForm
+          visible={visible}
+          onCreate={onCreate}
+          onCancel={() => { setVisible(false);}}
+        />  
+      </div>
+    );
+  };
 
-const App2 = () => {
-  const [visible, setVisible] = useState(false);
-  return (
-    <div>
-      <Button type="primary" onClick={() => setVisible(true)}>
-        HR注册
-      </Button>
+  const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
+    const [form] = Form4.useForm();
+    return (
       <Modal
-        title="Modal 1000px width"
-        centered
         visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
+        title="员工注册"
+        okText="Create"
+        cancelText="Cancel"
+        onCancel={onCancel}
+        onOk={() => {
+          form.validateFields().then((values) => {
+              form.resetFields();
+              onCreate(values);
+            }).catch((info) => {
+              console.log('Validate Failed:', info);
+            });
+        }}
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        <Form4 form={form} layout="vertical" name="form_in_modal"
+          initialValues={{
+            modifier: 'public',
+          }}
+        >
+          <Form4.Item name="username" label="用户名"
+            rules={[{
+                required: true,
+                message: 'Please input the username!',
+              },]}>
+            <Input />
+          </Form4.Item>
+          <Form4.Item name="password" label="密码" rules={[{
+                required: true,
+                message: 'Please input the password!',
+              },]}>
+            <Input type="textarea" />
+          </Form4.Item>
+          <Form4.Item name="affirmpassword" label="再次输入密码" rules={[{
+                required: true,
+                message: 'Please input the password again!',
+              },]}>
+            <Input type="textarea" />
+          </Form4.Item>
+          <Form4.Item name="telephone" label="电话" rules={[{
+                required: true,
+                message: 'Please input the telephone!',
+              },]}>
+            <Input type="textarea" />
+          </Form4.Item>
+          <Form4.Item name="email" label="邮箱" rules={[{
+                required: true,
+                message: 'Please input the email!',
+              },]}>
+            <Input type="textarea" />
+          </Form4.Item>
+        </Form4>
       </Modal>
-    </div>
-  );
-};
+    );
+  };
+
+
 
 const styles = {
   focus: {
@@ -290,4 +314,4 @@ const styles = {
   },
 }
 
-export default LoginForm
+export default StaffLoginForm
