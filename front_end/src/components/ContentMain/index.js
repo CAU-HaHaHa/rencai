@@ -14,10 +14,6 @@ const ListDemo = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/inde
 const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/index'))
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
-<<<<<<< HEAD
-
-=======
->>>>>>> d372eb49e799bb61aa871c2e95595b29bc64d5ea
 
 //导航组件Demo
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
@@ -75,7 +71,6 @@ class ContentMain extends React.Component {
   }
 
   render () {
-<<<<<<< HEAD
     return (
       <div style={{padding: 16, position: 'relative'}}>
         <Switch>
@@ -121,55 +116,6 @@ class ContentMain extends React.Component {
         </Switch>
       </div>
     )
-=======
-    if(this.props.appStore.loginUser.usertype==null){
-      this.refresh();
-    }
-    if(this.props.appStore.loginUser.usertype=="1"){
-      return (
-        <div style={{padding: 16, position: 'relative'}}>
-          <Switch>
-            <PrivateRoute exact path='/homeHr' component={Home}/>
-
-            <PrivateRoute exact path='/home/dangan/list' component={ListDemo}/>
-            <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
-            <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
-            <PrivateRoute exact path='/home/dangan/jiangcheng/view' component={JiangchengviweDemo}/>
-
-            <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
-            <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
-            <PrivateRoute exact path='/home/navigation/steps' component={StepsDemo}/>
-
-            <PrivateRoute exact path='/home/entry/form/basic-form' component={FormDemo1}/>
-            <PrivateRoute exact path='/home/entry/form/step-form' component={FormDemo2}/>
-            <PrivateRoute exact path='/home/entry/upload' component={UploadDemo}/>
-
-            {/* new */}
-            <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
-
-            <PrivateRoute exact path='/home/about' component={About}/>
-
-            <Redirect exact from='/' to='/homeHr' component={Home}/>
-          </Switch>
-        </div>
-      )
-    }
-    else{
-      return (
-        <div style={{padding: 16, position: 'relative'}}>
-          <Switch>
-            <PrivateRoute exact path='/homeStaff' component={Home}/>
-
-            <PrivateRoute exact path='/home/test/test1' component={Test1}/>
-            <PrivateRoute exact path='/home/test/test2' component={Test2}/>
-
-            <Redirect exact from='/' to='/homeStaff' component={Home}/>
-          </Switch>
-        </div>
-      )
-
-    }
->>>>>>> d372eb49e799bb61aa871c2e95595b29bc64d5ea
   }
 }
 
