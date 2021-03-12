@@ -11,7 +11,9 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD';
 
 export default class RencaiDemo extends React.Component {
-
+    constructor(props) {
+        super(props);    
+    }
     state = {
         searchContent: "",
         size: 'default',
@@ -46,10 +48,7 @@ export default class RencaiDemo extends React.Component {
           {
             key: 'action',
             render: (row) => (
-              // 这里OnClick中不加()=>会导致无限循环，具体原因可查阅错误：
-              // This can happen when a component repeatedly calls setState insdepartmente componentWillUpdate or componentDdepartmentUpdate. 
-              // React limits the number of nested updates to prevent infinite loops.
-               <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle} shape="round">
+               <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle.bind(this,row.recruitpost_id,row.department,row.posttype)} shape="round">
                 查看投递
                </Button>)
           }
@@ -57,7 +56,7 @@ export default class RencaiDemo extends React.Component {
       }
     
 
-      componentWillMount() {
+      componentDidMount() {
         const _this = this;
         axios.get('http://45.76.99.155/rencai/show?corporation_id=1')
           .then(function (response) {
@@ -69,8 +68,8 @@ export default class RencaiDemo extends React.Component {
           });
       }
 
-    ClickViewHandle = () => {
-      this.props.history.push('./rencai/view')
+    ClickViewHandle = (recruitpost_id,department_name,posttype_name) => { 
+      this.props.history.push({ pathname:'./rencai/view', state:{id:recruitpost_id,department:department_name,posttype:posttype_name}})
     }
     
     inputChange = (event, flag) => {
@@ -98,7 +97,8 @@ export default class RencaiDemo extends React.Component {
       }
       Search = (event) => {
         let testdata = []
-        for (const temp of this.state.dataSource) {
+        for (const temp of this.state.originaldataSource) {
+          console.log("in",temp.name)
           if (temp.department == this.state.searchdepartment || this.state.searchdepartment == "") {
             if (temp.posttype == this.state.searchposttype || this.state.searchposttype == "")
                 if (temp.number == this.state.searchnumber || this.state.searchnumber == "") {
