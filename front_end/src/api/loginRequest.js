@@ -1,6 +1,44 @@
 import axios from "axios";
 
-export default async function loginRequest  (
+export async function hrRegister(
+    name, username, password, realName, sex, idCard
+) {
+    var params = new URLSearchParams();
+    params.append('name', name);
+    params.append('username', username);
+    params.append('password', password);
+    params.append('realName', realName);
+    params.append('sex', sex);
+    params.append('idCard', idCard);
+    return axios.post("http://45.76.99.155/hr/create", params);
+}
+
+export async function corporationRegister(
+    name, registeredCapital, legalRepresentative, telephone, email, webAddress, address
+) {
+    var params = new URLSearchParams();
+    params.append('name', name);
+    params.append('registeredCapital', registeredCapital);
+    params.append('legalRepresentative', legalRepresentative);
+    params.append('telephone', telephone);
+    params.append('email', email);
+    params.append('webAddress', webAddress);
+    params.append('address', address);
+    return axios.post("http://45.76.99.155/corporation/create", params);
+}
+
+export async function staffRegister(
+    username, password, telephone, email
+) {
+    var params = new URLSearchParams();
+    params.append('username', username);
+    params.append('password', password);
+    params.append('telephone', telephone);
+    params.append('email', email);
+    return axios.post("http://45.76.99.155/person/create", params);
+}
+
+export async function loginRequest  (
 	Username, Password, Usertype
 ){
     var params = new URLSearchParams();

@@ -4,7 +4,7 @@ import LoadableComponent from '../../utils/LoadableComponent'
 import PrivateRoute from '../PrivateRoute'
 import { inject, observer } from 'mobx-react/index'
 import { getCookie } from '../../utils/Session'
-import loginRequest from '../../api/loginRequest'
+import {loginRequest} from '../../api/loginRequest'
 import axios from "axios";
 
 const Home = LoadableComponent(()=>import('../../routes/Home/index'))  //参数一定要是函数，否则不会懒加载，只会代码拆分
