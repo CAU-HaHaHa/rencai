@@ -49,15 +49,16 @@ class Corporation(db.Model):
             obj_list.append(obj)
         return obj_list
 
-    def __init__(self, corporation_id, name, registeredcapital=0, legalrepresentative="",
-                 registrationdate=datetime.now, tel="", email="", website="", structure="",
+    def __init__(self, name, registeredcapital=0, legalrepresentative="",
+                 registrationdate=0, tel="", email="", website="", structure="",
                  location="", requirementinfo="", otherinfo="", is_register=0,
                  is_delete=0):
-        self.corporation_id = corporation_id
         self.name = name
         self.registeredcapital = registeredcapital
         self.legalrepresentative = legalrepresentative
-        self.registrationdate = registrationdate
+        if registrationdate == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.registrationdate = create_time
         self.tel = tel
         self.email = email
         self.website = website

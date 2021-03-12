@@ -18,7 +18,7 @@ class Sendcheck:
         '''
         str_list = [random.choice(string.digits + string.ascii_letters) for i in range(230)]
         random_str = ''.join(str_list)
-        link = config["host_ip"] + ":" + config["host_port"] + "/check/personemail?valid=" + random_str
+        link = "http://" + config["host_ip"] + "/check/personemail?valid=" + random_str
         self.imgbody = self.imgbody + link
         self.smtpserver = "smtp.qq.com"
         self.smtpport = 465

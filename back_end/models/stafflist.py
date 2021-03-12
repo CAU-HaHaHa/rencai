@@ -46,7 +46,7 @@ class Stafflist(db.Model):
         return obj_list
 
     def __init__(self, corporation_id, user_id, hr_id, user_or_hr="", user_name="",
-                 transferreason="", lastcorporation_id=0, hiredate=datetime.now,
+                 transferreason="", lastcorporation_id=0, hiredate=0,
                  dutytype="", department="", jobnumber="", description=""):
         self.corporation_id = corporation_id
         self.user_or_hr = user_or_hr
@@ -55,7 +55,9 @@ class Stafflist(db.Model):
         self.user_name = user_name
         self.transferreason = transferreason
         self.lastcorporation_id = lastcorporation_id
-        self.hiredate = hiredate
+        if hiredate == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.hiredate = create_time
         self.dutytype = dutytype
         self.department = department
         self.jobnumber = jobnumber

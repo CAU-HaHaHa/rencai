@@ -1,15 +1,15 @@
 from flask import Blueprint, request, session
 from flaskapp.create_flask import app
 from mysql.create_db import db
-from models.rewardandpulishment import Rewardandpulishment
-from models.person import Person
 from models.stafflist import Stafflist
+import tools.login_check as login_check
 
 blue_print_name = "/jiangcheng"
 user_blueprint = Blueprint(blue_print_name, __name__)
 
 
 @user_blueprint.route('/search', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def search():
     try:
         if request.method == "POST":
@@ -41,15 +41,18 @@ def search():
         if duty != "":
             querylist = querylist.filter(Stafflist.dutytype.like("%{}%".format(duty)))
 
+
         return_msg = []
         for line in querylist:
             temp = zip(retrieve_list, line)
             return_msg.append(dict(temp))
         return_msg = return_msg[page_num * page_size:page_num * page_size + page_size]
+
         return dict(
             status=1,
             message="success",
-            data=str(return_msg)
+            data=return_msg,
+            numbers=len(return_msg)
         )
     except Exception as e:
         return dict(

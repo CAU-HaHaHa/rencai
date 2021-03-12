@@ -11,7 +11,7 @@ class Performance(db.Model):
     hr_id = db.Column(db.Integer, comment="记录该绩效的hr的id")
     value = db.Column(db.Integer, comment="绩效数值，整数型")
     description = db.Column(db.Text, comment="绩效描述")
-    registerdate = db.Column(db.DateTime, default=datetime.now, comment="绩效等级日期")
+    registerdate = db.Column(db.DateTime, comment="绩效等级日期")
     department = db.Column(db.String(255), comment="员工部门")
     post = db.Column(db.String(255), comment="职位信息")
 
@@ -38,13 +38,15 @@ class Performance(db.Model):
         return obj_list
 
     def __init__(self, corporation_id, user_id, hr_id, value=0,
-                 description="", registerdate=datetime.now, department="", post=""):
+                 description="", registerdate=0, department="", post=""):
         self.corporation_id = corporation_id
         self.user_id = user_id
         self.hr_id = hr_id
         self.value = value
         self.description = description
-        self.registerdate = registerdate
+        if registerdate == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.registerdate = create_time
         self.department = department
         self.post = post
 

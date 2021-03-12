@@ -28,10 +28,12 @@ class Resignlist(db.Model):
         return obj_list
 
     def __init__(self, user_id, description="",
-                 registerdate=datetime.now):
+                 registerdate=0):
         self.user_id = user_id
         self.description = description
-        self.registerdate = registerdate
+        if registerdate == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.registerdate = create_time
 
     def save(self):
         db.session.add(self)

@@ -1,15 +1,16 @@
 from flask import Blueprint, request, session
 from flaskapp.create_flask import app
 from models.person import Person
-import tools.valid as valid
 from mysql.create_db import db
 from tools.mail.sendvalidcheck import Sendcheck
+import tools.login_check as login_check
 
 blue_print_name = "/develop"
 person_blueprint = Blueprint(blue_print_name, __name__)
 
 
 @person_blueprint.route('/send', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def send():
     mail = request.values.get("mail", "")
     config = app.config['SERVER_INI']
@@ -20,6 +21,7 @@ def send():
 
 
 @person_blueprint.route('/', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def default():
     return dict(
         status=0,
@@ -31,6 +33,7 @@ def default():
 
 
 @person_blueprint.route('/delete_data', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def delete_data():
     try:
         db.session.query(Person).delete()
@@ -49,6 +52,7 @@ def delete_data():
 
 
 @person_blueprint.route('/create_random_data', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def create_random_data():
     """
     产生随机数据person，仅做测试使用
@@ -100,6 +104,7 @@ def create_random_data():
 
 
 @person_blueprint.route('/retrieve_sql', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def retrieve():
     """
     CRUD中的R，retrieve操作，查询用户，要求方式为GET形式

@@ -2,12 +2,14 @@ from flask import Blueprint, request, session
 from flaskapp.create_flask import app
 from mysql.create_db import db
 from models.person import Person
+import tools.login_check as login_check
 
 blue_print_name = "/StuffInfo"
 user_blueprint = Blueprint(blue_print_name, __name__)
 
 
 @user_blueprint.route('/', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def stuffInfo():
     try:
         if request.method == "POST":

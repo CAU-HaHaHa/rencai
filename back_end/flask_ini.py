@@ -26,9 +26,6 @@ def create_app(sever_ini):
 
     # 设置服务器配置
     app.config['SERVER_INI'] = get_server_ini(sever_ini)
-
-
-
     return app
 
 

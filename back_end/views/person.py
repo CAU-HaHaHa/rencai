@@ -1,8 +1,10 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, redirect
 from flaskapp.create_flask import app
 from models.person import Person
 import tools.valid as valid
 from mysql.create_db import db
+from models.hr import Hr
+from tools.mail.sendvalidcheck import Sendcheck
 
 """
 本程序包含以下路由：
@@ -16,7 +18,130 @@ from mysql.create_db import db
 blue_print_name = "/person"
 person_blueprint = Blueprint(blue_print_name, __name__)
 
+@person_blueprint.route('/sa_login', methods=['GET', 'POST'])
+def sa_login():
+    root_uid = request.form.get('username')
+    root_pwd = request.form.get('password')
+    if app.config['SERVER_INI']["root_uid"] == root_uid and \
+        app.config['SERVER_INI']["root_pwd"] == root_pwd:
+        session["user_type"] = 3
+    return redirect("/")
 
+
+@person_blueprint.route('/sa_logout', methods=['GET', 'POST'])
+def sa_logout():
+    session["user_type"] = 0
+    return redirect("/")
+
+
+@person_blueprint.route('/login/', methods=['GET', 'POST'])
+def login():
+    status = 0
+    try:
+        if request.method == "GET":
+            raise Exception("method must be post")
+        username = request.form.get('username')
+        password = request.form.get('password')
+        usertype = request.form.get('usertype')
+        if not all([username, password, usertype]):
+            raise Exception("username/password/usertype must not be empty")
+        if usertype == "1":  # 这里是hr登录
+            retrieve_list = ["hr_id", "corporation_id", "name", "sex",
+                             "identitycard", "username", "password", ]
+            querylist = Hr.get_obj(retrieve_list)
+            msg = db.session.query(*querylist)
+            have_user = msg.filter(Hr.username == username).first()
+            if not have_user:
+                status = 2
+                raise Exception("user is not exist, please check your account")
+            passcheck = msg.filter(Hr.username == username, Hr.password == password).first()
+            if not passcheck:
+                status = 3
+                raise Exception("password error")
+            session["user_id"] = have_user[0]
+            session["user_type"] = 1
+            return dict(
+                status=1,
+                message="success",
+                data=dict(zip(retrieve_list, passcheck))
+            )
+            # 如果用户名和密码不一致返回登录页面,并给提示信息
+        elif usertype == "2":  # 这里是person登录
+            retrieve_list = ["user_id", "username", "password", "name", "sex",
+                             "identitycard", "tags", "edubackground", "eduschool",
+                             "briefintro", "tel", "email", "politicsstatus", "address",
+                             "postcode", "workaddress"]
+            querylist = Person.get_obj(retrieve_list)
+            msg = db.session.query(*querylist)
+            have_user = msg.filter(Person.username == username).first()
+            if not have_user:
+                status = 2
+                raise Exception("user is not exist, please check your account")
+            passcheck = msg.filter(Person.username == username, Person.password == password).first()
+            if not passcheck:
+                status = 3
+                raise Exception("password error")
+            session["user_id"] = have_user[0]
+            session["user_type"] = 2
+            return dict(
+                status=1,
+                message="success",
+                data=dict(zip(retrieve_list, passcheck))
+            )
+        else:
+            raise Exception("user type error: user type must be 1 for hr or 2 for staff")
+
+    except Exception as e:
+        return dict(
+            status=status,
+            message=str(e),
+            data="none"
+        )
+
+
+@person_blueprint.route('/create', methods=['GET', 'POST'])
+def create():
+    status = 0
+    try:
+        if request.method == 'GET':
+            raise Exception("method must be post")
+        # 获取用户填写的信息
+        username = request.form.get('username')
+        password = request.form.get('password')
+        tel = request.form.get('telephone')
+        email = request.form.get('email')
+        if not all([username, password, tel, email]):
+            raise Exception('required information is not complete: username, password, tel, email')
+        have_uid = Person.query.filter(Person.username == username).first()
+        if have_uid:
+            status = 2
+            raise Exception('user name is exist')
+        if not valid.checkEmail(email):
+            raise Exception('email is not valid')
+        if not valid.checkPhone(tel):
+            raise Exception('phone number is not valid')
+
+        config = app.config['SERVER_INI']
+        config["to_mail"] = email
+        sender = Sendcheck(config)
+        emailcheck = sender.send()
+        person = Person(username=username, password=username,
+                        tel=tel, email=email, emailcheck=emailcheck)
+        person.save()
+        return dict(
+            status=1,
+            message="success",
+            data="none"
+        )
+    except Exception as e:
+        return dict(
+            status=status,
+            message=str(e),
+            data="none"
+        )
+
+
+'''
 @person_blueprint.route('/create/', methods=['GET', 'POST'])
 def create():
     """
@@ -95,93 +220,5 @@ def create():
             data="none"
         )
 
-
-@person_blueprint.route('/create_random_data', methods=['GET', 'POST'])
-def create_random_data():
-    """
-    产生随机数据person，仅做测试使用
-    """
-    try:
-        if request.method == 'POST':
-            raise Exception("method must be get")
-
-        number = request.values.get("number", "")
-        if number == "":
-            raise Exception("please check out how to use create random data,"
-                            "eg, person/create_random_data?number=10")
-        number = int(number)
-        if number > 20 or number < 0:
-            raise Exception("number must in between 0 to 20")
-        import random
-        for i in range(number):
-            newperson = Person(
-                username=str(random.randint(0, 10000000)),
-                password=str(random.randint(0, 10000000)),
-                name=str(random.randint(0, 10000000)),
-                sex=random.randint(0, 1),
-                identitycard =str(random.randint(0, 10000000)),
-                tags=str(random.randint(0, 10000000)),
-                edubackground=str(random.randint(0, 10000000)),
-                briefintro=str(random.randint(0, 10000000)),
-                tel=str(random.randint(0, 10000000)),
-                email=str(random.randint(0, 10000000)),
-                politicsstatus=str(random.randint(0, 10000000)),
-                address=str(random.randint(0, 10000000)),
-                postcode=str(random.randint(0, 10000000)),
-                workaddress=str(random.randint(0, 10000000))
-            )
-            db.session.add(newperson)
-        db.session.commit()
-
-
-    except Exception as e:
-        return dict(
-            status=0,
-            message=str(e),
-            data="none"
-        )
-    return dict(
-            status=1,
-            message="create successfully",
-            data="none"
-        )
-
-
-@person_blueprint.route('/retrieve_sql', methods=['GET', 'POST'])
-def retrieve():
-    """
-    CRUD中的R，retrieve操作，查询用户，要求方式为GET形式
-    该函数仅做测试使用，实际项目中这种用法将会十分危险
-    使用方法：
-        url = "person/retrieve?select=name,tags"
-    :return: 字典形式，详情请看/views/demo.py介绍
-    """
-    try:
-        if request.method == 'POST':
-            raise Exception("method must be get")
-
-        select = request.values.get("select", "")
-        if select == "":
-            raise Exception("please check out how to use retrieve, eg,"
-                            " url = \"person/retrieve?select=name,tags\""
-                            "use url = person/create_random_data?number=10 to generate data")
-
-        select_list = select.split(",")
-        querylist = Person.get_obj(select_list)
-        msg = db.session.query(*querylist).all()
-
-    except Exception as e:
-        return dict(
-            status=0,
-            message=str(e),
-            data="none"
-        )
-    ret = dict(
-            status=0,
-            message="success",
-            data=str(msg)
-        )
-    return str(ret)
-
-
+'''
 app.register_blueprint(blueprint=person_blueprint, url_prefix=blue_print_name)

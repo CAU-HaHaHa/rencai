@@ -6,6 +6,7 @@ demo内容会不断更新
 from flask import Blueprint, request, session
 from flaskapp.create_flask import app
 from mysql.create_db import db
+import tools.login_check as login_check
 
 # 步骤1：定义blueprint名称，以斜杠开头，加上路径的名称
 blue_print_name = "/demo"
@@ -17,6 +18,7 @@ user_blueprint = Blueprint(blue_print_name, __name__)
 
 # 步骤2，定义访问路由，该路由对应的是"/demo/create_db"，将被调用下面的函数
 @user_blueprint.route('/create_db/')
+@login_check.is_admin_login
 def create_db():
     """
     创建数据库（如果存在则不进行创建，创建的位置为models文件夹下的所以模型
@@ -49,6 +51,7 @@ def create_db():
 # 会话才会被自动断开，会话中所有的变量都可以保存在session中，session本质为
 # python中的字典dict，与dict的操作一致）
 @user_blueprint.route('/setvar/', methods=['GET'])
+@login_check.is_admin_login
 def setvar():
     """
     设置会话的变量
@@ -58,6 +61,7 @@ def setvar():
 
 
 @user_blueprint.route('/getvar/', methods=['GET'])
+@login_check.is_admin_login
 def getvar():
     """
     测试会话的变量
@@ -70,6 +74,7 @@ def getvar():
 
 # 步骤5：判断用户的访问请求是GET还是POST，并作出不同的反馈
 @user_blueprint.route('/getpost/', methods=['GET', 'POST'])
+@login_check.is_admin_login
 def getpost():
     if request.method == "GET":
         return 'get method'

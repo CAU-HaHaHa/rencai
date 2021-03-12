@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公司审核</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>corporation_id</th>
+        <th>registeredcapital</th>
+        <th>legalrepresentative</th>
+        <th>tel</th>
+        <th>email</th>
+        <th>website</th>
+        <th>location</th>
+        <th>accept</th>
+        <th>decline</th>
+    </tr>
+    {% for info in cor_list %}
+    <tr>
+        <td>{{info.corporation_id}}</td>
+        <td>{{info.registeredcapital}}</td>
+        <td>{{info.legalrepresentative}}</td>
+        <td>{{info.tel}}</td>
+        <td>{{info.email}}</td>
+        <td><a href="http://{{info.website}}" target="_blank"> {{info.website}} </a></td>
+        <td>{{info.location}}</td>
+        <td>
+            <a href="corporation_accept?corporation_id={{info.corporation_id}}"> accept </a>
+        </td>
+        <td>
+            <a href="corporation_decline?corporation_id={{info.corporation_id}}"> decline&delete </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

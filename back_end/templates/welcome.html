@@ -3,8 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>关于哈哈哈的研究小组的后端</title>
-    <h4>已经实现的地址访问如下所示</h4>
+    {% if debug != "": %}
+    <h4>注意，当前为开发者模式，所有页面无需登陆验证，
+        注释server.ini文件中的debug信息以取消开发者模式</h4>
+    <br>
+    {% endif %}
+    {% if debug == "" and user_type != 3: %}
+    <div align="center">
+        <br><br>
+        超级管理员登录以查看隐藏模块
+        <div>
+            <div>
+                <form action="/person/sa_login" method="post">
+                    <p>username: <input type="text" name="username" value="admin"/></p>
+                    <p>password: <input type="text" name="password" value="admin"/></p>
+                    <input type="submit" value="login"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if user_type == 3 or debug != "" %}
+    <h4>置顶：</h4>
     <ul>
+        <li>
+            <a href="person/sa_logout">退出超级管理员</a>
+        </li>
+        <li>
+            <a href="{{server_ip}}" target="_blank">点击进入前端页面</a>
+        </li>
+        <li>
+            <a href="inspect/corporation" target="_blank">审核公司</a>
+        </li>
+        <li>
+            <a href="inspect/hr" target="_blank">审核hr</a>
+        </li>
+    </ul>
+    <h4>快速访问：</h4>
+    <ul>
+        <li>
+            <a href="#check">check</a>
+        </li>
+        <li>
+            <a href="#corporation">corporation</a>
+        </li>
+        <li>
+            <a href="#dangan">dangan</a>
+        </li>
+        <li>
+            <a href="#demo">demo</a>
+        </li>
+        <li>
+            <a href="#develop">develop</a>
+        </li>
+        <li>
+            <a href="#jiangcheng">jiangcheng</a>
+        </li>
+        <li>
+            <a href="#hr">hr</a>
+        </li>
+        <li>
+            <a href="#inspect">inspect</a>
+        </li>
+        <li>
+            <a href="#person">person</a>
+        </li>
+        <li>
+            <a href="#rencai">rencai</a>
+        </li>
+        <li>
+            <a href="#reward">reward</a>
+        </li>
+        <li>
+            <a href="#StuffInfo">StuffInfo</a>
+        </li>
+        <li>
+            <a href="#Zhiye">Zhiye</a>
+        </li>
+    </ul>
+    <h4>已经实现的地址访问如下所示</h4>
+    <ul id="demo">
         <li>/demo</li>
         <div>
             &ensp;&ensp;&ensp;&ensp;/create_db &ensp;
@@ -29,13 +108,20 @@
         </div>
         <div>
             &ensp;&ensp;&ensp;&ensp;/getpost &ensp;
-            用于测试请求类型
+            用于测试请求类型，get方法：
             <a href="/demo/getpost">
                 /demo/getpost
             </a>
+            <div>
+                <div style="float:left;width:250px">&ensp;</div>
+                <div style="float:left">post方法：</div>
+                <form action="/demo/getpost" method="post">
+                    <input type="submit" value="/demo/getpost"/>
+                </form>
+            </div>
         </div>
     </ul>
-    <ul>
+    <ul id="develop">
         <li>/develop</li>
         <div>
             &ensp;&ensp;&ensp;&ensp;/send &ensp;
@@ -45,7 +131,7 @@
             </a>
         </div>
     </ul>
-    <ul>
+    <ul id="StuffInfo">
         <li>/StuffInfo</li>
         <div>
             &ensp;&ensp;&ensp;&ensp;/&ensp;
@@ -55,7 +141,7 @@
             </a>
         </div>
     </ul>
-    <ul>
+    <ul id="dangan">
         <li>/dangan</li>
         <div>
             &ensp;&ensp;&ensp;&ensp;/performance/dataSource &ensp;
@@ -73,9 +159,91 @@
                 /dangan/performance/newdataSource
             </a>
         </div>
-
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/jixiao/insert &ensp;
+            post方法访问，form形式传递参数，插入一条performance数据
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：corporation_id，value，user_id，post，description，department，hr_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中user_id可以由form传递，也可以由登录的session设置，form优先级更高，都没有则会报错
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回status：0:其他错误（必要字段不能为空、整型数值错误等）、1:成功插入数据、
+            2:value值没有介于0~10之间、3: user_id或corporation_id或hr_id不存在
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/dangan/jixiao/insert" method="post">
+                        <p>corporation_id: <input type="text" name="corporation_id" value="1"/></p>
+                        <p>value:&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                            <input type="text" name="value" value="5"/></p>
+                        <p>user_id: &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                            <input type="text" name="user_id" value="1"/></p>
+                        <p>post: &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                            <input type="text" name="post" value="项目经理"/></p>
+                        <p>description: &ensp;&ensp;&ensp;
+                            <input type="text" name="description" value="一般"/></p>
+                        <p>department: &ensp;&ensp;&ensp;
+                            <input type="text" name="department" value="市场部"/></p>
+                        <p>hr_id: &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                            <input type="text" name="hr_id" value="1"/></p>
+                        <input type="submit" value="go and have a try: /dangan/jixiao/insert"/>
+                    </form>
+                </div>
+                <div style="clear:both">
+                    &ensp;
+                </div>
+            </div>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/hrlizhi &ensp;
+            post方法访问，form形式传递参数，获取离职信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：co_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            数据库查询方式 SELECT * FROM resignlist,stafflist WHERE resignlist.user_id =
+            stafflist.user_id and stafflist.corporation_id = co_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回信息："resignlist_id", "user_id", "description", "registerdate",
+            "corporation_id", "dutytype", "department", "user_name"
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/dangan/hrlizhi" method="post">
+                        <p>co_id: <input type="text" name="co_id" value="1"/></p>
+                        <input type="submit" value="go and have a try: /dangan/hrlizhi"/>
+                    </form>
+                </div>
+                <div style="clear:both">
+                    &ensp;
+                </div>
+            </div>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/hrlizhi/delete &ensp;
+            post方法访问，form形式传递参数，处理离职申请，
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：u_id，flag
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            flag：
+            0 拒绝离职 只删除离职表中的信息 
+            1 同意离职 删除离职表、职工表的信息，添加工作经历
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/dangan/hrlizhi/delete" method="post">
+                        <p>u_id: <input type="text" name="u_id" value="20"/>
+                        <p>flag: <input type="text" name="flag" value="1"/></p>
+                        <input type="submit" value="go and have a try: /hrlizhi/delete"/>
+                    </form>
+                </div>
+                <div style="clear:both">
+                    &ensp;
+                </div>
+            </div>
+        </div>
     </ul>
-    <ul>
+    <ul id="jiangcheng">
         <li>/jiangcheng</li>
         <div>
             &ensp;&ensp;&ensp;&ensp;/search &ensp;
@@ -86,8 +254,315 @@
                 /jiangcheng/search?corp_id=&id=&name=&dep=部&duty=端&page_size=8&page_num=0
             </a>
         </div>
+    </ul>
+    <ul id="person">
+        <li>/person</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/login&ensp;
+            post方法访问，form形式传递参数，用于获取全部的person表信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：username，password，usertype（用户类型，1为person，2位hr）
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回status：0:其他错误（必要字段不能为空）、1:成功登陆、2:用户名不存在、3:用户密码错误
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/person/login/" method="post">
+                        <p>username: <input type="text" name="username" value="user01"/></p>
+                        <p>password: <input type="text" name="password" value="123456"/></p>
+                        <p>usertype: <input type="text" name="usertype" value="2"/></p>
+                        <input type="submit" value="go and have a try: /person/login/"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">
+            &ensp;&ensp;&ensp;&ensp;/create&ensp;
+            post方法访问，form形式传递参数，创建一个用户
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：username，password，telephone，email
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回status：0:其他错误（必要字段不能为空）、1:成功、2:用户名已经存在
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            邮箱的激活需要点击邮箱内部的激活按钮
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/person/create" method="post">
+                        <p>username: <input type="text" name="username" value="user888"/></p>
+                        <p>password: <input type="text" name="password" value="123456"/></p>
+                        <p>telephone: <input type="text" name="telephone" value="你的手机"/></p>
+                        <p>email: <input type="text" name="email" value="你的邮箱"/></p>
+                        <input type="submit" value="go and have a try: /person/create"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/sa_login&ensp;
+            超级管理员登录
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            参数：username，password
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/person/sa_login" method="post">
+                        <p>username: <input type="text" name="username" value="admin"/></p>
+                        <p>password: <input type="text" name="password" value="admin"/></p>
+                        <input type="submit" value="login"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">
+            &ensp;
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/sa_logout &ensp;
+            超级管理员登出：
+            <a href="/person/sa_logout">
+                /person/sa_logout
+            </a>
+        </div>
 
     </ul>
+    <ul id="check">
+        <li>/check</li>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;../check/personemail &ensp;
+            get方法访问，激活邮箱，必要参数为valid：
+            <a href="/check/personemail?valid=test">
+                /check/personemail?valid=test
+            </a>
+        </div>
+    </ul>
+
+    <ul id="rencai">
+        <li>/rencai</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/show &ensp;
+            get方法访问，获取recruitpost表中的数据，返回isposted=1的数据（已经发布的岗位）
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数为corporation_id：
+            <a href="/rencai/show?corporation_id=1">
+                /rencai/show?corporation_id=1
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/recruitpost_candidate &ensp;
+            get方法访问，获取applylist表中的数据
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            select * from applylist, person where
+            applylist.recruitpost_id = recruitpost_id and applylist.user_id = person.user_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数为recruitpost_id：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中，年龄字段由身份证提取，只返回get_offer字段为0的
+            <a href="/rencai/recruitpost_candidate?recruitpost_id=1">
+                /rencai/recruitpost_candidate?recruitpost_id=1
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/refuse &ensp;
+            get方法访问，将applylist表中的一条数据的get_offer设置为2
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数为applylist_id：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中，applylist_id必须存在
+            <a href="/rencai/refuse?applylist_id=1">
+                /rencai/refuse?applylist_id=1
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/enroll &ensp;
+            get方法访问，将applylist表中的一条数据的get_offer设置为1
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数为applylist_id：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中，applylist_id必须存在
+            <a href="/rencai/enroll?applylist_id=1">
+                /rencai/enroll?applylist_id=1
+            </a>
+        </div>
+    </ul>
+    <ul id="reward">
+        <li>/reward</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/add &ensp;
+            post方法访问，向rewardandpunishment添加数据：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：corporation_id，user_id，hr_id，user_name，user_depart，user_job，rew_or_pun
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            reward_pun_name，description，registerdate
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回status：0:其他错误（必要字段不能为空）、1:成功、3:id不存在
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/reward/add" method="post">
+                        <p>corp_id: <input type="text" name="corp_id" value="1"/></p>
+                        <p>user_id: <input type="text" name="user_id" value="1"/></p>
+                        <p>hr_id: <input type="text" name="hr_id" value="1"/></p>
+                        <p>user_name: <input type="text" name="user_name" value="你猜"/></p>
+                        <p>department: <input type="text" name="department" value="开发部"/></p>
+                        <p>dutytype: <input type="text" name="dutytype" value="开发"/></p>
+                        <p>rewardTpye: <input type="text" name="rewardTpye" value="1"/></p>
+                        <p>rewardName: <input type="text" name="rewardName" value="奖励"/></p>
+                        <p>description: <input type="text" name="description" value="没有描述"/></p>
+                        <p>rewardTime: <input type="text" name="rewardTime" value="2020-10-10"/></p>
+                        <input type="submit" value="go and have a try: /reward/add/"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/search &ensp;
+            get方法访问，访问rewardandpulishment表全部数据，返回数据按照时间顺序递减方式排序
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数为user_id：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中，applylist_id必须存在
+            <a href="/reward/search?user_id=1">
+                /reward/search?user_id=1
+            </a>
+        </div>
+    </ul>
+    <ul id="corporation">
+        <li>/corporation</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/create &ensp;
+            post方法访问，form表单形式，向corporation表添加数据：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：name，registeredCapital，legalRepresentative，telephone，
+            email，webAddress，address
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中name为必要参数
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回status：0:其他错误（registeredcapital必须为整形数据）、1:成功、
+            2:公司正在审核中、3:公司已经完成注册，请勿重复提交注册
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/corporation/create" method="post">
+                        <p>name: <input type="text" name="name" value="cor888"/></p>
+                        <p>registeredCapital: <input type="text" name="registeredCapital" value="100000"/></p>
+                        <p>legalRepresentative: <input type="text" name="legalRepresentative" value="nobody"/></p>
+                        <p>telephone: <input type="text" name="telephone" value="18201185536"/></p>
+                        <p>email: <input type="text" name="email" value="1967527237@qq.com"/></p>
+                        <p>webAddress: <input type="text" name="webAddress" value="http://www.baidu.com"/></p>
+                        <p>address: <input type="text" name="address" value="Venus"/></p>
+
+                        <input type="submit" value="go and have a try: /corporation/create"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">&ensp;</div>
+    </ul>
+    <ul id="hr">
+        <li>/hr</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/create &ensp;
+            post方法访问，form表单形式，向hr表添加数据：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：name，username，password，realName，
+            sex，idCard
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中全部都为必要参数
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回status：0:其他错误（registeredcapital必须为整形数据）、1:成功、
+            2:公司正在审核中、3:公司已经完成注册，请勿重复提交注册、4:hr正在审核中、
+            5:hr已经被注册
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/hr/create" method="post">
+                        <p>name: <input type="text" name="name" value="viva"/></p>
+                        <p>username: <input type="text" name="username" value="zhangsan"/></p>
+                        <p>password: <input type="text" name="password" value="007"/></p>
+                        <p>realName: <input type="text" name="realName" value="张三"/></p>
+                        <p>sex: <input type="text" name="sex" value="1"/></p>
+                        <p>idCard: <input type="text" name="idCard" value="110222199812070318"/></p>
+                        <input type="submit" value="go and have a try: /hr/create"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">&ensp;</div>
+    </ul>
+    <ul id="Zhiye">
+        <li>/Zhiye</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/Myzhaopin/dataSource &ensp;
+            get方法，获取recruitpost表和applylist表联合查询，查询方法如下：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            SELECT * FROM recruitpost,applylist WHERE recruitpost.recruitpost_id =
+            applylist.recruitpost_id and applylist.user_id =
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：user_id，返回值加入offer过期日期，过期时间被写入了start.ini配置文件
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/Zhiye/Myzhaopin/dataSource?user_id=16">
+                /Zhiye/Myzhaopin/dataSource?user_id=16
+            </a>
+        </div>
+    </ul>
+    <ul id="inspect">
+        <li>/inspect</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/corporation &ensp;
+            审核公司注册信息：
+            <a href="/inspect/corporation">
+                /inspect/corporation
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/corporation_accept &ensp;
+            get方法，必要参数corporation_id，接受公司申请：
+            <a href="/inspect/corporation_accept?corporation_id=10">
+                /inspect/corporation_accept?corporation_id=10
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/corporation_decline &ensp;
+            get方法，必要参数corporation_id，拒绝并删除公司申请：
+            <a href="/inspect/corporation_decline?corporation_id=10">
+                /inspect/corporation_decline?corporation_id=10
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/hr &ensp;
+            审核hr注册信息：
+            <a href="/inspect/hr">
+                /inspect/hr
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/hr_accept &ensp;
+            get方法，必要参数hr_id，接受hr申请：
+            <a href="/inspect/hr_accept?hr_id=10">
+                /inspect/hr_accept?hr_id=10
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/hr_decline &ensp;
+            get方法，必要参数hr_id，拒绝并删除hr申请：
+            <a href="/inspect/hr_decline?hr_id=10">
+                /inspect/hr_decline?hr_id=10
+            </a>
+        </div>
+    </ul>
+
+
+    {% endif %}
 </head>
 <body>
 

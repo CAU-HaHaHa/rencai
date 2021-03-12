@@ -34,12 +34,16 @@ class Stafftrack(db.Model):
         return obj_list
 
     def __init__(self, corporation_id, user_id,
-                 arrivetime=datetime.now, departtime=datetime.now,
+                 arrivetime=0, departtime=0,
                  dutytype="", description=""):
+        if arrivetime == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.arrivetime = create_time
+        if departtime == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.departtime = create_time
         self.corporation_id = corporation_id
         self.user_id = user_id
-        self.arrivetime = arrivetime
-        self.departtime = departtime
         self.dutytype = dutytype
         self.description = description
 

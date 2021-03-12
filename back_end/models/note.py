@@ -33,12 +33,14 @@ class Note(db.Model):
 
 
     def __init__(self, user_id, hr_id, corporation_id,
-                 description="", registerdate=datetime.now):
+                 description="", registerdate=0):
         self.user_id = user_id
         self.hr_id = hr_id
         self.description = description
         self.corporation_id = corporation_id
-        self.registerdate = registerdate
+        if registerdate == 0:
+            create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.registerdate = create_time
 
     def save(self):
         db.session.add(self)
