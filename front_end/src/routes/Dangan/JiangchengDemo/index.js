@@ -1,19 +1,92 @@
 import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card } from 'antd';
-import { PlusOutlined, SearchOutlined} from '@ant-design/icons';
+import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card, Cascader, ConfigProvider } from 'antd';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import Text from 'antd/lib/typography/Text';
+import axios from "axios"
 
-const { Option } = Select;
 const { TextArea } = Input;
-const { RangePicker } = DatePicker;
+const { Option } = Select;
 
-const dateFormat = 'YYYY/MM/DD';
+axios.defaults.timeout = 30000;
+axios.defaults.baseURL = "http://45.76.99.155"
 
-const AdvancedSearchForm = () => {
+// 搜索栏
+const AdvancedSearchForm = (props) => {
+
+  // 搜索表单
   const [form] = Form.useForm();
 
+  // 部门数据
+  const options = [
+    {
+      value: '市场部',
+      label: '市场部',
+      children: [
+        {
+          value: '项目经理',
+          label: '项目经理',
+        },
+        {
+          value: '销售人员',
+          label: '销售人员',
+        }
+      ],
+    },
+    {
+      value: '研发部',
+      label: '研发部',
+      children: [
+        {
+          value: '前端开发',
+          label: '前端开发',
+        },
+        {
+          value: '后端开发',
+          label: '后端开发'
+        },
+        {
+          value: '技术中台',
+          label: '技术中台'
+        }
+      ],
+    },
+    {
+      value: '业务部',
+      label: '业务部',
+      children: [
+        {
+          value: '业务主管',
+          label: '业务主管',
+        },
+      ],
+    },
+    {
+      value: '综合部',
+      label: '综合部',
+      children: [
+        {
+          value: '后勤主管',
+          label: '后勤主管',
+        },
+      ],
+    }
+  ];
+
+  // 两个属性
+  let dept = '';
+  let duty = '';
+
+  // 选择栏保存事件
+  function onChange(value) {
+    dept = value[0];
+    duty = value[1];
+  }
+
+  // 点击提交搜索表单事件
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    // get请求
+    props.SetTableData(values.ID, values.name, dept, duty)
   };
 
   return (
@@ -25,32 +98,25 @@ const AdvancedSearchForm = () => {
     >
       <Row gutter={12}>
         <Col span={5} key={1}>
-          <Form.Item name="ID" label="员工ID">
+          <Form.Item name="ID" label="员工ID" defaults="">
             <Input placeholder="请输入员工ID" />
           </Form.Item>
         </Col>
-        <Col span={4} key={2}>
-          <Form.Item name="name" label="姓名">
+        <Col span={5} key={2}>
+          <Form.Item name="name" label="姓名" defaults="">
             <Input placeholder="请输入员工姓名" />
           </Form.Item>
         </Col>
-        <Col span={5} key={3}>
-          <Form.Item name="ID" label="员工性别">
-            <Select placeholder="请选择员工性别">
-              <Option value="man">男</Option>
-              <Option value="woman">女</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col span={6} key={4}>
-          <Form.Item name="date" label="入职日期">
-            <RangePicker format={dateFormat} />
+        <Col span={8} key={3}>
+          <Form.Item name="depandduty" label="员工部门/职位">
+            <Cascader options={options} onChange={onChange} />,
           </Form.Item>
         </Col>
         <Col span={4} style={{ textAlign: 'right', }}>
-          <Button type="primary" htmlType="submit"> Search </Button>
+          <Button type="primary" htmlType="submit"> 搜索 </Button>
+          {/* 鼠标点击清除事件 */}
           <Button style={{ margin: '0 8px', }} onClick={() => { form.resetFields(); }}>
-            Clear
+            清除
           </Button>
         </Col>
       </Row>
@@ -60,91 +126,149 @@ const AdvancedSearchForm = () => {
 
 export default class Reward extends React.Component {
 
-  state = {
-    visible: false,
-    confirmLoading: false,
-    modalText: 'Content of the modal',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,         // 模态框可见？
+      user_id: '',            // 
+      user_name: '',          // 
+      department: '',
+      dutytype: '',
+      tabledata: [],          // 表格数据
+      tableloading: false     // 表格的数据是否加载
+    }
+    this.SetTableData();
+    this.form = React.createRef();
+  }
 
+  // 设置模态框可见
   setVisible = (e) => {
     this.setState({
       visible: e
     });
   }
 
-  setModalText = (e) => {
-    this.setState({
-      modalText: e
-    })
-  }
-
-  setConfirmLoading = (e) => {
-    this.setState({
-      confirmLoading: e
-    })
-  }
-
+  // 展示模态框
   showModal = () => {
     this.setVisible(true);
   };
 
-  ClickAddHandle = () => {
-    this.setVisible(true);
+  // 添加奖惩记录
+  AddRewardAPI = (value) => {
+    var params = new URLSearchParams();
+    params.append('corp_id', 1);
+    params.append('user_id', this.state.user_id);
+    params.append('hr_id', 1);
+    params.append('user_name', this.state.user_name);
+    params.append('department', this.state.department)
+    params.append('dutytype', this.state.dutytype)
+    var rewordtype = (value.rewardTpye == "reward" ? 1 : 0);
+    params.append('rewardTpye', rewordtype);
+    params.append('rewardName', value.rewardName);
+    var rewardTime = value.rewardTime.format('YYYY-MM-DD');
+    params.append('description', value.detial);
+    params.append('rewardTime', rewardTime);
+    console.log(axios.post("/reward/add", params));
   }
 
+  // 点击模态框的提交按钮
   handleOk = () => {
-    this.setModalText('The modal will be closed after two seconds');
-    this.setConfirmLoading(true);
+    this.form.current.validateFields().then(value => this.AddRewardAPI(value));
     setTimeout(() => {
       this.setVisible(false);
-      this.setConfirmLoading(false);
-    }, 2000);
+      this.form.current.resetFields();
+    }, 1000);
   };
 
+  // 点击模态框的取消按钮
   handleCancel = () => {
     this.setVisible(false);
   };
 
-  ClickViewHandle = () => {
-    this.props.history.push('./jiangcheng/view')
+  // 点击添加按钮
+  ClickAddHandle = (e) => {
+    this.setState({
+      user_id: e.user_id,
+      user_name: e.user_name,
+      department: e.department,
+      dutytype: e.dutytype
+    });
+    this.setVisible(true);
+  }
+
+
+  // 点击表格每列数据的查看按钮
+  ClickViewHandle = (type) => {
+    this.props.history.push({ pathname: './jiangcheng/view/' + type.user_id})
+  }
+
+  // 从里面搜索数据
+  SetTableData = (id, name, dept, duty) => {
+    // 防止undifine
+    id = (id ? id : '')
+    name = (name ? name : '')
+    dept = (dept ? dept : '')
+    duty = (duty ? duty : '')
+    console.log(id, name, dept, duty)
+
+    // 查询前表格显示加载中。。。
+    this.setState({
+      tableloading: true
+    })
+
+    // 保存this指针，防止箭头函数将this覆盖
+    const _this = this
+
+    // 发送get请求，从后端读取数据
+    axios.get('/jiangcheng/search', {
+      params: {
+        id: id,
+        name: name,
+        dept: dept,
+        duty: duty,
+      }
+    })
+      .then(function (response) {
+        console.log(response.data.data)
+        _this.setState({
+          tabledata: response.data.data
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+
+    // 查询后取消加载中标识
+    this.setState({
+      tableloading: false
+    })
   }
 
   render() {
-    const data = []
-    for (let i = 0; i < 23; i++) {
-      data.push({
-        key: i,
-        ID: "123456",
-        name: '宋小花',
-        sex: '女',
-        date: '2019-01-01',
-      })
-    }
-
     // 列数据，包含两个操作按钮
     const columns = [
       {
         title: '员工ID',
-        dataIndex: 'ID',
-        key: 'ID',
+        dataIndex: 'user_id',
+        key: 'user_id',
         width: '20%',
       },
       {
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
+        title: '员工姓名',
+        dataIndex: 'user_name',
+        key: 'user_name',
         width: '20%',
       },
       {
-        title: '性别',
-        dataIndex: 'sex',
-        key: 'sex',
+        title: '员工部门',
+        dataIndex: 'department',
+        key: 'department',
         width: '20%'
       },
       {
-        title: '入职日期',
-        dataIndex: 'date',
-        key: 'date',
+        title: '员工职位',
+        dataIndex: 'dutytype',
+        key: 'dutytype',
         width: '20%',
       },
       {
@@ -154,41 +278,11 @@ export default class Reward extends React.Component {
           <div>
             <Space size={[8, 16]} wrap>
               {/* 增添按钮 */}
-              <Button type="primary" icon={<PlusOutlined />} onClick={this.ClickAddHandle} shape="round">
+              <Button type="primary" icon={<PlusOutlined />} onClick={this.ClickAddHandle.bind(this, record)} shape="round">
                 新增
               </Button>
-              {/* 增添模态框 */}
-              <Modal
-                title="添加奖惩记录"
-                visible={this.state.visible}
-                onOk={this.handleOk}
-                confirmLoading={this.state.confirmLoading}
-                onCancel={this.handleCancel}
-              >
-                <Form
-                  labelCol={{ span: 4, }}
-                  wrapperCol={{ span: 14, }}
-                  layout="horizontal"
-                >
-                  <Form.Item label="奖惩类型">
-                    <Select placeholder="请选择奖惩类型">
-                      <Option value="Reward">奖励</Option>
-                      <Option value="Punishment">惩罚</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item label="奖惩名称">
-                    <Input placeholder="请输入奖惩名称"/>
-                  </Form.Item>
-                  <Form.Item label="奖惩时间">
-                    <DatePicker />
-                  </Form.Item>
-                  <Form.Item label="详细说明">
-                    <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />
-                  </Form.Item>
-                </Form>
-              </Modal>
               {/* 查看按钮 */}
-              <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle} shape="round">
+              <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle.bind(this, record)} shape="round">
                 查看
               </Button>
             </Space>
@@ -203,13 +297,67 @@ export default class Reward extends React.Component {
         <CustomBreadcrumb arr={['员工档案管理', '员工奖惩']} />
         {/* 高级搜索框 */}
         <Card hoverable bordered={false} className='card-item' title="搜索栏">
-          <AdvancedSearchForm />
+          <AdvancedSearchForm SetTableData={this.SetTableData} />
         </Card>
         {/* 展示数据的表格 */}
-        <Table columns={columns} dataSource={data} pagination={{ position: 'bottomCenter' }} />;
+        <Table columns={columns} dataSource={this.state.tabledata} loading={this.state.tableloading} />;
+        {/* 增添模态框 */}
+        <Modal
+          title="添加奖惩记录"
+          visible={this.state.visible}
+          confirmLoading={this.state.confirmLoading}
+          onCancel={
+            () => {
+              this.setState({ visible: false });
+            }
+          }
+          footer={[
+            <Button type="primary" onClick={this.handleOk} key={'submit'}>
+              提交
+            </Button>
+          ]}
+        >
+          <Form
+            labelCol={{ span: 4, }}
+            wrapperCol={{ span: 16, }}
+            layout="horizontal"
+            ref={this.form}
+          >
+            <Row >
+              <Col span={12}>
+                <Form.Item label="ID">
+                  <Text>
+                    {this.state.user_id}
+                  </Text>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="姓名">
+                  <Text>
+                    {this.state.user_name}
+                  </Text>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Form.Item label="奖惩类型" name='rewardTpye'>
+              <Select placeholder="请选择奖惩类型">
+                <Option value="Reward">奖励</Option>
+                <Option value="Punishment">惩罚</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="奖惩名称" name='rewardName'>
+              <Input placeholder="请输入奖惩名称" />
+            </Form.Item>
+            <Form.Item label="奖惩时间" name="rewardTime">
+              <DatePicker format="YYYY-MM-DD" />
+            </Form.Item>
+            <Form.Item label="详细说明" name='detial'>
+              <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     )
   }
-
 }
 
