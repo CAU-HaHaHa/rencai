@@ -73,7 +73,7 @@ class ContentMain extends React.Component {
 
           {/* new */}
           <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
-          <PrivateRoute exact path='/home/navigation/rencai/view' component={RencaiViewDemo}/>
+          <PrivateRoute exact path='/home/navigation/rencai/view/:id/:department/:posttype' component={RencaiViewDemo}/>
 
           {/* <PrivateRoute exact path='/home/display/carousel' component={CarouselDemo}/>
           <PrivateRoute exact path='/home/display/collapse' component={CollapseDemo}/>

@@ -12,9 +12,9 @@ export default class RencaiViewDemo extends React.Component {
     constructor(props) {
         super(props);    
         this.setDrawerVisible = this.setDrawerVisible.bind(this);
-        this.recruitpost_id = this.props.location.state.id;
-        this.department = this.props.location.state.department;
-        this.posttype = this.props.location.state.posttype;
+        this.recruitpost_id = this.props.match.params.id;
+        this.department = this.props.match.params.department;
+        this.posttype = this.props.match.params.posttype;
         console.log(this.recruitpost_id)
     }
     state = {

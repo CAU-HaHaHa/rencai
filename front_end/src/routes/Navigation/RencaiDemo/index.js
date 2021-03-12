@@ -69,7 +69,7 @@ export default class RencaiDemo extends React.Component {
       }
 
     ClickViewHandle = (recruitpost_id,department_name,posttype_name) => { 
-      this.props.history.push({ pathname:'./rencai/view', state:{id:recruitpost_id,department:department_name,posttype:posttype_name}})
+      this.props.history.push({ pathname:'./rencai/view/'+recruitpost_id+'/'+department_name+'/'+posttype_name})
     }
     
     inputChange = (event, flag) => {
