@@ -19,6 +19,8 @@ const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/Jia
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
 const MenuDemo = LoadableComponent(()=>import('../../routes/Navigation/MenuDemo/index'))
 const StepsDemo = LoadableComponent(()=>import('../../routes/Navigation/StepsDemo/index'))
+const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
+const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
 
 //输入组件Demo
 const FormDemo1 = LoadableComponent(()=>import('../../routes/Entry/FormDemo/FormDemo1'))
@@ -88,6 +90,8 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
             <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
             <PrivateRoute exact path='/home/navigation/steps' component={StepsDemo}/>
+            <PrivateRoute exact path='/home/navigation/rencai' component={RencaiDemo}/>
+            <PrivateRoute exact path='/home/navigation/rencai/view/:id/:department/:posttype' component={RencaiViewDemo}/>
 
             <PrivateRoute exact path='/home/entry/form/basic-form' component={FormDemo1}/>
             <PrivateRoute exact path='/home/entry/form/step-form' component={FormDemo2}/>

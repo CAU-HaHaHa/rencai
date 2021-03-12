@@ -25,6 +25,7 @@ const menus1 = [
     icon: 'bars',
     key: '/home/navigation',
     subs: [
+      {key: '/home/navigation/rencai', title: '备选人才', icon: ''},
       {key: '/home/navigation/dropdown', title: '下拉菜单', icon: ''},
       {key: '/home/navigation/menu', title: '导航菜单', icon: ''},
       {key: '/home/navigation/steps', title: '步骤条', icon: ''},
