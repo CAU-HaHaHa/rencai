@@ -1,7 +1,7 @@
 # rencai
 
 ## update 0313
-lifiles标记文件都有所改动  
+lizhifiles标记文件都有所改动  
   
 HR端离职管理 在Dangan文件夹下  
 员工端的离职申请 在Test文件夹下  
