@@ -14,6 +14,8 @@ const ListDemo = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/inde
 const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/index'))
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
+const HRLiZhiDemo = LoadableComponent(()=>import('../../routes/Dangan/HRLiZhiDemo/index'))
+// const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/StfLiZhiDemo/index'))
 
 //导航组件Demo
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
@@ -29,7 +31,7 @@ const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDe
 
 //员工页面测试Demo
 const Test1 = LoadableComponent(()=>import('../../routes/Test/Test1/index'))
-const Test2 = LoadableComponent(()=>import('../../routes/Test/Test2/index'))
+const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
 
 // //显示组件Demo
 // const CarouselDemo = LoadableComponent(()=>import('../../routes/Display/CarouselDemo/index'))
@@ -84,6 +86,7 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
             <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
             <PrivateRoute exact path='/home/dangan/jiangcheng/view' component={JiangchengviweDemo}/>
+            <PrivateRoute exact path='/home/dangan/hrlizhi' component={HRLiZhiDemo}/>
 
             <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
             <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
@@ -110,7 +113,7 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/homeStaff' component={Home}/>
 
             <PrivateRoute exact path='/home/test/test1' component={Test1}/>
-            <PrivateRoute exact path='/home/test/test2' component={Test2}/>
+            <PrivateRoute exact path='/home/test/stafflizhi' component={StfLiZhiDemo}/>
 
             <Redirect exact from='/' to='/homeStaff' component={Home}/>
           </Switch>
