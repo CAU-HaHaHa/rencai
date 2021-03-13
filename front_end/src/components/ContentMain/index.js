@@ -4,7 +4,7 @@ import LoadableComponent from '../../utils/LoadableComponent'
 import PrivateRoute from '../PrivateRoute'
 import { inject, observer } from 'mobx-react/index'
 import { getCookie } from '../../utils/Session'
-import {loginRequest} from '../../api/loginRequest'
+import loginRequest from '../../api/loginRequest'
 import axios from "axios";
 
 const Home = LoadableComponent(()=>import('../../routes/Home/index'))  //参数一定要是函数，否则不会懒加载，只会代码拆分
@@ -14,13 +14,13 @@ const ListDemo = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/inde
 const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/index'))
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
+const HRLiZhiDemo = LoadableComponent(()=>import('../../routes/Dangan/HRLiZhiDemo/index'))
+// const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/StfLiZhiDemo/index'))
 
 //导航组件Demo
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
 const MenuDemo = LoadableComponent(()=>import('../../routes/Navigation/MenuDemo/index'))
 const StepsDemo = LoadableComponent(()=>import('../../routes/Navigation/StepsDemo/index'))
-const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
-const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
 
 //输入组件Demo
 const FormDemo1 = LoadableComponent(()=>import('../../routes/Entry/FormDemo/FormDemo1'))
@@ -31,7 +31,7 @@ const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDe
 
 //员工页面测试Demo
 const Test1 = LoadableComponent(()=>import('../../routes/Test/Test1/index'))
-const Test2 = LoadableComponent(()=>import('../../routes/Test/Test2/index'))
+const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
 
 // //显示组件Demo
 // const CarouselDemo = LoadableComponent(()=>import('../../routes/Display/CarouselDemo/index'))
@@ -85,13 +85,12 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/home/dangan/list' component={ListDemo}/>
             <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
             <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
-            <PrivateRoute exact path='/home/dangan/jiangcheng/view/:id' component={JiangchengviweDemo}/>
+            <PrivateRoute exact path='/home/dangan/jiangcheng/view' component={JiangchengviweDemo}/>
+            <PrivateRoute exact path='/home/dangan/hrlizhi' component={HRLiZhiDemo}/>
 
             <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
             <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
             <PrivateRoute exact path='/home/navigation/steps' component={StepsDemo}/>
-            <PrivateRoute exact path='/home/navigation/rencai' component={RencaiDemo}/>
-            <PrivateRoute exact path='/home/navigation/rencai/view/:id/:department/:posttype' component={RencaiViewDemo}/>
 
             <PrivateRoute exact path='/home/entry/form/basic-form' component={FormDemo1}/>
             <PrivateRoute exact path='/home/entry/form/step-form' component={FormDemo2}/>
@@ -114,7 +113,7 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/homeStaff' component={Home}/>
 
             <PrivateRoute exact path='/home/test/test1' component={Test1}/>
-            <PrivateRoute exact path='/home/test/test2' component={Test2}/>
+            <PrivateRoute exact path='/home/test/stafflizhi' component={StfLiZhiDemo}/>
 
             <Redirect exact from='/' to='/homeStaff' component={Home}/>
           </Switch>

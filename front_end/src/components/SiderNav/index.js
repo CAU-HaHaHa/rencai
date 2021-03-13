@@ -18,6 +18,7 @@ const menus1 = [
       {key: '/home/dangan/list', title: '员工列表', icon: '',},
       {key: '/home/dangan/jixiao', title: '绩效评价', icon: '',},
       {key: '/home/dangan/jiangcheng', title: '员工奖惩', icon: '',},
+      {key: '/home/dangan/hrlizhi', title: '离职管理', icon: '',},
     ]
   },
   {
@@ -25,7 +26,6 @@ const menus1 = [
     icon: 'bars',
     key: '/home/navigation',
     subs: [
-      {key: '/home/navigation/rencai', title: '备选人才', icon: ''},
       {key: '/home/navigation/dropdown', title: '下拉菜单', icon: ''},
       {key: '/home/navigation/menu', title: '导航菜单', icon: ''},
       {key: '/home/navigation/steps', title: '步骤条', icon: ''},
@@ -67,7 +67,7 @@ const menus2 = [
     key: '/home/test',
     subs: [
       {key: '/home/test/test1', title: 'test1', icon: '',},
-      {key: '/home/test/test2', title: 'test2', icon: '',},
+      {key: '/home/test/stafflizhi', title: '离职申请', icon: '',},
     ]
   },
 ]

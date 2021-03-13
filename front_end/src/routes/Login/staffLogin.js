@@ -118,7 +118,7 @@ class StaffLoginForm extends React.Component {
                 {username: values.username, 
                   password: values.password, 
                   usertype: "2",
-                  userid: res[0].data.data.hr_id,
+                  userid: res[0].data.data.user_id,
                   corporationid: res[0].data.data.corporation_id,
               });
               this.props.history.push("/#/homeStaff");
