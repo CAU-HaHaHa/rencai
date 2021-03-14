@@ -4,9 +4,9 @@ import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Row, Col,Modal, Button, Form as Form4, Radio   } from 'antd';
+import { Input, Row, Col,Modal, Button, Form as Form4, Radio, Alert, notification   } from 'antd';
 import PromptBox from '../../components/PromptBox'
-import loginRequest from '../../api/loginRequest'
+import { loginRequest, staffRegister } from '../../api/loginRequest'
 import axios from "axios";
 
 @withRouter @inject('appStore') @observer @Form.create()
@@ -229,7 +229,52 @@ const CollectionsPage = () => {
   
     const onCreate = (values) => {
       console.log('Received values of form: ', values);
-      setVisible(false);
+      if(values.affirmpassword!=values.password){
+        alert("两次输入的密码不同！")
+      }
+      else{
+        let data = staffRegister(values.username, values.password, values.telephone, values.email);
+        axios.all([data]).then(
+          res => {
+            console.log(res);
+            if(res[0].data.status=="1"){  // 注册成功，请登录邮箱激活该账号
+              notification.open({
+                message: '注册成功',
+                description: '请登录邮箱激活该账号',
+              });
+              setVisible(false);
+            }
+            else if(res[0].data.status=="2"){ // 注册失败，该账号已存在
+              notification.open({
+                message: '注册失败',
+                description: '该账号已存在',
+              });
+            }
+            else{
+              if(res[0].data.message=="phone number is not valid"){
+                notification.open({
+                  message: '请输入正确的电话号码',
+                });
+              }
+              else{
+                notification.open({
+                  message: '未知错误',
+                  description: '未知错误',
+                });
+              }
+            }
+          }
+        ).catch(
+          () =>{
+            notification.open({
+              message: '未知错误',
+              description: '未知错误',
+            });
+          }
+        )
+        
+      }
+      
     };
   
     return (
@@ -280,13 +325,13 @@ const CollectionsPage = () => {
                 required: true,
                 message: 'Please input the password!',
               },]}>
-            <Input type="textarea" />
+            <Input.Password />
           </Form4.Item>
           <Form4.Item name="affirmpassword" label="再次输入密码" rules={[{
                 required: true,
                 message: 'Please input the password again!',
               },]}>
-            <Input type="textarea" />
+            <Input.Password />
           </Form4.Item>
           <Form4.Item name="telephone" label="电话" rules={[{
                 required: true,
@@ -297,6 +342,7 @@ const CollectionsPage = () => {
           <Form4.Item name="email" label="邮箱" rules={[{
                 required: true,
                 message: 'Please input the email!',
+                type: 'email',
               },]}>
             <Input type="textarea" />
           </Form4.Item>

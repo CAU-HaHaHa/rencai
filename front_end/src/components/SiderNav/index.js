@@ -3,7 +3,7 @@ import CustomMenu from "../CustomMenu/index";
 import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
 import { getCookie } from '../../utils/Session'
-
+import logo from './logo.png'
 const menus1 = [
   {
     title: 'HR首页',
@@ -11,10 +11,11 @@ const menus1 = [
     key: '/homeHr'
   },
   {
-    title: '员工档案管理',
+    title: '档案管理',
     icon: 'laptop',
     key: '/home/dangan',
     subs: [
+      {key: '/home/dangan/corporation', title: '公司架构', icon: '',},
       {key: '/home/dangan/list', title: '员工列表', icon: '',},
       {key: '/home/dangan/jixiao', title: '绩效评价', icon: '',},
       {key: '/home/dangan/jiangcheng', title: '员工奖惩', icon: '',},
@@ -22,39 +23,15 @@ const menus1 = [
     ]
   },
   {
-    title: '导航组件',
+    title: '人才招聘工作台',
     icon: 'bars',
     key: '/home/navigation',
     subs: [
-      {key: '/home/navigation/dropdown', title: '下拉菜单', icon: ''},
-      {key: '/home/navigation/menu', title: '导航菜单', icon: ''},
-      {key: '/home/navigation/steps', title: '步骤条', icon: ''},
+      {key: '/home/navigation/fabu', title: '发布招聘岗位', icon: ''},
+      {key: '/home/navigation/rencai', title: '备选人才', icon: ''},
     ]
   },
-  {
-    title: '输入组件',
-    icon: 'edit',
-    key: '/home/entry',
-    subs: [
-      {
-        key: '/home/entry/form',
-        title: '表单',
-        icon: '',
-        subs: [
-          {key: '/home/entry/form/basic-form', title: '基础表单', icon: ''},
-          {key: '/home/entry/form/step-form', title: '分步表单', icon: ''}
-        ]
-      },
-      {key: '/home/entry/upload', title: '上传', icon: ''},
-    ]
-  },
-  {
-    title: '关于',
-    icon: 'info-circle-o',
-    key: '/home/about'
-  }
 ]
-
 const menus2 = [
   {
     title: '员工首页',
@@ -62,16 +39,26 @@ const menus2 = [
     key: '/homeStaff'
   },
   {
-    title: 'test',
+    title: '个人档案管理',
     icon: 'laptop',
-    key: '/home/test',
+    key: '/home/staffdangan',
     subs: [
-      {key: '/home/test/test1', title: 'test1', icon: '',},
-      {key: '/home/test/stafflizhi', title: '离职申请', icon: '',},
+      {key: '/home/staffdangan/basicinfo', title: '基本信息管理', icon: '',},
+      {key: '/home/staffdangan/jixiao', title: '绩效查看', icon: '',},
+      {key: '/home/staffdangan/jiangcheng', title: '奖惩查看', icon: '',},
+    ]
+  },
+  {
+    title: '职业生涯发展',
+    icon: 'laptop',
+    key: '/home/zhiye',
+    subs: [
+      {key: '/home/zhiye/gangwei', title: '招聘岗位', icon: '',},
+      {key: '/home/zhiye/myzhaopin', title: '我的招聘', icon: '',},
+      {key: '/home/zhiye/lizhi', title: '离职申请', icon: '',},
     ]
   },
 ]
-
 @withRouter @inject('appStore') @observer
 class SiderNav extends React.Component {
   render() {
@@ -93,7 +80,6 @@ class SiderNav extends React.Component {
     }
   }
 }
-
 const styles = {
   logo: {
     height: '32px',
@@ -101,5 +87,4 @@ const styles = {
     margin: '16px'
   }
 }
-
 export default SiderNav

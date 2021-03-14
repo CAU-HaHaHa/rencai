@@ -1,6 +1,5 @@
 import React from 'react'
 import { Icon as LegacyIcon } from '@ant-design/compatible';
-import { NotificationOutlined } from '@ant-design/icons';
 import { Badge, Dropdown, Menu, Modal } from 'antd';
 import screenfull from 'screenfull'
 import { inject, observer } from 'mobx-react'
@@ -55,12 +54,7 @@ class HeaderBar extends React.Component {
       <Menu className='menu'>
         <Menu.ItemGroup title='用户中心' className='menu-group'>
           <Menu.Item>你好 - {this.props.appStore.loginUser.username}</Menu.Item>
-          <Menu.Item>个人信息</Menu.Item>
           <Menu.Item><span onClick={this.logout}>退出登录</span></Menu.Item>
-        </Menu.ItemGroup>
-        <Menu.ItemGroup title='设置中心' className='menu-group'>
-          <Menu.Item>个人设置</Menu.Item>
-          <Menu.Item>系统设置</Menu.Item>
         </Menu.ItemGroup>
       </Menu>
     )
@@ -78,11 +72,6 @@ class HeaderBar extends React.Component {
         <div style={{lineHeight: '64px', float: 'right'}}>
           <ul className='header-ul'>
             <li><LegacyIcon type={icon} onClick={this.screenfullToggle}/></li>
-            <li onClick={() => this.setState({count: 0})}>
-              <Badge count={appStore.isLogin ? count : 0} overflowCount={99} style={{marginRight: -17}}>
-                <NotificationOutlined />
-              </Badge>
-            </li>
             <li>
               {appStore.isLogin ? login : notLogin}
             </li>
