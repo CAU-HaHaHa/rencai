@@ -171,7 +171,7 @@ export default class RencaiViewDemo extends React.Component {
   showDrawer = (row) => {
     const _this = this;
     console.log('http://45.76.99.155/rencai/candidate?user_id=' + row.user_id)
-    axios.get('http://45.76.99.155/rencai/candidate?user_id=2' + row.user_id)
+    axios.get('http://45.76.99.155/rencai/candidate?user_id='+row.user_id)
       .then(function (response) {
         _this.setState({
           detailRow: Object.assign({}, row),
@@ -300,14 +300,10 @@ export default class RencaiViewDemo extends React.Component {
                           <div>曾任职公司:{value.corporation.name}</div>
                           <div>公司电话:{value.corporation.tel}</div>
                           <div>公司邮箱:{value.corporation.email}</div>
+                          <div>入职时间:{value.corporation.arrivetime}</div>
+                          <div>离职时间:{value.corporation.departtime}</div>
+                          <div>整体工作状态:{value.corporation.description}</div>
                           </Card>
-                        ]
-                      }
-                      if (key == 'stafftrack') {
-                        return [
-                          <div>入职时间:{value.stafftrack.arrivetime}</div>,
-                          <div>离职时间:{value.stafftrack.departtime}</div>,
-                          <div>整体工作状态:{value.stafftrack.description}</div>,
                         ]
                       }
                       if (key == 'performance') {
