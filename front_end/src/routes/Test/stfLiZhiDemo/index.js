@@ -28,18 +28,16 @@ export default class StfLiZhiDemo extends React.Component {
       "department": "部门",
       "dutytype": "岗位",
     },
+    nothing:" ",
   };
 
   componentDidMount() {
-    if(appStore.loginUser.corporationid==undefined){
+    if(appStore.loginUser.corporationid==0){
       message.error(' 无在职信息，无法申请离职！ ');
       // 禁用提交按钮
       this.setState({isDisabled:true});
     }
     else{
-      // 启用提交按钮
-      this.setState({isDisabled:false});
-
       // 向后端请求数据
       const _this = this;
       let data = stafflizhiRequest(appStore.loginUser.userid);
@@ -49,7 +47,16 @@ export default class StfLiZhiDemo extends React.Component {
           _this.setState({
             dataSource: res[0].data.data,
             isLoaded: true
-          });
+          },
+          ()=>{if(this.state.dataSource["flag"]==1){
+            message.info(' 您已提交过申请，不能重复申请，请耐心等待审核 ');
+            // 禁用提交按钮
+            this.setState({isDisabled:true});
+          }else{
+            // 启用提交按钮
+            this.setState({isDisabled:false});
+          }}
+          );
         }
       ).catch(
         (err)=>{
@@ -76,57 +83,45 @@ export default class StfLiZhiDemo extends React.Component {
   
   // 提交申请
   onClick = () => {
-    // 判断是否已经提交过申请
-    if(this.state.dataSource["flag"]==1){
-      this.setState({isDisabled:true});
-      message.info('您已提交了申请，不能重复申请，请耐心等待审核'); 
-    }
-    else{
-      // 如果勾选checkbox则传参
-      if(this.state.checked){
-        const _this = this;
-        confirm({
-          title: '操作确认',
-          icon: <ExclamationCircleOutlined />,
-          content:"确定要提交离职申请吗？",
-          // 点击确定
-          onOk() {
-            console.log('OK');
-            stafflizhiApply(appStore.loginUser.userid,_this.state.text);
-            message.info("申请提交成功，请耐心等待审核");
+    if(this.state.checked){
+      const _this = this;
+      confirm({
+        title: '操作确认',
+        icon: <ExclamationCircleOutlined />,
+        content:"确定要提交离职申请吗？",
+        // 点击确定
+        onOk() {
+          console.log('OK');
+          stafflizhiApply(appStore.loginUser.userid,_this.state.text);
+          message.info("申请提交成功，请耐心等待审核");
             
-            // 重新请求数据    ---------------------------------------------
-            let data = stafflizhiRequest(appStore.loginUser.userid);
-            console.log(data,"data")
-            axios.all([data]).then(
-              res => {
-                _this.setState({
-                  dataSource: res[0].data.data,
-                  isLoaded: true
-                });
-              }
-            ).catch(
-              (err)=>{
-                alert("未知错误11")
-              }
-            )
+          // 重新请求数据    ---------------------------------------------
+          let data = stafflizhiRequest(appStore.loginUser.userid);
+          console.log(data,"data")
+          axios.all([data]).then(
+            res => {
+              _this.setState({
+                dataSource: res[0].data.data,
+                isLoaded: true
+              });
+            }
+          ).catch(()=>{alert("未知错误11")})
             // 重新请求数据结束-----------------------------------------------
-          },
-          //点击取消
-          onCancel() {
-            console.log('Cancel');
-          }
-        });
-        console.log(this.state);
-      }else{
-        // 如果checkbox没有勾的提示
-        message.info('请确认与上级领导沟通，达成一致后再提交申请');
-      }
+        },
+        //点击取消
+        onCancel() {
+          console.log('Cancel');
+        }
+      });
+      console.log(this.state);
+      this.setState({isDisabled:true});
+    }else{
+      // 如果checkbox没有勾的提示
+      message.info('请确认与上级领导沟通，达成一致后再提交申请');
     }
   }
 
   render() {
-    const { value } = this.state;
     const upToTopStyle = {
       height: 40,
       width: 60,

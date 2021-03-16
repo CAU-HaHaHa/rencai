@@ -22,6 +22,9 @@ const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/Ren
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
 
+//个人信息查看
+const jixiaocheckDemo = LoadableComponent(()=>import('../../routes/Test/JixiaoCheckDemo/index'))
+
 //职业生涯发展
 const Test1 = LoadableComponent(()=>import('../../routes/Test/Test1/index'))
 const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
@@ -105,7 +108,7 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/homeStaff' component={Home}/>
             {/* 个人档案管理 */}
             <PrivateRoute exact path='/home/staffdangan/basicinfo' component={Home}/>
-            <PrivateRoute exact path='/home/staffdangan/jixiao' component={Home}/>
+            <PrivateRoute exact path='/home/staffdangan/jixiao' component={jixiaocheckDemo}/>
             <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={Home}/>
 
             {/* 职业生涯发展 */}
