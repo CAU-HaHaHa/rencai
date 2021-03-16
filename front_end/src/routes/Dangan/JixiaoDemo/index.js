@@ -212,7 +212,7 @@ class JixiaoDemo extends React.Component {
   componentDidMount() {
     const _this = this;
     // http://127.0.0.1:5000/dangan/performance/datasource
-    // http://20.46.117.148:8001/dangan/performance/datasource
+    // http://http://45.76.99.155/dangan/performance/datasource
     //
     axios.get('http://45.76.99.155/dangan/performance/newdataSource')
       .then(function(response) {

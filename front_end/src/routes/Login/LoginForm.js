@@ -8,6 +8,7 @@ import { Input, Row, Col, Select,Modal, Button, Form as Form4, notification } fr
 import PromptBox from '../../components/PromptBox'
 import { loginRequest, corporationRegister, hrRegister } from '../../api/loginRequest'
 import axios from "axios";
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 @withRouter @inject('appStore') @observer @Form.create()
 class LoginForm extends React.Component {
@@ -250,7 +251,8 @@ const CollectionsPage1 = () => {
             if(res[0].data.status=="1"){  // 注册成功
               notification.open({
                 message: '注册成功',
-                description: '请耐心等待审核'
+                description: '请耐心等待审核',
+                icon:<CheckCircleOutlined style={{ color: "green"}}/>,
               });
               setVisible(false);
             }
@@ -258,24 +260,28 @@ const CollectionsPage1 = () => {
               notification.open({
                 message: '注册失败',
                 description: '该公司正在注册审核中',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
               });
             }
             else if(res[0].data.status=="3"){ // 注册失败，该公司已注册
               notification.open({
                 message: '注册失败',
                 description: '该公司已注册',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
               });
             }
             else{
               if(res[0].data.message=="phone number is not valid"){
                 notification.open({
                   message: '请输入正确的电话号码',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
               }
               else{
                 notification.open({
                   message: '未知错误',
                   description: '未知错误',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
               }
             }
@@ -285,6 +291,7 @@ const CollectionsPage1 = () => {
             notification.open({
               message: '未知错误',
               description: '未知错误',
+              icon: <CloseCircleOutlined style={{ color: "red"}}/>,
             });
           }
         )
@@ -312,12 +319,11 @@ const CollectionCreateForm1 = ({ visible, onCreate, onCancel }) => {
     <Modal
       visible={visible}
       title="公司注册"
-      okText="Create"
-      cancelText="Cancel"
+      okText="注册"
+      cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
         form.validateFields().then((values) => {
-            form.resetFields();
             onCreate(values);
           }).catch((info) => {
             console.log('Validate Failed:', info);
@@ -395,7 +401,8 @@ const CollectionsPage2 = () => {
              if(res[0].data.status=="1"){  // 注册成功
                notification.open({
                  message: '注册成功',
-                 description: '请耐心等待审核'
+                 description: '请耐心等待审核',
+                 icon:<CheckCircleOutlined style={{ color: "green"}}/>,
                });
                setVisible(false);
              }
@@ -403,31 +410,44 @@ const CollectionsPage2 = () => {
                notification.open({
                  message: '注册失败',
                  description: '该公司尚未审核通过',
+                 icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                });
              }
              else if(res[0].data.status=="3"){ // 注册失败，
                notification.open({
                  message: '注册失败',
                  description: '该公司未注册',
+                 icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                });
              }
              else if(res[0].data.status=="4"){ // 注册失败，
               notification.open({
                 message: '注册失败',
                 description: '您已提交申请待审核，勿重复提交',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
               });
             }
             else if(res[0].data.status=="5"){ // 注册失败，
               notification.open({
                 message: '注册失败',
                 description: '该身份证已被hr注册',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
               });
             }
              else{
+              if(res[0].data.message=="phone number is not valid"){
+                notification.open({
+                  message: '请输入正确的电话号码',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+              else{
                 notification.open({
                   message: '未知错误',
                   description: '未知错误',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
+              }
              }
            }
          ).catch(
@@ -435,6 +455,7 @@ const CollectionsPage2 = () => {
              notification.open({
                message: '未知错误',
                description: '未知错误',
+               icon: <CloseCircleOutlined style={{ color: "red"}}/>,
              });
            }
          )
@@ -461,12 +482,11 @@ const CollectionCreateForm2 = ({ visible, onCreate, onCancel }) => {
     <Modal
       visible={visible}
       title="HR注册"
-      okText="Create"
-      cancelText="Cancel"
+      okText="注册"
+      cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
         form.validateFields().then((values) => {
-            form.resetFields();
             onCreate(values);
           }).catch((info) => {
             console.log('Validate Failed:', info);

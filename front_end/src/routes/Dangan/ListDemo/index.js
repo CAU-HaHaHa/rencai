@@ -146,7 +146,7 @@ class ListDemo extends React.Component {
     // .catch(error => {
     // });
 
-    axios.get('http://20.46.117.148:8001/StuffInfo/')
+    axios.get('http://45.76.99.155/StuffInfo/')
       .then(function (response) {
         // 绝了，data在response.data.data中
         console.log(typeof (response.data.data), response.data.data)
