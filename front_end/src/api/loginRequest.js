@@ -45,7 +45,7 @@ export async function loginRequest  (
     params.append('username', Username);
     params.append('password', Password);
     params.append('usertype', Usertype);
-    return axios.post("http://20.46.117.148:8001/person/login/", params
+    return axios.post("http://45.76.99.155/person/login/", params
         // {
         //     headers:{
 		// 		'Content-type': 'application/x-www-form-urlencoded'
