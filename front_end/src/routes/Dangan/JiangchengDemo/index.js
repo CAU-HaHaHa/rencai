@@ -1,12 +1,13 @@
 import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card, Cascader, ConfigProvider } from 'antd';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col, Card, Cascader, ConfigProvider, notification } from 'antd';
+import { PlusOutlined, SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
 import axios from "axios"
 
 const { TextArea } = Input;
 const { Option } = Select;
+const { confirm } = Modal;
 
 axios.defaults.timeout = 30000;
 axios.defaults.baseURL = "http://45.76.99.155"
@@ -87,6 +88,7 @@ const AdvancedSearchForm = (props) => {
   const onFinish = (values) => {
     // get请求
     props.SetTableData(values.ID, values.name, dept, duty)
+    // 
   };
 
   return (
@@ -122,6 +124,16 @@ const AdvancedSearchForm = (props) => {
       </Row>
     </Form>
   );
+};
+
+const openNotification = () => {
+  const args = {
+    message: 'Notification Title',
+    description:
+      'I will never close automatically. This is a purposely very very long description that has many many characters and words.',
+    duration: 2,
+  };
+  notification.open(args);
 };
 
 export default class Reward extends React.Component {
@@ -165,19 +177,46 @@ export default class Reward extends React.Component {
     var rewordtype = (value.rewardTpye == "reward" ? 1 : 0);
     params.append('rewardTpye', rewordtype);
     params.append('rewardName', value.rewardName);
-    var rewardTime = value.rewardTime.format('YYYY-MM-DD');
     params.append('description', value.detial);
-    params.append('rewardTime', rewardTime);
-    console.log(axios.post("/reward/add", params));
+    params.append('rewardTime', value.rewardTime);
+
+    var _this = this
+    axios.post("/reward/add", params)
+      .then(function () {
+        notification['success']({
+          message: '添加成功',
+          description:
+            '您已成功将'+_this.state.user_name+'的奖惩记录添加至数据库！',
+        });
+      })
+      .catch(function (error) {
+        notification['error']({
+          message: '添加失败',
+          description:
+            error,
+        });
+      })
+  }
+
+  showPromiseConfirm = () => {
+    Modal.confirm({
+      title: '确认添加此记录吗?',
+      icon: <ExclamationCircleOutlined />,
+      content: '添加后不能修改，请确认此记录已被正确填写',
+      okText: '是',
+      cancelText: '否',
+      centered: true,
+      onOk: () => {
+        this.handleOk() //确认按钮的回调方法，在下面
+      },
+    });
   }
 
   // 点击模态框的提交按钮
   handleOk = () => {
+    this.setVisible(false);
+    this.form.current.resetFields();
     this.form.current.validateFields().then(value => this.AddRewardAPI(value));
-    setTimeout(() => {
-      this.setVisible(false);
-      this.form.current.resetFields();
-    }, 1000);
   };
 
   // 点击模态框的取消按钮
@@ -199,7 +238,7 @@ export default class Reward extends React.Component {
 
   // 点击表格每列数据的查看按钮
   ClickViewHandle = (type) => {
-    this.props.history.push({ pathname: './jiangcheng/view/' + type.user_id})
+    this.props.history.push({ pathname: './jiangcheng/view/' + type.user_id })
   }
 
   // 从里面搜索数据
@@ -306,13 +345,14 @@ export default class Reward extends React.Component {
           title="添加奖惩记录"
           visible={this.state.visible}
           confirmLoading={this.state.confirmLoading}
+          // 取消按钮和x
           onCancel={
             () => {
               this.setState({ visible: false });
             }
           }
           footer={[
-            <Button type="primary" onClick={this.handleOk} key={'submit'}>
+            <Button type="primary" onClick={this.showPromiseConfirm} key={'submit'}>
               提交
             </Button>
           ]}

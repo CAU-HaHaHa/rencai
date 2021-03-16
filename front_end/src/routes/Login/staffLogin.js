@@ -8,6 +8,7 @@ import { Input, Row, Col,Modal, Button, Form as Form4, Radio, Alert, notificatio
 import PromptBox from '../../components/PromptBox'
 import { loginRequest, staffRegister } from '../../api/loginRequest'
 import axios from "axios";
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 @withRouter @inject('appStore') @observer @Form.create()
 class StaffLoginForm extends React.Component {
@@ -118,7 +119,7 @@ class StaffLoginForm extends React.Component {
                 {username: values.username, 
                   password: values.password, 
                   usertype: "2",
-                  userid: res[0].data.data.hr_id,
+                  userid: res[0].data.data.user_id,
                   corporationid: res[0].data.data.corporation_id,
               });
               this.props.history.push("/#/homeStaff");
@@ -241,6 +242,7 @@ const CollectionsPage = () => {
               notification.open({
                 message: '注册成功',
                 description: '请登录邮箱激活该账号',
+                icon:<CheckCircleOutlined style={{ color: "green"}}/>,
               });
               setVisible(false);
             }
@@ -248,18 +250,21 @@ const CollectionsPage = () => {
               notification.open({
                 message: '注册失败',
                 description: '该账号已存在',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
               });
             }
             else{
               if(res[0].data.message=="phone number is not valid"){
                 notification.open({
                   message: '请输入正确的电话号码',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
               }
               else{
                 notification.open({
                   message: '未知错误',
                   description: '未知错误',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
               }
             }
@@ -269,6 +274,7 @@ const CollectionsPage = () => {
             notification.open({
               message: '未知错误',
               description: '未知错误',
+              icon: <CloseCircleOutlined style={{ color: "red"}}/>,
             });
           }
         )
@@ -297,12 +303,11 @@ const CollectionsPage = () => {
       <Modal
         visible={visible}
         title="员工注册"
-        okText="Create"
-        cancelText="Cancel"
+        okText="注册"
+        cancelText="取消"
         onCancel={onCancel}
         onOk={() => {
           form.validateFields().then((values) => {
-              form.resetFields();
               onCreate(values);
             }).catch((info) => {
               console.log('Validate Failed:', info);
