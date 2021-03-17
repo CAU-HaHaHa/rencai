@@ -25,6 +25,7 @@ const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDe
 //职业生涯发展
 const jixiaocheckDemo = LoadableComponent(()=>import('../../routes/Test/JixiaoCheckDemo/index'))
 const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
+const Myzhaopin = LoadableComponent(()=>import('../../routes/Test/Myzhaopin/index'))
 
 //关于
 const About = LoadableComponent(()=>import('../../routes/About/index'))

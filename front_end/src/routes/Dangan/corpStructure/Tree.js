@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
-import { Button, Card, Modal, message } from 'antd';
+import { Button, Card, Modal, message, Spin } from 'antd';
 import {Tree, Icon} from 'antd';
 import { Icon as LegacyIcon } from '@ant-design/compatible';
 import styles from './EditableTree.less';
@@ -9,7 +9,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { changeStructure,getStructure } from '../../../api/loginRequest'
 import axios from "axios";
 import DemoOrganizationGraph from '../../../components/Structure/index'
-
+import './sty.css'
 const {TreeNode} = Tree;
 
 @withRouter @inject('appStore') @observer
@@ -19,6 +19,7 @@ export default class Treee extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      loading: true,
       expandedKeys: [],
       structure: [],
       data: this.data
@@ -40,8 +41,9 @@ export default class Treee extends React.Component{
       (res) => {
         // console.log(res[0].data.data);
         this.setState({
-          structure: res[0].data.data,
+          structure: this.dfs([res[0].data.data])[0],
           data: [res[0].data.data],
+          loading: false
         })
         this.data = [res[0].data.data]
       }
@@ -292,15 +294,18 @@ export default class Treee extends React.Component{
     const { confirm } = Modal;
     const onCreate = () =>{
       confirm({
-        title: 'Do you Want to delete these items?',
+        title: '公司架构修改?',
         icon: <ExclamationCircleOutlined />,
-        content: 'Some descriptions',
+        content: '您确定要修改公司架构吗？',
         onOk: () => {
           let temp = this.dfsTrans(this.state.data);
           console.log(typeof JSON.stringify(temp))
           let data = changeStructure(this.props.appStore.loginUser.corporationid, JSON.stringify(temp))
           axios.all([data]).then(
             (res) => {
+              this.setState({
+                loading: true,
+              })
               console.log(res[0].data);
               this.GetStructure();
               message.success("编辑公司架构成功");
@@ -315,14 +320,13 @@ export default class Treee extends React.Component{
         },
         onCancel: () => {
           console.log('Cancel');
-          message.error("编辑公司架构失败");
         },
       });
     } 
 
     return(
       <div>
-        <Button type="primary"onClick={() => { setVisible(true);}}>Edit</Button>
+        <Button type="primary"onClick={() => { setVisible(true);}}>修改公司架构</Button>
         <this.treeModal
           visible={visible}
           onCreate={onCreate}
@@ -337,8 +341,8 @@ export default class Treee extends React.Component{
       <Modal
           visible={visible}
           title="编辑公司信息"
-          okText="Create"
-          cancelText="Cancel"
+          okText="修改"
+          cancelText="取消"
           onCancel={onCancel}
           onOk={onCreate}
           width = {1100}
@@ -351,19 +355,12 @@ export default class Treee extends React.Component{
   }
 
   render() {
-    let structureData = []
-    if(this.state.structure!=[]){
-      console.log(this.state.structure)
-      structureData = this.dfs([this.state.structure]);
-      console.log(structureData[0])
-      structureData = structureData[0]
-    }
     return (
       <div>
         <Card>
         <this.editTree />
         {
-          structureData==[] ?  <div></div> :   <DemoOrganizationGraph  data={structureData}/>
+          this.state.loading ? <div className="example"><Spin tip="Loading..." size='large'/></div> : <DemoOrganizationGraph  data={this.state.structure}/>
         }
         </Card>
       </div>
