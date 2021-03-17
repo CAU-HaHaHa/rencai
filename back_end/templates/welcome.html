@@ -46,6 +46,9 @@
             <a href="#check">check</a>
         </li>
         <li>
+            <a href="#CorpInfo">CorpInfo</a>
+        </li>
+        <li>
             <a href="#corporation">corporation</a>
         </li>
         <li>
@@ -70,10 +73,19 @@
             <a href="#person">person</a>
         </li>
         <li>
+            <a href="#RecruitpostInfo">RecruitpostInfo</a>
+        </li>
+        <li>
+            <a href="#recuit">recuit</a>
+        </li>
+        <li>
             <a href="#rencai">rencai</a>
         </li>
         <li>
             <a href="#reward">reward</a>
+        </li>
+        <li>
+            <a href="#staff">staff</a>
         </li>
         <li>
             <a href="#StuffInfo">StuffInfo</a>
@@ -136,13 +148,41 @@
         <div>
             &ensp;&ensp;&ensp;&ensp;/&ensp;
             get方法访问，用于获取全部的person表信息
-            <a href="/StuffInfo">
-                /StuffInfo
+            <a href="/StuffInfo/">
+                /StuffInfo/
+            </a>
+        </div>
+    </ul>
+    <ul id="RecruitpostInfo">
+        <li>/RecruitpostInfo</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/&ensp;
+            get方法访问，用于获取全部的recruitpost表信息
+            <a href="/RecruitpostInfo/">
+                /RecruitpostInfo/
+            </a>
+        </div>
+    </ul>
+    <ul id="CorpInfo">
+        <li>/CorpInfo</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/&ensp;
+            get方法访问，用于获取全部的corporation表信息
+            <a href="/CorpInfo/">
+                /CorpInfo/
             </a>
         </div>
     </ul>
     <ul id="dangan">
         <li>/dangan</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/performance/datauserid &ensp;
+            get方法，获取performance表全部信息，示例：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/dangan/performance/datauserid?user_id=1&corporation_id=1">
+                /dangan/performance/datauserid?user_id=1&corporation_id=1
+            </a>
+        </div>
         <div>
             &ensp;&ensp;&ensp;&ensp;/performance/dataSource &ensp;
             get方法，获取performance表全部信息，示例：
@@ -155,8 +195,10 @@
             &ensp;&ensp;&ensp;&ensp;/performance/newdataSource &ensp;
             get方法，获取performance表每一位员工最近一次的数据，示例：
             <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
-            <a href="/dangan/performance/newdataSource">
-                /dangan/performance/newdataSource
+            必要参数：corporation_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/dangan/performance/newdataSource?corporation_id=1">
+                /dangan/performance/newdataSource?corporation_id=1
             </a>
         </div>
         <div>
@@ -234,7 +276,46 @@
                     <form action="/dangan/hrlizhi/delete" method="post">
                         <p>u_id: <input type="text" name="u_id" value="20"/>
                         <p>flag: <input type="text" name="flag" value="1"/></p>
-                        <input type="submit" value="go and have a try: /hrlizhi/delete"/>
+                        <input type="submit" value="go and have a try: /dangan/hrlizhi/delete"/>
+                    </form>
+                </div>
+                <div style="clear:both">
+                    &ensp;
+                </div>
+            </div>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/stflizhiadd &ensp;
+            post方法访问，form形式传递参数，增加一个员工离职
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：u_id，description
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/dangan/stflizhiadd" method="post">
+                        <p>u_id: <input type="text" name="u_id" value="1"/>
+                        <p>description: <input type="text" name="description" value="我拒绝996"/></p>
+                        <input type="submit" value="go and have a try: /dangan/stflizhiadd"/>
+                    </form>
+                </div>
+                <div style="clear:both">
+                    &ensp;
+                </div>
+            </div>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/stflizhi &ensp;
+            post方法访问，form形式传递参数，员工访问自己的离职申请
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：u_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            返回结果：查找stafflist表与resignlist表，如果员工有提交resignlist则flag=1，否则flag=0
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/dangan/stflizhi" method="post">
+                        <p>u_id: <input type="text" name="u_id" value="16"/></p>
+                        <input type="submit" value="go and have a try: /dangan/stflizhi"/>
                     </form>
                 </div>
                 <div style="clear:both">
@@ -327,6 +408,41 @@
                 /person/sa_logout
             </a>
         </div>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/update&ensp;
+            修改用户信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：userid
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            可选参数：name，sex，identitycard，politicsstatus，edubackground，eduschool，tel
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            email，address，postcode，briefintro
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/person/update" method="post">
+                        <p>userid: <input type="text" name="userid" value="27"/></p>
+                        <p>name: <input type="text" name="name" value=""/></p>
+                        <p>sex: <input type="text" name="sex" value=""/></p>
+                        <p>identitycard: <input type="text" name="identitycard" value=""/></p>
+                        <p>politicsstatus: <input type="text" name="politicsstatus" value=""/></p>
+                        <p>edubackground: <input type="text" name="edubackground" value=""/></p>
+                        <p>eduschool: <input type="text" name="eduschool" value=""/></p>
+                        <p>tel: <input type="text" name="tel" value=""/></p>
+                        <p>email: <input type="text" name="email" value=""/></p>
+                        <p>address: <input type="text" name="address" value=""/></p>
+                        <p>postcode: <input type="text" name="postcode" value=""/></p>
+                        <p>briefintro: <input type="text" name="briefintro" value=""/></p>
+                        <input type="submit" value="update：/person/update "/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">
+            &ensp;
+        </div>
 
     </ul>
     <ul id="check">
@@ -364,6 +480,16 @@
             其中，年龄字段由身份证提取，只返回get_offer字段为0的
             <a href="/rencai/recruitpost_candidate?recruitpost_id=1">
                 /rencai/recruitpost_candidate?recruitpost_id=1
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/candidate &ensp;
+            get方法访问，获取stafftrack表中的数据，对于每一个user_id对应的corporation，
+            查出corporation、performance、rewardandpulishment对于的信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数为user_id：
+            <a href="/rencai/candidate?user_id=2">
+                /rencai/candidate?user_id=2
             </a>
         </div>
         <div>
@@ -465,6 +591,93 @@
                 </div>
             </div>
         </div>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/retrieve&ensp;
+            通过corporation_id检索公司信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：corporation_id
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/corporation/retrieve" method="post">
+                        <p>corporation_id: <input type="text" name="corporation_id" value="1"/></p>
+                        <input type="submit" value="retrieve"/>
+                    </form>
+                </div>
+            </div>
+            <div style="clear:both">
+                &ensp;
+            </div>
+        </div>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/update&ensp;
+            通过corporation_id检索公司信息，并更新信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：corporation_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            可选参数：name，email，tel，website，location，requirementinfo
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/corporation/update" method="post">
+                        <p>corporation_id: <input type="text" name="corporation_id" value="1"/></p>
+                        <p>name: <input type="text" name="name" value=""/></p>
+                        <p>email: <input type="text" name="email" value=""/></p>
+                        <p>tel: <input type="text" name="tel" value=""/></p>
+                        <p>website: <input type="text" name="website" value=""/></p>
+                        <p>location: <input type="text" name="location" value=""/></p>
+                        <p>requirementinfo: <input type="text" name="requirementinfo" value=""/></p>
+                        <input type="submit" value="go：corporation_id/update"/>
+                    </form>
+                </div>
+            </div>
+            <div style="clear:both">
+                &ensp;
+            </div>
+        </div>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/structure/retrieve&ensp;
+            通过corporation_id检索公司架构
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：corporation_id
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/corporation/structure/retrieve" method="post">
+                        <p>corporation_id: <input type="text" name="corporation_id" value="1"/></p>
+                        <input type="submit" value="/corporation/structure/retrieve"/>
+                    </form>
+                </div>
+            </div>
+            <div style="clear:both">
+                &ensp;
+            </div>
+        </div>
+        <div style="clear:both">
+            <br>
+            &ensp;&ensp;&ensp;&ensp;/structure/update&ensp;
+            通过corporation_id更新
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：corporation_id，structure，测试用例如下
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            "[{\"id\":\"0-1\",\"label\":\"Root\",\"children\":[{\"id\":\"0-11\",\"label\":\"Root1\"},{\"id\":\"0-12\",\"label\":\"Root2\"}]}]"
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/corporation/structure/update" method="post">
+                        <p>corporation_id: <input type="text" name="corporation_id" value="1"/></p>
+                        <p>structure: <input type="text" name="structure" value=""/></p>
+                        <input type="submit" value="/corporation/structure/update"/>
+                    </form>
+                </div>
+            </div>
+            <div style="clear:both">
+                &ensp;
+            </div>
+        </div>
         <div style="clear:both">&ensp;</div>
     </ul>
     <ul id="hr">
@@ -514,6 +727,28 @@
                 /Zhiye/Myzhaopin/dataSource?user_id=16
             </a>
         </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/Myzhaopin/isOK &ensp;
+            get方法，判断用户是否进入公司，查询stafflist表
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：user_id，返回值为1表示进入公司
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/Zhiye/Myzhaopin/isOK?user_id=16">
+                /Zhiye/Myzhaopin/isOK?user_id=16
+            </a>
+        </div>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/Myzhaopin/getoffer &ensp;
+            get方法，用户接受offer，改变applylist表get_offer状态为4，通过recruitpost_id查询岗位信息
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            通过user_id查询person表，最后填写增加stafflist表
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            必要参数：user_id，recruitpost_id
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            <a href="/Zhiye/Myzhaopin/getoffer?user_id=16&recruitpost_id=2">
+                /Zhiye/Myzhaopin/getoffer?user_id=16&recruitpost_id=2
+            </a>
+        </div>
     </ul>
     <ul id="inspect">
         <li>/inspect</li>
@@ -560,7 +795,52 @@
             </a>
         </div>
     </ul>
-
+    <ul id="recuit">
+        <li>/recuit</li>
+        <div>
+            &ensp;&ensp;&ensp;&ensp;/add &ensp;
+            post方法访问，form表单形式，向recruitpost表添加数据：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：corporation_id, department, posttype, number, description
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            其中全部都为必要参数
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/recuit/add" method="post">
+                        <p>corporation_id: <input type="text" name="corporation_id" value="1"/></p>
+                        <p>department: <input type="text" name="department" value="开发部"/></p>
+                        <p>posttype: <input type="text" name="posttype" value="程序员"/></p>
+                        <p>number: <input type="text" name="number" value="5"/></p>
+                        <p>description: <input type="text" name="description" value="不会996"/></p>
+                        <input type="submit" value="go and have a try: /recuit/add">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">&ensp;</div>
+    </ul>
+    <ul id="staff">
+        <li>/staff</li>
+         <div>
+            &ensp;&ensp;&ensp;&ensp;/jixiaoCheck &ensp;
+            post方法访问，form表单形式，获取performance表数据：
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：uid
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/staff/jixiaoCheck" method="post">
+                        <p>uid: <input type="text" name="uid" value="1"/></p>
+                        <input type="submit" value="go and have a try: /staff/jixiaoCheck">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both">&ensp;</div>
+    </ul>
 
     {% endif %}
 </head>

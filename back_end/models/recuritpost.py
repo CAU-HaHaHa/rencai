@@ -35,13 +35,14 @@ class Recruitpost(db.Model):
             obj_list.append(obj)
         return obj_list
 
-    def __init__(self, corporation_id, department="",
-                 number=0, description="", isposted=0, registerdate=0):
+    def __init__(self, corporation_id, department="", posttype="",
+                 number=0, description="", isposted=1, registerdate=0):
         self.corporation_id = corporation_id
         self.department = department
         self.number = number
         self.isposted = isposted
         self.description = description
+        self.posttype = posttype
         if registerdate == 0:
             create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.registerdate = create_time

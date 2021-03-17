@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, jsonify
 from flaskapp.create_flask import app
 from mysql.create_db import db
 from models.recuritpost import Recruitpost
@@ -6,6 +6,11 @@ from models.person import Person
 from models.applylist import Applylist
 from tools.transform import idcard2ages
 import tools.login_check as login_check
+from models.stafftrack import Stafftrack
+from models.corporation import Corporation
+from models.performance import Performance
+from models.rewardandpulishment import Rewardandpulishment
+import json
 
 blue_print_name = "/rencai"
 user_blueprint = Blueprint(blue_print_name, __name__)
@@ -57,6 +62,96 @@ def refuse():
             message="success",
             data="none"
         )
+    except Exception as e:
+        return dict(
+            status=0,
+            message=str(e),
+            data="none"
+        )
+
+
+@user_blueprint.route('/candidate', methods=['GET', 'POST'])
+@login_check.is_admin_login
+def candidate():
+    try:
+        if request.method == "POST":
+            raise Exception("method must be get")
+        user_id = request.values.get("user_id", "")
+        if user_id == "":
+            raise Exception("user_id must not be empty")
+
+        retrieve_list_stafftrack = ["stafftrack_id", "corporation_id", "user_id",
+                                   "arrivetime", "departtime", "dutytype", "description"]
+        querylist_stafftrack = Stafftrack.get_obj(retrieve_list_stafftrack)
+        msg = db.session.query(*querylist_stafftrack). \
+            filter(Stafftrack.user_id == user_id)
+
+        retrieve_list_corporation = ["corporation_id", "name", "registeredcapital", "legalrepresentative",
+                         "registrationdate", "tel", "email", "website",
+                         "location", "requirementinfo", "structure", "overall_depart",
+                         "otherinfo", "is_register", "is_delete"]
+        querylist_corporation = Corporation.get_obj(retrieve_list_corporation)
+
+
+        retrieve_list_performance = ["performance_id", "corporation_id", "user_id",
+                                     "hr_id", "value", "description", "registerdate",
+                                     "department", "post"]
+        querylist_performance = Performance.get_obj(retrieve_list_performance)
+        
+
+
+        retrieve_list_rewardandpulishment = \
+            ["rnp_id", "corporation_id", "user_id", "user_name", "user_depart",
+             "user_job", "hr_id", "rew_or_pun", "reward_pun_name", "description", "registerdate"]
+        querylist_rewardandpulishment = Rewardandpulishment.get_obj(retrieve_list_rewardandpulishment)
+
+        return_list = []
+        for line in msg:
+            struct = dict()
+            corporation_id = line.corporation_id
+            line = list(line)
+            line[3] = line[3].strftime('%Y-%m-%d')
+            line[4] = line[4].strftime('%Y-%m-%d')
+            stafftrack_ret = dict(zip(retrieve_list_stafftrack, line))
+
+
+            msg_cor = db.session.query(*querylist_corporation).\
+                filter(Corporation.corporation_id == corporation_id).first()
+            msg_cor = list(msg_cor)
+            msg_cor[4] = msg_cor[4].strftime('%Y-%m-%d')
+            stafftrack_ret = dict(zip(retrieve_list_corporation, msg_cor), **stafftrack_ret)
+            struct["corporation"] = stafftrack_ret
+
+            msg_per = db.session.query(*querylist_performance). \
+                filter(Performance.user_id == user_id).\
+                filter(Performance.corporation_id == corporation_id)
+            return_msg_per = []
+            for line_per in msg_per:
+                line_per = list(line_per)
+                line_per[6] = line_per[6].strftime('%Y-%m-%d')
+                temp = dict(zip(retrieve_list_performance,line_per))
+                return_msg_per.append(temp)
+            struct["performance"] = return_msg_per
+
+            msg_rnp = db.session.query(*querylist_rewardandpulishment). \
+                filter(Rewardandpulishment.user_id == user_id). \
+                filter(Rewardandpulishment.corporation_id == corporation_id)
+            return_msg_rnp = []
+            for line_per in msg_rnp:
+                line_per = list(line_per)
+                line_per[10] = line_per[10].strftime('%Y-%m-%d')
+                temp = dict(zip(retrieve_list_rewardandpulishment, line_per))
+                return_msg_rnp.append(temp)
+            struct["rewardandpulishment"] = return_msg_rnp
+
+            return_list.append(struct)
+
+        return dict(
+            status=0,
+            message="success",
+            data=return_list
+        )
+
     except Exception as e:
         return dict(
             status=0,

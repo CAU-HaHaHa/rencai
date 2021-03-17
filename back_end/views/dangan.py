@@ -10,9 +10,118 @@ from models.stafflist import Stafflist
 from models.resignlist import Resignlist
 import tools.login_check as login_check
 
-
 blue_print_name = "/dangan"
 user_blueprint = Blueprint(blue_print_name, __name__)
+
+
+@user_blueprint.route('/performance/datauserid', methods=['GET', 'POST'])
+@login_check.is_hr_login
+def performance_datauserid():
+    try:
+        if request.method == "POST":
+            raise Exception("method must be get")
+        user_id = request.values.get('user_id')
+        corporation_id = request.values.get('corporation_id')
+
+        if not all([user_id, corporation_id]):
+            raise Exception("user_id, corporation_id must not be empty")
+
+        retrieve_list = ["performance_id", "corporation_id", "user_id",
+                         "hr_id", "value", "description", "registerdate", "department", "post"]
+        querylist = Performance.get_obj(retrieve_list)
+        msg = db.session.query(*querylist). \
+            filter(Performance.corporation_id == corporation_id). \
+            filter(Performance.user_id == user_id). \
+            order_by(Performance.registerdate.desc())
+
+        return_msg = []
+        for line in msg:
+            line = list(line)
+            line[6] = line[6].strftime('%Y-%m-%d')
+            temp = zip(retrieve_list, line)
+            return_msg.append(dict(temp))
+        return dict(
+            status=1,
+            message="success",
+            data=return_msg
+        )
+
+    except Exception as e:
+        return dict(
+            status=0,
+            message=str(e),
+            data="none"
+        )
+
+
+@user_blueprint.route('/stflizhi', methods=['GET', 'POST'])
+@login_check.is_user_login
+def stflizhi():
+    try:
+        if request.method == "GET":
+            raise Exception("method must be post")
+        user_id = request.form.get('u_id')
+        if not user_id:
+            raise Exception("u_id must not be empty")
+
+        retrieve_list_stafflist = ["user_id", "dutytype", "department", "user_name"]
+        querylist_stafflist = Stafflist.get_obj(retrieve_list_stafflist)
+        info = db.session.query(*querylist_stafflist). \
+            filter(Stafflist.user_id == user_id).first()
+        if not info:
+            raise Exception("user is not work in company")
+
+        return_data = dict(zip(retrieve_list_stafflist, info))
+        msg = db.session.query(Resignlist.user_id). \
+            filter(Resignlist.user_id == user_id).first()
+        if msg:
+            return_data["flag"] = 1
+        else:
+            return_data["flag"] = 0
+        return dict(
+            status=1,
+            message="success",
+            data=return_data
+        )
+    except Exception as e:
+        return dict(
+            status=0,
+            message=str(e),
+            data="none"
+        )
+
+
+@user_blueprint.route('/stflizhiadd', methods=['GET', 'POST'])
+@login_check.is_user_login
+def stflizhiadd():
+    try:
+        if request.method == "GET":
+            raise Exception("method must be post")
+        user_id = request.form.get('u_id')
+        description = request.form.get('description')
+        if not all([user_id, description]):
+            raise Exception("u_id, description must not be empty")
+        have_user = db.session.query(Person.user_id).filter(Person.user_id == user_id).first()
+        if not have_user:
+            raise Exception("user id is not exist")
+
+        resignlist = Resignlist(
+            user_id=user_id,
+            description=description,
+        )
+        resignlist.save()
+        return dict(
+            status=1,
+            message="success",
+            data="none"
+        )
+    except Exception as e:
+        return dict(
+            status=0,
+            message=str(e),
+            data="none"
+        )
+
 
 @user_blueprint.route('/hrlizhi/delete', methods=['GET', 'POST'])
 @login_check.is_hr_login
@@ -97,6 +206,7 @@ def hrlizhi():
             message=str(e),
             data="none"
         )
+
 
 @user_blueprint.route('/jixiao/insert', methods=['GET', 'POST'])
 @login_check.is_hr_login
@@ -208,10 +318,15 @@ def newdataSource_dataSource():
     try:
         if request.method == "POST":
             raise Exception("method must be get")
+
+        corporation_id = request.values.get("corporation_id")
+        if not corporation_id:
+            raise Exception("corporation_id must not be empty")
+
         retrieve_list = ["performance_id", "corporation_id", "user_id",
                          "hr_id", "value", "description", "registerdate", "department", "post"]
         querylist = Performance.get_obj(retrieve_list)
-        msg = db.session.query(*querylist)
+        msg = db.session.query(*querylist).filter(Performance.corporation_id == corporation_id)
         tempmessage = dict()
         for line in msg:
             user_id = line[retrieve_list.index("user_id")]

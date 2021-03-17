@@ -4,6 +4,7 @@ from models.person import Person
 import tools.valid as valid
 from mysql.create_db import db
 from models.hr import Hr
+from models.stafflist import Stafflist
 from tools.mail.sendvalidcheck import Sendcheck
 
 """
@@ -18,12 +19,13 @@ from tools.mail.sendvalidcheck import Sendcheck
 blue_print_name = "/person"
 person_blueprint = Blueprint(blue_print_name, __name__)
 
+
 @person_blueprint.route('/sa_login', methods=['GET', 'POST'])
 def sa_login():
     root_uid = request.form.get('username')
     root_pwd = request.form.get('password')
     if app.config['SERVER_INI']["root_uid"] == root_uid and \
-        app.config['SERVER_INI']["root_pwd"] == root_pwd:
+            app.config['SERVER_INI']["root_pwd"] == root_pwd:
         session["user_type"] = 3
     return redirect("/")
 
@@ -83,10 +85,25 @@ def login():
                 raise Exception("password error")
             session["user_id"] = have_user[0]
             session["user_type"] = 2
+
+            passcheck = list(passcheck)
+            if passcheck[4] == 1:
+                passcheck[4] = "男"
+            else:
+                passcheck[4] = "女"
+            passcheck[10] = passcheck[10].strip(";")
+            return_data = dict(zip(retrieve_list, passcheck))
+            msg = db.session.query(Stafflist.user_id, Stafflist.corporation_id).\
+                filter(Stafflist.user_id == have_user[0]).first()
+            if msg:
+                return_data["corporation_id"] = msg[1]
+            else:
+                return_data["corporation_id"] = 0
+
             return dict(
                 status=1,
                 message="success",
-                data=dict(zip(retrieve_list, passcheck))
+                data=return_data
             )
         else:
             raise Exception("user type error: user type must be 1 for hr or 2 for staff")
@@ -141,84 +158,79 @@ def create():
         )
 
 
-'''
-@person_blueprint.route('/create/', methods=['GET', 'POST'])
-def create():
-    """
-    CRUD中的C，create操作，新增一个用户，要求方式为POST形式，用户被添加到Person表中
-    其中username, password, name, identitycard为必填，其他判断内容详见代码
-    :return: 字典形式，详情请看/views/demo.py介绍
-    """
-    if request.method == 'GET':
-        return dict(
-            status=0,
-            message="method must be post",
-            data="none"
-        )
+@person_blueprint.route('/update', methods=['GET', 'POST'])
+def update():
     try:
+        if request.method == 'GET':
+            raise Exception("method must be post")
         # 获取用户填写的信息
-        username = request.form.get('username')
-        password = request.form.get('password')
+        user_id = request.form.get('userid')
         name = request.form.get('name')
         sex = request.form.get('sex')
         identitycard = request.form.get('identitycard')
-        tags = request.form.get('tags')
+        politicsstatus = request.form.get('politicsstatus')
         edubackground = request.form.get('edubackground')
-        briefintro = request.form.get('briefintro')
+        eduschool = request.form.get('eduschool')
         tel = request.form.get('tel')
         email = request.form.get('email')
-        politicsstatus = request.form.get('politicsstatus')
         address = request.form.get('address')
         postcode = request.form.get('postcode')
-        workaddress = request.form.get('workaddress')
+        briefintro = request.form.get('briefintro')
 
-        # 定义个变量来控制过滤用户填写的信息
-        flag = True
-        msg = ""
-        # 必要信息为用户名、密码、姓名、身份证号
-        if flag and not all([username, password, name, identitycard]):
-            msg, flag = '必要信息不完整：用户名、密码、姓名、身份证号', False
-        # 判断用户名是长度是否大于16
-        if flag and len(username) > 20:
-            msg, flag = '用户名长度不能大于20', False
+        if not user_id:
+            raise Exception("userid must not be empty")
 
-        if flag:
-            # 核对输入的用户是否已经被注册了
-            u = Person.query.filter(Person.username == username).first()
-            # 判断用户名是否已经存在
-            if u:
-                flag = False
-                msg = '用户名已经存在'
-        if flag:
-            res = valid.checkIdcard(identitycard)
-            # 判断身份证合法性
-            if res != "验证通过!":
-                flag = False
-                msg = res
+        msg_per = Person.query.filter(Person.user_id == user_id).first()
+        if not msg_per:
+            raise Exception("userid is not exist")
+        if name:
+            msg_per.name = name
+        if sex:
+            if sex == "男":
+                msg_per.sex = 1
+            elif sex == "女":
+                msg_per.sex = 0
+            else:
+                raise Exception("sex must be 男 or 女")
+        if identitycard:
+            if valid.checkIdcard(identitycard) != "验证通过!":
+                raise Exception("id card is not valid")
+            msg_per.identitycard = identitycard
+        if politicsstatus:
+            msg_per.politicsstatus = politicsstatus
+        if edubackground:
+            msg_per.edubackground = edubackground
+        if eduschool:
+            msg_per.eduschool = eduschool
+        if email:
+            if not valid.checkEmail(email):
+                raise Exception("email is not valid")
+            msg_per.email = email
+        if address:
+            msg_per.address = address
+        if postcode:
+            msg_per.postcode = postcode
+        if tel:
+            if not valid.checkPhone(tel):
+                raise Exception("phone is not valid")
+            msg_per.tel = tel
+        if briefintro:
+            msg_per.briefintro = briefintro
 
-        # 如果上面的检查有任意一项没有通过就返回注册页面,并提示响应的信息
-        if not flag:
-            raise Exception(msg)
+        db.session.commit()
 
-        # 上面的验证全部通过后就开始创建新用户
-        person = Person(username=username, password=username, name=name, sex=sex,
-                        identitycard=identitycard, tags=tags, edubackground=edubackground,
-                        briefintro=briefintro, tel=tel, email=email,
-                        politicsstatus=politicsstatus, address=address,
-                        postcode=postcode, workaddress=workaddress)
-        # 保存注册的用户
-        person.save()
         return dict(
             status=1,
             message="success",
             data="none"
         )
+
     except Exception as e:
         return dict(
             status=0,
-            message="internal error:" + str(e),
+            message=str(e),
             data="none"
         )
 
-'''
+
 app.register_blueprint(blueprint=person_blueprint, url_prefix=blue_print_name)
