@@ -16,10 +16,10 @@ const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/Jia
 const HRLiZhiDemo = LoadableComponent(()=>import('../../routes/Dangan/HRLiZhiDemo/index'))
 const corpStructure = LoadableComponent(()=>import('../../routes/Dangan/corpStructure/index'))
 
-
 //导航组件Demo
 const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
 const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
+const StuffJiangchengDemo = LoadableComponent(()=>import('../../routes/staffDangan/StuffJiangchengDemo/index'))
 
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
@@ -111,7 +111,7 @@ class ContentMain extends React.Component {
             {/* 个人档案管理 */}
             <PrivateRoute exact path='/home/staffdangan/basicinfo' component={basicInfo}/>
             <PrivateRoute exact path='/home/staffdangan/jixiao' component={Home}/>
-            <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={Home}/>
+            <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={StuffJiangchengDemo}/>
 
             {/* 职业生涯发展 */}
             <PrivateRoute exact path='/home/zhiye/gangwei' component={Home}/>

@@ -1,12 +1,14 @@
 import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import { Table, Button, Form, DatePicker, Input, Row, Col, Card, Select, Drawer } from 'antd';
+import { Table, Button, Form, DatePicker, Input, Row, Col, Card, Select, Drawer,message,Modal } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import axios from 'axios'
+import {ExclamationCircleOutlined} from '@ant-design/icons';
 
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
+const { confirm } = Modal;
 
 export default class RencaiViewDemo extends React.Component {
   constructor(props) {
@@ -66,7 +68,7 @@ export default class RencaiViewDemo extends React.Component {
       {
         key: 'action1',
         render: (row) => (
-          <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle1.bind(this, row.applylist_id)} shape="round">
+          <Button type="primary" icon={<SearchOutlined />} onClick={this.onClick1.bind(this, row.applylist_id)} shape="round">
             批准
           </Button>
         )
@@ -83,7 +85,7 @@ export default class RencaiViewDemo extends React.Component {
       {
         key: 'action3',
         render: (row) => (
-          <Button type="primary" icon={<SearchOutlined />} onClick={this.ClickViewHandle3.bind(this, row.applylist_id)} shape="round">
+          <Button type="primary" icon={<SearchOutlined />} onClick={this.onClick2.bind(this, row.applylist_id)} shape="round">
             拒绝
           </Button>
 
@@ -91,6 +93,70 @@ export default class RencaiViewDemo extends React.Component {
       }
     ],
   }
+
+    // 批准按钮
+    onClick1 = (applylist_id) => {
+          const _this = this;
+          confirm({
+            title: '操作确认',
+            icon: <ExclamationCircleOutlined />,
+            content:"确定要批准吗？",
+            // 点击确定
+            onOk() {
+              console.log('OK');
+              console.log('http://45.76.99.155/rencai/enroll?applylist_id=' + applylist_id)
+              axios.get('http://45.76.99.155/rencai/enroll?applylist_id=' + applylist_id)
+              console.log('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
+              axios.get('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
+                .then(function (response) {
+                  _this.setState({
+                    dataSource: response.data['data'],
+                    originaldataSource: response.data['data'],
+                    isLoaded: true
+                  });
+                });
+                console.log(this.state)
+              message.info("成功批准！");
+            },
+            //点击取消
+            onCancel() {
+              console.log('取消操作');
+            }
+          });
+          console.log(this.state);
+        }
+
+    // 拒绝按钮
+    onClick2 = (applylist_id) => {
+      const _this = this;
+      confirm({
+        title: '操作确认',
+        icon: <ExclamationCircleOutlined />,
+        content:"确定要拒绝吗？",
+        // 点击确定
+        onOk() {
+          console.log('OK');
+          console.log('http://45.76.99.155/rencai/refuse?applylist_id=' + applylist_id)
+          axios.get('http://45.76.99.155/rencai/refuse?applylist_id=' + applylist_id)
+          console.log('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
+          axios.get('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
+            .then(function (response) {
+              _this.setState({
+                dataSource: response.data['data'],
+                originaldataSource: response.data['data'],
+                isLoaded: true
+              });
+            });
+            console.log(this.state)
+          message.info("成功拒绝！");
+        },
+        //点击取消
+        onCancel() {
+          console.log('取消操作');
+        }
+      });
+      console.log(this.state);
+    }
 
   ClickViewHandle1 = (applylist_id) => {
     console.log('http://45.76.99.155/rencai/enroll?applylist_id=' + applylist_id)
@@ -105,6 +171,7 @@ export default class RencaiViewDemo extends React.Component {
           isLoaded: true
         });
       });
+      console.log(this.state)
   }
 
   ClickViewHandle3 = (applylist_id) => {
@@ -120,6 +187,7 @@ export default class RencaiViewDemo extends React.Component {
           isLoaded: true
         });
       });
+      console.log(this.state)
   }
 
   componentDidMount() {
@@ -227,7 +295,7 @@ export default class RencaiViewDemo extends React.Component {
           <h1>【{this.department} / {this.posttype}岗位】</h1>
           <Form>
             <Row gutter={12}>
-              <Col span={3} key={1}>
+              <Col span={4} key={1}>
                 <Form.Item name="name" label="姓名">
                   <Input placeholder="请输入姓名" onChange={(event) => { this.inputChange2(event, "name") }} />
                 </Form.Item>
@@ -237,7 +305,7 @@ export default class RencaiViewDemo extends React.Component {
                   <Input placeholder="请输入性别" onChange={(event) => { this.inputChange2(event, "sex") }} />
                 </Form.Item>
               </Col>
-              <Col span={3} key={3}>
+              <Col span={4} key={3}>
                 <Form.Item name="age" label="年龄">
                   <Input placeholder="请输入年龄" onChange={(event) => { this.inputChange2(event, "age") }} />
                 </Form.Item>
@@ -252,12 +320,9 @@ export default class RencaiViewDemo extends React.Component {
                 </Form.Item>
               </Col>
 
-              <Col style={{ textAlign: 'right', }}>
+              <Col span={3} style={{ textAlign: 'right', }}>
 
-                <Button type="primary" htmlType="submit" onClick={this.Search2}>  &nbsp; 查&nbsp;&nbsp;询 &nbsp;  </Button>
-              </Col>
-              <Col style={{ textAlign: 'right', }}>
-                <Button type="primary" htmlType="submit" onClick={this.Clear2}>   &nbsp;取&nbsp;&nbsp;消 &nbsp;  </Button>
+                <Button type="primary" htmlType="submit" onClick={this.Search2}>   &nbsp;查&nbsp;&nbsp;询&nbsp;  </Button>
               </Col>
             </Row>
           </Form>
