@@ -3,34 +3,17 @@ import {BackTop} from 'antd'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import {Table, Space ,Col,Row,Form,Card} from 'antd';
 import { Button,Modal,InputNumber } from 'antd';
-import './ui.less'
 import { Input } from 'antd';
 import { DatePicker} from 'antd';
 import axios from 'axios';
-import Qs from 'qs'
+import { observer, inject } from "mobx-react"
+import { withRouter } from 'react-router-dom'
+
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Column } = Table;
-// //数据库插入信息语句（插入绩效信息）
-// router.post("/",(req,res) =>{
-//   const { errors,isValid } = validatorInput(req.body);
-//   // 接受数据库语句
-//   var sql = "insert into user values (?,?,?,?,?,?,?)";
-//   var arr = [req.body.performance_id,req.body.corporation_id,req.body.user_id,req.body.hr_id,req.body.value,req.body.description,req.body.registerdate];
-//   if(isValid){
-//       sqlFn(sql,arr,function(data){
-//           if(data.affectedRows){
-//               res.send({success:true})
-//           }else{
-//               res.status(400).json({error:'插入失败'});
-//           }
-//       })
-//   }else{
-//       res.status(400).json(errors);
-//   }
-// })
 
-
+@withRouter @inject('appStore') @observer
 //开始
 class JixiaoDemo extends React.Component {
   constructor(props){
@@ -38,6 +21,7 @@ class JixiaoDemo extends React.Component {
 
     this.state = {
       modalAddInfoVisible: false, //新增信息Modal的显示属性
+     
       dataselect:[],
       datasource: [],
       searchcorporation_id: "",     
@@ -56,6 +40,8 @@ class JixiaoDemo extends React.Component {
       addage:""
     }
     this.handleclickbtn = this.handleclickbtn.bind(this);
+    
+    this.addnew = this.addnew.bind(this);
   }
 
   //查看详情按钮事件——点击跳转并传参
@@ -158,13 +144,14 @@ class JixiaoDemo extends React.Component {
 
   //添加到数据库
   addnew= (type)=>{
-    console.log(this.state.adddescription)
-    console.log(this.state.addvalue)
-    console.log(this.state.addcorporation_id)
-    console.log(this.state.adduser_id)
-    console.log(this.state.addhr_id)  
-    console.log(this.state.addpost) 
-    console.log(this.state.adddepartment)   
+    // console.log(this.state.adddescription)
+    // console.log(this.state.addvalue)
+    // console.log(this.state.addcorporation_id)
+    // console.log(this.state.adduser_id)
+    // console.log(this.state.addhr_id)  
+    // console.log(this.state.addpost) 
+    // console.log(this.state.adddepartment) 
+    const _this = this;  
     this.setState({
       [type+"Visible"]: false
     })
@@ -180,82 +167,87 @@ class JixiaoDemo extends React.Component {
       console.log(a, b);
     }
     axios.post('http://45.76.99.155/dangan/jixiao/insert',params).then((res)=>{console.log(res.data)});
-    // axios({
-    //   method: "post",
-    //   url:"/dangan/jixiao/insert",
-    //   // data:Qs.stringify(this.state.data)
-    //   data:params
-      
-    // }).then((res)=>{
-    //   console.log(res.data);
-    //   console.log(11111);
-    //   console.log(params);
-    // })
-    // const _this = this;
-    // axios.post('/dangan/jixiao/insert')
-    //   .then(function(response){
-    //     _this.setState({
-    //       user_id: _this.state.adduser_id,
-    //       corporation_id: _this.state.addcorporation_id,
-    //       value:_this.state.addvalue+0,
-    //       post:_this.state.addpost,
-    //       description:_this.state.adddescription,
-    //       department:_this.state.adddepartment,
-    //       hr_id:_this.state.addhr_id
-    //     });
-    //   });
-     
+
+    axios({
+      method:'get',
+      url: 'http://45.76.99.155/dangan/performance/newdataSource',
+      params :{
+        corporation_id: this.props.appStore.loginUser.corporationid
+        //corporation_id: 1
+      }
+    }).then(function(response){
+      console.log(response.data)
+      _this.setState({
+               datasource: response.data.data,
+               dataselect: response.data.data,
+               isLoaded: true
+      });
+    })
 
   }
   
   //api
   componentDidMount() {
-    const _this = this;
-    // http://127.0.0.1:5000/dangan/performance/datasource
-    // http://http://45.76.99.155/dangan/performance/datasource
-    //
-    axios.get('http://45.76.99.155/dangan/performance/newdataSource')
-      .then(function(response) {
-        _this.setState({
-          datasource: response.data.data,
-          dataselect: response.data.data,
-          isLoaded: true
-        });
-    });
+     const _this = this;
+    // axios.get('http://45.76.99.155/dangan/performance/newdataSource')
+    //   .then(function(response) {
+    //     _this.setState({
+    //       datasource: response.data.data,
+    //       dataselect: response.data.data,
+    //       isLoaded: true
+    //     });
+    // });
+
+    console.log(this.props.appStore.loginUser.corporationid)
+    axios({
+      method:'get',
+      url: 'http://45.76.99.155/dangan/performance/newdataSource',
+      params :{
+        corporation_id: this.props.appStore.loginUser.corporationid
+        //corporation_id: 1
+      }
+    }).then(function(response){
+      console.log(response.data)
+      
+      _this.setState({
+               datasource: response.data.data,
+               dataselect: response.data.data,
+               isLoaded: true
+      });
+    })
   } 
 
   render() {
+    console.log(this.props.appStore.loginUser) 
     return (
       <div>
-        <CustomBreadcrumb arr={['员工档案管理','绩效评价']}/>   
-          <Form>
-            <Row>
-              <Col span={6}>
-                <Form.Item name="user_id" label="员工ID:">
-                <Input placeholder="请输入ID" onChange={(event) => { this.inputChange(event, "user_id") }} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item name="value" label="绩效">
-                <Input placeholder="请输入绩效分数" onChange={(event) => { this.inputChange(event, "value") }} /> 
-                </Form.Item>                 
-              </Col>
-              <Col span={6}>
-                <Form.Item name="department" label="部门">
-                <Input placeholder="请输入部门" onChange={(event) => { this.inputChange(event, "department") }} /> 
-                </Form.Item>                 
-              </Col>
-              <Col span={6}>
-                <Form.Item name="post" label="职位">
-                <Input placeholder="请输入职位" onChange={(event) => { this.inputChange(event, "post") }} /> 
-                </Form.Item>                 
-              </Col>
-              <Col span={6} style={{ textAlign: 'middle', }}>
-                {/* <Button type="primary" icon=" 点击查询 " onClick={this.Search}></Button> */}
-                <Button type="primary" onClick={this.Search}>查询</Button>
-              </Col>
-            </Row>
-          </Form>
+        <div>
+        <CustomBreadcrumb arr={['员工档案管理', '绩效评价']} />
+          <Card hoverable title="绩效评价" className='card-item' block>
+            <Space direction="vertical">
+              <Row gutter={20}>
+                <Col span={5}>
+                  <Input addonBefore="员工ID:" placeholder="" onChange={(event) => { this.inputChange(event, "user_id") }} />
+                </Col>
+                <Col span={5}>
+                  <Input addonBefore="绩效:" placeholder=" " onChange={(event) => { this.inputChange(event, "value") }} />
+                </Col>
+                <Col span={5}>
+                  <Input addonBefore="部门:" placeholder="" onChange={(event) => { this.inputChange(event, "department") }} />
+                </Col>
+                <Col span={5}>
+                  <Input addonBefore="职位:" placeholder=" " onChange={(event) => { this.inputChange(event, "post") }} />
+                </Col>
+                <Col span={2}>
+                  <Button type="primary" onClick={this.Search} block>
+                       查询
+                  </Button>
+                </Col>
+              </Row>
+            </Space>
+          </Card>
+        </div>
+        <Card hoverable>
           <Table dataSource={this.state.dataselect}>
             <Column title="公司ID" dataIndex="corporation_id" key="corporation_id" />
             <Column title="用户ID" dataIndex="user_id" key="user_id" />
@@ -264,7 +256,7 @@ class JixiaoDemo extends React.Component {
             <Column title="职位" dataIndex="post" key="post" />
             <Column title="记录时间" dataIndex="registerdate" key="registerdate" />
             <Column
-              title="Action"
+              title=""
               key="action"
               render={(text, record) => (
                 <Space size="middle">
@@ -275,6 +267,7 @@ class JixiaoDemo extends React.Component {
             />
             <BackTop visibilityHeight={200} style={{right: 50}}/>
           </Table>
+          </Card>
         <Modal title="增加绩效"
           visible={this.state.modalAddInfoVisible}
           wrapClassName="vertical-center-modal"
@@ -283,21 +276,9 @@ class JixiaoDemo extends React.Component {
           }} 
                 //onOk={()=>this. add} 
           onOk={()=>{
-          this. addnew("modalAddInfo")
+          this. addnew("modalAddInfo");
           }} 
         >
-          {/* <Space direction="vertical" size={12}>
-          <span>填写时间：</span><DatePicker showTime onChange={onChange} onOk={onOk} />
-          {/* <span>填写时间：</span><DatePicker showTime onChange={(event) => { this.inputChange1(event, "regisdates") }} onOk={onOk} /> */}
-          {/* <span>绩效评定起止时间：</span>
-            <RangePicker
-              showTime={{ format: 'HH:mm' }}
-              format="YYYY-MM-DD HH:mm"
-              onChange={onChange}
-              onOk={onOk}
-              //onChange={(event) => { this.inputChange(event, "dates") }}
-            />
-          // </Space> */}
           <span>绩效评分：</span><Input onChange={(event) => { this.inputChange1(event, "value") }} />
           {/* <span>绩效评分：</span><InputNumber min={1} max={10} defaultValue={3} onChange={(event) => { this.inputChange1(event, "value") }} /> */}
           <br />
