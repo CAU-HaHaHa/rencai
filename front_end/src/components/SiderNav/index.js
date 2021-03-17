@@ -18,6 +18,7 @@ const menus1 = [
       {key: '/home/dangan/list', title: '员工列表', icon: '',},
       {key: '/home/dangan/jixiao', title: '绩效评价', icon: '',},
       {key: '/home/dangan/jiangcheng', title: '员工奖惩', icon: '',},
+      {key: '/home/dangan/jobrelease', title: '招聘岗位发布', icon: '',},
     ]
   },
   {

@@ -15,6 +15,8 @@ const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
 
+const JobReleaseDemo =  LoadableComponent(()=>import('../../routes/Dangan/JobRelease/index'))
+
 //导航组件Demo
 const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
 const MenuDemo = LoadableComponent(()=>import('../../routes/Navigation/MenuDemo/index'))
@@ -91,6 +93,7 @@ class ContentMain extends React.Component {
 
           {/* new */}
           <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
+          <PrivateRoute exact path='/home/dangan/jobrelease' component={JobReleaseDemo}/>
 
           {/* <PrivateRoute exact path='/home/display/carousel' component={CarouselDemo}/>
           <PrivateRoute exact path='/home/display/collapse' component={CollapseDemo}/>
