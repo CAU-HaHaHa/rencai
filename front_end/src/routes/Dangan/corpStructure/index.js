@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
-import { Descriptions, Radio, Button, Card, Form, Modal, message } from 'antd';
+import { Descriptions, Radio, Button, Card, Form, Modal, message, Spin } from 'antd';
+import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import { Input } from 'antd';
 import { getCorInfo, changeCorInfo } from '../../../api/loginRequest'
 import axios from "axios";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Treee from './Tree'
+import './sty.css'
 
 @withRouter @inject('appStore') @observer
 export default class corpInfo extends React.Component{
@@ -15,7 +17,7 @@ export default class corpInfo extends React.Component{
     super(props);
     this.state = {
       size: 'default',
-
+      loading: true,
       name: "1",
       email: "2",
       tel: "3",
@@ -35,6 +37,7 @@ export default class corpInfo extends React.Component{
     axios.all([data]).then(
       (res) => {
         this.setState({
+          loading: false,
           name: res[0].data.data.name,
           email: res[0].data.data.email,
           tel: res[0].data.data.tel,
@@ -85,7 +88,7 @@ export default class corpInfo extends React.Component{
                 email: values.email,
                 tel: values.tel,
                 website: values.website,
-                lacation: values.lacation,
+                location: values.location,
                 requirementinfo: values.requirementinfo,
               })
               message.success('修改公司信息成功');
@@ -111,7 +114,7 @@ export default class corpInfo extends React.Component{
         size={this.state.size}
         extra={
         <div>
-          <Button type="primary"onClick={() => { setVisible(true);}}>Edit</Button>
+          <Button type="primary"onClick={() => { setVisible(true);}}>编辑</Button>
           <this.Func
             visible={visible}
             onCreate={onCreate}
@@ -136,13 +139,14 @@ export default class corpInfo extends React.Component{
       <Modal
         visible={visible}
         title="编辑公司信息"
-        okText="Create"
-        cancelText="Cancel"
+        okText="修改"
+        cancelText="取消"
         onCancel={onCancel}
         onOk={() => {
           form.validateFields().then((values) => {
               onCreate(values);
             }).catch((info) => {
+              message.error("请输入正确的修改信息")
               console.log('Validate Failed:', info);
             });
         }}
@@ -156,22 +160,38 @@ export default class corpInfo extends React.Component{
         size="middle"
       >
         <Descriptions.Item label="公司名称"> 
-        <Form.Item name="name" initialValue={this.state.name}><Input defaultValue={this.state.name}/></Form.Item>
+        <Form.Item name="name" initialValue={this.state.name} rules={[{
+              required: true,
+              message: '请输入公司名称',
+            },]}><Input defaultValue={this.state.name}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="邮箱">
-        <Form.Item name="email" initialValue={this.state.email}><Input defaultValue={this.state.email}/></Form.Item>
+        <Form.Item name="email" initialValue={this.state.email} rules={[{
+              required: true,
+              message: '请输入正确的邮箱',
+              type: 'email'
+            },]}><Input defaultValue={this.state.email}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="电话">
-        <Form.Item name="tel" initialValue={this.state.tel}><Input defaultValue={this.state.tel}/></Form.Item>
+        <Form.Item name="tel" initialValue={this.state.tel} rules={[{
+              required: true,
+              message: '请输入电话',
+            },]}><Input defaultValue={this.state.tel}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="公司官网">
         <Form.Item name="website" initialValue={this.state.website}><Input defaultValue={this.state.website}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="公司地址" span={2}>
-        <Form.Item name="locaction" initialValue={this.state.location}><Input defaultValue={this.state.location}/></Form.Item>
+        <Form.Item name="location" initialValue={this.state.location} rules={[{
+              required: true,
+              message: '请输入公司地址',
+            },]}><Input defaultValue={this.state.location}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="公司简介">
-        <Form.Item name="requirementinfo" initialValue={this.state.requirementinfo}><Input defaultValue={this.state.requirementinfo}/></Form.Item>
+        <Form.Item name="requirementinfo" initialValue={this.state.requirementinfo} rules={[{
+              required: true,
+              message: '请输入公司简介',
+            },]}><Input defaultValue={this.state.requirementinfo}/></Form.Item>
         </Descriptions.Item>
       </Descriptions>
       </Form>
@@ -182,13 +202,17 @@ export default class corpInfo extends React.Component{
   render() {
     return (
       <div>
+        <CustomBreadcrumb arr={['档案管理', '公司架构']} />
         <Card>
         <Radio.Group onChange={this.onChange} value={this.state.size}>
           <Radio value="default">default</Radio>
           <Radio value="middle">middle</Radio>
           <Radio value="small">small</Radio>
         </Radio.Group>
-          <this.initCorp />
+        {
+          this.state.loading ? <div className="example"><Spin tip="Loading..." size='large'/></div> : <this.initCorp />
+        }
+          
         </Card>
         <Treee />
       </div>
