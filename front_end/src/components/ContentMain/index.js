@@ -30,6 +30,7 @@ const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDem
 const About = LoadableComponent(()=>import('../../routes/About/index'))
 
 const basicInfo = LoadableComponent(()=>import('../../routes/staffDangan/basicInfo/index'))
+const Myzhaopin = LoadableComponent(()=>import('../../routes/Test/Myzhaopin/index'))
 
 @withRouter @inject('appStore') @observer
 class ContentMain extends React.Component {
@@ -110,7 +111,7 @@ class ContentMain extends React.Component {
 
             {/* 职业生涯发展 */}
             <PrivateRoute exact path='/home/zhiye/gangwei' component={Home}/>
-            <PrivateRoute exact path='/home/zhiye/myzhaopin' component={Home}/>
+            <PrivateRoute exact path='/home/zhiye/myzhaopin' component={Myzhaopin}/>
             <PrivateRoute exact path='/home/zhiye/lizhi' component={StfLiZhiDemo}/>
             <Redirect exact from='/' to='/homeStaff' component={Home}/>
           </Switch>
