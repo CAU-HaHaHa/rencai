@@ -25,6 +25,7 @@ const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDe
 //职业生涯发展
 const jixiaocheckDemo = LoadableComponent(()=>import('../../routes/Test/JixiaoCheckDemo/index'))
 const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
+const Myzhaopin = LoadableComponent(()=>import('../../routes/Test/Myzhaopin/index'))
 
 //关于
 const About = LoadableComponent(()=>import('../../routes/About/index'))
@@ -110,7 +111,7 @@ class ContentMain extends React.Component {
 
             {/* 职业生涯发展 */}
             <PrivateRoute exact path='/home/zhiye/gangwei' component={Home}/>
-            <PrivateRoute exact path='/home/zhiye/myzhaopin' component={Home}/>
+            <PrivateRoute exact path='/home/zhiye/myzhaopin' component={Myzhaopin}/>
             <PrivateRoute exact path='/home/zhiye/lizhi' component={StfLiZhiDemo}/>
             <Redirect exact from='/' to='/homeStaff' component={Home}/>
           </Switch>
