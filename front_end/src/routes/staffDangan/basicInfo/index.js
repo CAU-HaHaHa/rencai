@@ -1,12 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
-import { Descriptions, Radio, Button, Card, Form, Modal, message } from 'antd';
+import { Descriptions, Radio, Button, Card, Form, Modal, message, Spin } from 'antd';
 import { Input, Tooltip } from 'antd';
 import { loginRequest, changeStaffInfo } from '../../../api/loginRequest'
 import axios from "axios";
 import { getCookie } from '../../../utils/Session'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import './sty.css'
 
 @withRouter @inject('appStore') @observer
 export default class personInfo extends React.Component{
@@ -14,7 +15,7 @@ export default class personInfo extends React.Component{
     super(props);
     this.state = {
       size: 'default',
-
+      loading: true,
       name: "",
       sex: "",
       identitycard: "",
@@ -38,6 +39,7 @@ export default class personInfo extends React.Component{
     axios.all([data]).then(
       (res) => {
         this.setState({
+          loading: false,
           name: res[0].data.data.name,
           sex: res[0].data.data.sex,
           identitycard: res[0].data.data.identitycard,
@@ -130,7 +132,7 @@ export default class personInfo extends React.Component{
         size={this.state.size}
         extra={
         <div>
-          <Button type="primary"onClick={() => { setVisible(true);}}>Edit</Button>
+          <Button type="primary"onClick={() => { setVisible(true);}}>编辑</Button>
           <this.Func
             visible={visible}
             onCreate={onCreate}
@@ -160,13 +162,14 @@ export default class personInfo extends React.Component{
       <Modal
         visible={visible}
         title="编辑个人信息"
-        okText="Create"
-        cancelText="Cancel"
+        okText="修改"
+        cancelText="取消"
         onCancel={onCancel}
         onOk={() => {
           form.validateFields().then((values) => {
               onCreate(values);
             }).catch((info) => {
+              message.error("请正确填写个人信息！")
               console.log('Validate Failed:', info);
             });
         }}
@@ -180,13 +183,19 @@ export default class personInfo extends React.Component{
         size="middle"
       >
         <Descriptions.Item label="姓名"> 
-        <Form.Item name="name" initialValue={this.state.name}><Input defaultValue={this.state.name}/></Form.Item>
+        <Form.Item name="name" initialValue={this.state.name} rules={[{
+              required: true,
+              message: '请输入姓名',
+            },]}><Input defaultValue={this.state.name}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="性别">
         <Form.Item name="sex" initialValue={this.state.sex}><Input defaultValue={this.state.sex}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="身份证号">
-        <Form.Item name="identitycard" initialValue={this.state.identitycard}><Input defaultValue={this.state.identitycard}/></Form.Item>
+        <Form.Item name="identitycard" initialValue={this.state.identitycard} rules={[{
+              required: true,
+              message: '请输入身份证号码',
+            },]}><Input defaultValue={this.state.identitycard}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="政治面貌">
         <Form.Item name="politicsstatus" initialValue={this.state.politicsstatus}><Input defaultValue={this.state.politicsstatus}/></Form.Item>
@@ -198,10 +207,17 @@ export default class personInfo extends React.Component{
         <Form.Item name="eduschool" initialValue={this.state.eduschool}><Input defaultValue={this.state.eduschool}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="电话">
-        <Form.Item name="tel" initialValue={this.state.tel}><Input defaultValue={this.state.tel}/></Form.Item>
+        <Form.Item name="tel" initialValue={this.state.tel} rules={[{
+              required: true,
+              message: '请输入电话号码',
+            },]}><Input defaultValue={this.state.tel}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="邮箱">
-        <Form.Item name="email" initialValue={this.state.email}><Input defaultValue={this.state.email}/></Form.Item>
+        <Form.Item name="email" initialValue={this.state.email} rules={[{
+              required: true,
+              message: '请输入正确的邮箱',
+              type: 'email',
+            },]}><Input defaultValue={this.state.email}/></Form.Item>
         </Descriptions.Item>
         <Descriptions.Item label="邮政编码">
         <Form.Item name="postcode" initialValue={this.state.postcode}><Input defaultValue={this.state.postcode}/></Form.Item>
@@ -229,7 +245,9 @@ export default class personInfo extends React.Component{
         </Radio.Group>
         <br />
         <br />
-          <this.init />
+        {
+          this.state.loading ? <div className="example"><Spin tip="Loading..." size='large'/></div> : <this.init />
+        }
         <br />
         <br />
         </Card>
