@@ -14,8 +14,6 @@ const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
 const HRLiZhiDemo = LoadableComponent(()=>import('../../routes/Dangan/HRLiZhiDemo/index'))
-const corpStructure = LoadableComponent(()=>import('../../routes/Dangan/corpStructure/index'))
-
 
 //导航组件Demo
 const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
@@ -24,15 +22,15 @@ const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/Ren
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
 
+//个人信息查看
+const jixiaocheckDemo = LoadableComponent(()=>import('../../routes/Test/JixiaoCheckDemo/index'))
+
 //职业生涯发展
 const Test1 = LoadableComponent(()=>import('../../routes/Test/Test1/index'))
 const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
 
 //关于
 const About = LoadableComponent(()=>import('../../routes/About/index'))
-
-const basicInfo = LoadableComponent(()=>import('../../routes/staffDangan/basicInfo/index'))
-
 @withRouter @inject('appStore') @observer
 class ContentMain extends React.Component {
   refresh(){
@@ -82,7 +80,7 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/homeHr' component={Home}/>
 
             {/* 档案管理 */}
-            <PrivateRoute exact path='/home/dangan/corporation' component={corpStructure}/>
+            <PrivateRoute exact path='/home/dangan/corporation' component={Home}/>
             <PrivateRoute exact path='/home/dangan/list' component={ListDemo}/>
             <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
             <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
@@ -109,8 +107,8 @@ class ContentMain extends React.Component {
           <Switch>
             <PrivateRoute exact path='/homeStaff' component={Home}/>
             {/* 个人档案管理 */}
-            <PrivateRoute exact path='/home/staffdangan/basicinfo' component={basicInfo}/>
-            <PrivateRoute exact path='/home/staffdangan/jixiao' component={Home}/>
+            <PrivateRoute exact path='/home/staffdangan/basicinfo' component={Home}/>
+            <PrivateRoute exact path='/home/staffdangan/jixiao' component={jixiaocheckDemo}/>
             <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={Home}/>
 
             {/* 职业生涯发展 */}
