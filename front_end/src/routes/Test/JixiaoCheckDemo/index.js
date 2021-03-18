@@ -225,7 +225,7 @@ export default class JixiaoCheckDemo extends React.Component {
                     />
                 </Col>
                 <Col push={2}>
-                    <Button type="primary" shape="round" icon={<SearchOutlined />} onClick={this.onClick}> 查找 </Button>
+                    <Button type="primary" icon={<SearchOutlined />} onClick={this.onClick}> 搜索 </Button>
                 </Col>
             </Row>
           </Card>
