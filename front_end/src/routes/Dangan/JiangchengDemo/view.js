@@ -2,7 +2,7 @@ import React from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import { List, Row, Col, Card, Space, Avatar } from 'antd';
 import moment from 'moment'
-import axios from "axios"
+import axios from "axios"  
 
 axios.defaults.timeout = 30000;
 axios.defaults.baseURL = "http://45.76.99.155"
@@ -18,9 +18,11 @@ export default class Reward extends React.Component {
             department: '',
             dutytype: '',
             listData: [],
-            reward_count: 0,
-            punishment_count: 0
+            reward_count: 0,        
+            punishment_count: 0,
+            table_loading: false    // 表格是否加载中
         };
+
         //保存this指针，防止被覆盖
         const _this = this
         //发送get请求动态添加员工的基本信息
@@ -40,7 +42,11 @@ export default class Reward extends React.Component {
             .catch(function (error) {
                 console.log(error);
             })
-
+        
+        //请求前将表格置为加载中
+        this.setState({
+            table_loading: true
+        })
         // 发送get请求
         axios.get('/reward/search', {
             params: {
@@ -69,11 +75,19 @@ export default class Reward extends React.Component {
                     punishment_count: punishment_count
                 })
             })
+            // 答应错误信息
             .catch(function (error) {
-                console.log(error);
+                console.log(error)
             })
+            .then(
+                // 拿到数据后取消掉页面的加载状态
+                _this.setState({
+                    table_loading: false
+                })
+            )
     }
 
+    // 渲染UI界面
     render() {
         return (
             <div>
@@ -100,6 +114,7 @@ export default class Reward extends React.Component {
                     <Col span={24}>
                         <List
                             itemLayout="vertical"
+                            loading={this.state.table_loading}
                             size="large"
                             pagination={{
                                 pageSize: 3,
@@ -115,7 +130,7 @@ export default class Reward extends React.Component {
                                         description={
                                             // 奖励时间和hr_id
                                             <Space>
-                                                <text>{moment(item.registerdate).format("YYYY-MM-DD") }</text>
+                                                <text>{moment(item.registerdate).format("YYYY-MM-DD")}</text>
                                                 <text>{"记录员编号：" + item.hr_id}</text>
                                             </Space>}
                                     />

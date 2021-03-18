@@ -20,6 +20,7 @@ const corpStructure = LoadableComponent(()=>import('../../routes/Dangan/corpStru
 const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
 const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
 const StuffJiangchengDemo = LoadableComponent(()=>import('../../routes/staffDangan/StuffJiangchengDemo/index'))
+const JobRelease = LoadableComponent(()=>import('../../routes/Navigation/JobRelease/index'))
 
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
@@ -93,7 +94,7 @@ class ContentMain extends React.Component {
             {/* 人才招聘 */}
             <PrivateRoute exact path='/home/navigation/rencai' component={RencaiDemo}/>
             <PrivateRoute exact path='/home/navigation/rencai/view/:id/:department/:posttype' component={RencaiViewDemo}/>
-            <PrivateRoute exact path='/home/navigation/fabu' component={Home}/>
+            <PrivateRoute exact path='/home/navigation/fabu' component={JobRelease}/>
             
             <PrivateRoute exact path='/home/about' component={About}/>
             <Redirect exact from='/' to='/homeHr' component={Home}/>
