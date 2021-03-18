@@ -6,6 +6,7 @@ import { inject, observer } from 'mobx-react/index'
 import { getCookie } from '../../utils/Session'
 import {loginRequest} from '../../api/loginRequest'
 import axios from "axios";
+
 const Home = LoadableComponent(()=>import('../../routes/Home/index'))  //参数一定要是函数，否则不会懒加载，只会代码拆分
 //档案Demo
 const ListDemo = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/index'))
@@ -15,17 +16,17 @@ const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/Jia
 const HRLiZhiDemo = LoadableComponent(()=>import('../../routes/Dangan/HRLiZhiDemo/index'))
 const corpStructure = LoadableComponent(()=>import('../../routes/Dangan/corpStructure/index'))
 
-
 //导航组件Demo
 const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
 const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
+const StuffJiangchengDemo = LoadableComponent(()=>import('../../routes/staffDangan/StuffJiangchengDemo/index'))
+
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
 
 //职业生涯发展
 const jixiaocheckDemo = LoadableComponent(()=>import('../../routes/Test/JixiaoCheckDemo/index'))
 const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
-const Myzhaopin = LoadableComponent(()=>import('../../routes/Test/Myzhaopin/index'))
 
 //关于
 const About = LoadableComponent(()=>import('../../routes/About/index'))
@@ -108,7 +109,7 @@ class ContentMain extends React.Component {
             {/* 个人档案管理 */}
             <PrivateRoute exact path='/home/staffdangan/basicinfo' component={basicInfo}/>
             <PrivateRoute exact path='/home/staffdangan/jixiao' component={jixiaocheckDemo}/>
-            <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={Home}/>
+            <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={StuffJiangchengDemo}/>
 
             {/* 职业生涯发展 */}
             <PrivateRoute exact path='/home/zhiye/gangwei' component={Home}/>
