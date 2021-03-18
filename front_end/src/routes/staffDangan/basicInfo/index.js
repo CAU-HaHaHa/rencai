@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react/index'
 import { Descriptions, Radio, Button, Card, Form, Modal, message, Spin } from 'antd';
 import { Input, Tooltip } from 'antd';
 import { loginRequest, changeStaffInfo } from '../../../api/loginRequest'
+import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import axios from "axios";
 import { getCookie } from '../../../utils/Session'
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -237,6 +238,7 @@ export default class personInfo extends React.Component{
   render() {
     return (
       <div>
+        <CustomBreadcrumb arr={['个人档案管理', '基本信息管理']} />
         <Card>
         <Radio.Group onChange={this.onChange} value={this.state.size}>
           <Radio value="default">default</Radio>

@@ -88,6 +88,7 @@ export default class StuffJiangchengDemo extends React.Component {
             <div>
                 {/* 顶部导航信息 */}
                 <CustomBreadcrumb arr={['个人档案管理', '奖惩查看']} />
+                <Card>
                 <Row gutter={[16, 16]}>
                     {/* 员工信息卡片 */}
                     <Col span={12}>
@@ -135,6 +136,7 @@ export default class StuffJiangchengDemo extends React.Component {
                         />
                     </Col>
                 </Row>
+                </Card>
             </div>
         )
     }
