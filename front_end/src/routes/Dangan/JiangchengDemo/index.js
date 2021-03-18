@@ -4,18 +4,21 @@ import { Table, Modal, Button, Space, Form, DatePicker, Select, Input, Row, Col,
 import { PlusOutlined, SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
 import axios from "axios"
+import moment from "moment"
 
+// 起一个别名，防止混淆
 const { TextArea } = Input;
 const { Option } = Select;
 const { confirm } = Modal;
 
+// 设置路由请求的超时世时间和URL
 axios.defaults.timeout = 30000;
 axios.defaults.baseURL = "http://45.76.99.155"
 
-// 搜索栏
+// 搜索栏（以函数的形式实现
 const AdvancedSearchForm = (props) => {
 
-  // 搜索表单
+  // 搜索表单实体
   const [form] = Form.useForm();
 
   // 部门数据
@@ -84,13 +87,13 @@ const AdvancedSearchForm = (props) => {
     duty = value[1];
   }
 
-  // 点击提交搜索表单事件
+  // 点击提交搜索表单事件（调用父组件的函数，完成子组件改变父组件状态的功能
   const onFinish = (values) => {
     // get请求
-    props.SetTableData(values.ID, values.name, dept, duty)
-    // 
+    props.SetTableData(values.ID, values.name, dept, duty) 
   };
 
+  // 渲染UI界面
   return (
     <Form
       form={form}
@@ -126,24 +129,16 @@ const AdvancedSearchForm = (props) => {
   );
 };
 
-const openNotification = () => {
-  const args = {
-    message: 'Notification Title',
-    description:
-      'I will never close automatically. This is a purposely very very long description that has many many characters and words.',
-    duration: 2,
-  };
-  notification.open(args);
-};
-
+// 大组件
 export default class Reward extends React.Component {
 
+  // 构造函数：初始换子组件、初始化状态，发送get请求拿到默认数据
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,         // 模态框可见？
-      user_id: '',            // 
-      user_name: '',          // 
+      visible: false,         // 模态框可见
+      user_id: '',            
+      user_name: '',          
       department: '',
       dutytype: '',
       tabledata: [],          // 表格数据
@@ -165,8 +160,9 @@ export default class Reward extends React.Component {
     this.setVisible(true);
   };
 
-  // 添加奖惩记录
+  // 添加奖惩记录post API
   AddRewardAPI = (value) => {
+    // 整合post的请求字段
     var params = new URLSearchParams();
     params.append('corp_id', 1);
     params.append('user_id', this.state.user_id);
@@ -178,15 +174,17 @@ export default class Reward extends React.Component {
     params.append('rewardTpye', rewordtype);
     params.append('rewardName', value.rewardName);
     params.append('description', value.detial);
-    params.append('rewardTime', value.rewardTime);
-
+    var time = moment(value.rewardTime).format("YYYY-MM-DD")
+    params.append('rewardTime', time);
+    // 保存this指针
     var _this = this
+    // 发送post请求，根据是否成功来显示有关信息
     axios.post("/reward/add", params)
       .then(function () {
         notification['success']({
           message: '添加成功',
           description:
-            '您已成功将'+_this.state.user_name+'的奖惩记录添加至数据库！',
+            '您已成功将' + _this.state.user_name + '的奖惩记录添加至数据库！',
         });
       })
       .catch(function (error) {
@@ -196,8 +194,13 @@ export default class Reward extends React.Component {
             error,
         });
       })
+      .then(
+        // 清空模态框数据
+        this.form.current.resetFields()
+      )
   }
 
+  // 模态框点击提交按钮，弹出二次确认模态框
   showPromiseConfirm = () => {
     Modal.confirm({
       title: '确认添加此记录吗?',
@@ -214,8 +217,9 @@ export default class Reward extends React.Component {
 
   // 点击模态框的提交按钮
   handleOk = () => {
+    // 关闭模态框
     this.setVisible(false);
-    this.form.current.resetFields();
+    // 发送post请求将数据添加到数据库
     this.form.current.validateFields().then(value => this.AddRewardAPI(value));
   };
 
@@ -235,13 +239,12 @@ export default class Reward extends React.Component {
     this.setVisible(true);
   }
 
-
   // 点击表格每列数据的查看按钮
   ClickViewHandle = (type) => {
     this.props.history.push({ pathname: './jiangcheng/view/' + type.user_id })
   }
 
-  // 从里面搜索数据
+  // get请求API，从数据库中拿到奖惩数据并展示到表格中
   SetTableData = (id, name, dept, duty) => {
     // 防止undifine
     id = (id ? id : '')
@@ -276,11 +279,12 @@ export default class Reward extends React.Component {
       .catch(function (error) {
         console.log(error);
       })
-
-    // 查询后取消加载中标识
-    this.setState({
-      tableloading: false
-    })
+      .then(
+        // 查询后取消加载中标识
+        this.setState({
+          tableloading: false
+        })
+      )
   }
 
   render() {
@@ -330,6 +334,7 @@ export default class Reward extends React.Component {
       }
     ];
 
+    // 渲染UI界面
     return (
       <div>
         {/* 顶部导航信息 */}
@@ -345,12 +350,13 @@ export default class Reward extends React.Component {
           title="添加奖惩记录"
           visible={this.state.visible}
           confirmLoading={this.state.confirmLoading}
-          // 取消按钮和x
+          // 取消按钮
           onCancel={
             () => {
               this.setState({ visible: false });
             }
           }
+          // 关联提交按钮
           footer={[
             <Button type="primary" onClick={this.showPromiseConfirm} key={'submit'}>
               提交
