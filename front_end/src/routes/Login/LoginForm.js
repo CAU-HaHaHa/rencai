@@ -13,6 +13,7 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 @withRouter @inject('appStore') @observer @Form.create()
 class LoginForm extends React.Component {
   state = {
+    load: true,
     focusItem: -1,   //保存当前聚焦的input
     code: '',         //验证码
     usertype: "1"    // 用户类型
@@ -20,6 +21,15 @@ class LoginForm extends React.Component {
 
   componentDidMount () {
     this.createCode()
+  }
+
+  componentWillUpdate(){
+    if(this.state.load==false){
+      this.createCode();
+      this.setState({
+        load: true,
+      })
+    }
   }
 
   /**
@@ -139,14 +149,13 @@ class LoginForm extends React.Component {
   }
   register = () => {
     this.props.switchShowBox('stafflogin')
+    var c=this.canvas
+    c.height=c.height;  
+    this.setState({
+      load: false
+    })
     setTimeout(() => this.props.form.resetFields(), 500)
   }
-
-  // handleChange = (value) =>{
-  //   this.setState({
-  //     usertype: value
-  //   })
-  // }
 
   render () {
     const {getFieldDecorator, getFieldError} = this.props.form
@@ -210,15 +219,11 @@ class LoginForm extends React.Component {
                                        style={focusItem === 2 ? styles.focus : {}}/>}/>
                 </Col>
                 <Col span={9}>
-                  <canvas onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
+                  <canvas id="myCanvas" onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
                 </Col>
               </Row>
             )}
           </Form.Item>
-          {/* <Select defaultValue="1" className='selectBtn' style={{ width: 120, color: "#4FA1D9" }} onChange={this.handleChange}>
-            <Option value="1">HR</Option>
-            <Option value="2">员工</Option>
-          </Select> */}
           <div className='bottom'>
             <input className='loginBtn' type="submit" value='登录'/>
             <span className='registerBtn' onClick={this.register}>转员工登录</span>

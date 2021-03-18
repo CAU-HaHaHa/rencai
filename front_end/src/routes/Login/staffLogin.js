@@ -13,20 +13,31 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 @withRouter @inject('appStore') @observer @Form.create()
 class StaffLoginForm extends React.Component {
   state = {
+    load: false,
     focusItem: -1,   //保存当前聚焦的input
     code: '',         //验证码
     usertype: "2"    // 用户类型
   }
 
   componentDidMount () {
-    this.createCode()
+
   }
+
+  componentWillUpdate(){
+    if(this.state.load==false){
+      this.createCode();
+      this.setState({
+        load: true,
+      })
+    }
+  }
+
 
   /**
    * 生成验证码
    */
   createCode = () => {
-    const ctx = this.canvas.getContext('2d')
+    const ctx = this.canvas.getContext('2d')//document.getElementById("myCanvas").getContext('2d')
     const chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     let code = ''
     ctx.clearRect(0, 0, 80, 39)
@@ -139,12 +150,18 @@ class StaffLoginForm extends React.Component {
   }
   register = () => {
     this.props.switchShowBox('login')
+    var c=this.canvas
+    c.height=c.height;  
+    this.setState({
+      load: false
+    })
     setTimeout(() => this.props.form.resetFields(), 500)
   }
 
   render () {
     const {getFieldDecorator, getFieldError} = this.props.form
     const {focusItem, code} = this.state
+    
     return (
       <div className={this.props.className}>
         <h3 className='title'>员工登录</h3>
@@ -203,7 +220,7 @@ class StaffLoginForm extends React.Component {
                                        style={focusItem === 2 ? styles.focus : {}}/>}/>
                 </Col>
                 <Col span={9}>
-                  <canvas onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
+                    <canvas id="myCanvas" onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
                 </Col>
               </Row>
             )}

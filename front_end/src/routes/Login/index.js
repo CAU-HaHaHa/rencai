@@ -103,10 +103,10 @@ class Login extends React.Component {
               <div className='container'>
                 <LoginForm
                   className={showBox === 'login' ? 'box showBox' : 'box hiddenBox'}
-                  switchShowBox={this.switchShowBox}/>
+                  switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
                 <StaffLoginForm
                   className={showBox === 'stafflogin' ? 'box showBox' : 'box hiddenBox'}
-                  switchShowBox={this.switchShowBox}/>
+                  switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
               </div>
             </div>
         }
