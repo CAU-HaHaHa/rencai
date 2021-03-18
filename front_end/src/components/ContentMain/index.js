@@ -32,6 +32,7 @@ const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDem
 //关于
 const About = LoadableComponent(()=>import('../../routes/About/index'))
 
+const gangwei = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/index2'))
 const basicInfo = LoadableComponent(()=>import('../../routes/staffDangan/basicInfo/index'))
 const Myzhaopin = LoadableComponent(()=>import('../../routes/Test/Myzhaopin/index'))
 
@@ -113,7 +114,7 @@ class ContentMain extends React.Component {
             <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={StuffJiangchengDemo}/>
 
             {/* 职业生涯发展 */}
-            <PrivateRoute exact path='/home/zhiye/gangwei' component={Home}/>
+            <PrivateRoute exact path='/home/zhiye/gangwei' component={gangwei}/>
             <PrivateRoute exact path='/home/zhiye/myzhaopin' component={Myzhaopin}/>
             <PrivateRoute exact path='/home/zhiye/lizhi' component={StfLiZhiDemo}/>
             <Redirect exact from='/' to='/homeStaff' component={Home}/>
