@@ -170,9 +170,9 @@ export default class HRLiZhiDemo extends React.Component {
                 <Col span={6}>
                   <Input addonBefore="部门:" placeholder=" " onChange={(event) => { this.inputChange(event, "department") }} />
                 </Col>
-                <Col span={4}>
-                  <Button shape="round" type="primary" onClick={this.onClick} block>
-                      确认
+                <Col span={3}>
+                  <Button type="primary" onClick={this.onClick} block>
+                      搜索
                   </Button>
                 </Col>
               </Row>
