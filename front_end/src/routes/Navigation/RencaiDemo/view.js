@@ -34,6 +34,7 @@ export default class RencaiViewDemo extends React.Component {
     searcheduschool: "",
     detailRow: {},
     personExperience: [],
+    recruitpost_id:"",
     columns: [
       {
         title: '姓名',
@@ -106,8 +107,8 @@ export default class RencaiViewDemo extends React.Component {
               console.log('OK');
               console.log('http://45.76.99.155/rencai/enroll?applylist_id=' + applylist_id)
               axios.get('http://45.76.99.155/rencai/enroll?applylist_id=' + applylist_id)
-              console.log('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
-              axios.get('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
+              console.log('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + _this.recruitpost_id)
+              axios.get('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + _this.recruitpost_id)
                 .then(function (response) {
                   _this.setState({
                     dataSource: response.data['data'],
@@ -115,7 +116,6 @@ export default class RencaiViewDemo extends React.Component {
                     isLoaded: true
                   });
                 });
-                console.log(this.state)
               message.info("成功批准！");
             },
             //点击取消
@@ -123,7 +123,7 @@ export default class RencaiViewDemo extends React.Component {
               console.log('取消操作');
             }
           });
-          console.log(this.state);
+          console.log(_this.state);
         }
 
     // 拒绝按钮
@@ -138,8 +138,8 @@ export default class RencaiViewDemo extends React.Component {
           console.log('OK');
           console.log('http://45.76.99.155/rencai/refuse?applylist_id=' + applylist_id)
           axios.get('http://45.76.99.155/rencai/refuse?applylist_id=' + applylist_id)
-          console.log('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
-          axios.get('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + this.recruitpost_id)
+          console.log('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + _this.recruitpost_id)
+          axios.get('http://45.76.99.155/rencai/recruitpost_candidate?recruitpost_id=' + _this.recruitpost_id)
             .then(function (response) {
               _this.setState({
                 dataSource: response.data['data'],
@@ -147,7 +147,7 @@ export default class RencaiViewDemo extends React.Component {
                 isLoaded: true
               });
             });
-            console.log(this.state)
+            console.log(_this.state)
           message.info("成功拒绝！");
         },
         //点击取消
@@ -155,7 +155,7 @@ export default class RencaiViewDemo extends React.Component {
           console.log('取消操作');
         }
       });
-      console.log(this.state);
+      console.log(_this.state);
     }
 
   ClickViewHandle1 = (applylist_id) => {
