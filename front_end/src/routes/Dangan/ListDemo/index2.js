@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Select, Modal } from 'antd'
+import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Select, Modal, Message } from 'antd'
 import axios from 'axios'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import Item from 'antd/lib/list/Item';
@@ -27,7 +27,7 @@ class ListDemo2 extends React.Component {
     detailCorp: {},
     dictTitle: {
       "recruitpost_id": "招聘序号",
-      "corporation_id": "公司",
+      "corporation_id": "公司ID",
       "email": "邮箱",
       "legalrepresentative": "法人",
       "location": "地址",
@@ -45,19 +45,12 @@ class ListDemo2 extends React.Component {
       "number": "招聘人数",
       "description": "职位描述",
       "registerdate": "发布日期",
-
     },
     columns: [
       {
-        title: 'ID',
-        dataIndex: 'recruitpost_id',
-        key: 'recruitpost_id',
-        align: 'center'
-      },
-      {
-        title: '公司',
-        dataIndex: 'corporation_id',
-        key: 'corporation_id',
+        title: '公司名',
+        dataIndex: 'name',
+        key: 'name',
         align: 'center'
       },
       {
@@ -118,6 +111,19 @@ class ListDemo2 extends React.Component {
   componentDidMount() {
     const _this = this;
     // http://20.46.117.148:8001/RecruitpostInfo/
+    axios.get('http://45.76.99.155/CorpInfo/')
+      .then(function (response) {
+        // console.log(typeof (response.data.data), response.data.data);
+        _this.setState({
+          dataOfCorp: response.data.data,
+        });
+      })
+      .catch(error => {
+        _this.setState({
+          isLoaded: false,
+          error: error
+        });
+      });
     axios.get('http://45.76.99.155/RecruitpostInfo/')
       .then(function (response) { // mockAPI时
         // console.log(typeof (response.data.data), response.data.data);
@@ -126,6 +132,7 @@ class ListDemo2 extends React.Component {
           dataSearch: response.data.data,
           isLoaded: true
         });
+
         let newCops = [], newDept = [], newPost = [];
         for (const item of response.data.data) {
           if (!newCops.includes(item.corporation_id)) {
@@ -152,19 +159,7 @@ class ListDemo2 extends React.Component {
           error: error
         });
       });
-    axios.get('http://45.76.99.155/CorpInfo/')
-      .then(function (response) {
-        // console.log(typeof (response.data.data), response.data.data);
-        _this.setState({
-          dataOfCorp: response.data.data,
-        });
-      })
-      .catch(error => {
-        _this.setState({
-          isLoaded: false,
-          error: error
-        });
-      });
+    
   }
 
   handleSizeChange = (e) => {
@@ -204,6 +199,13 @@ class ListDemo2 extends React.Component {
   handleOk = () => {
     this.setState({
       isModalVisible: false,
+    });
+    Message.success({
+      content: '简历提交成功！',
+      className: 'custom-class',
+      style: {
+        marginTop: '20vh',
+      },
     });
   };
 
