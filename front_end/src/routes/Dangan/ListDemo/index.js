@@ -1,12 +1,20 @@
 import React from 'react'
 import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Badge } from 'antd'
 import axios from 'axios'
+import {withRouter} from 'react-router';
+import {
+  observer,
+  inject,
+} from 'mobx-react'
+import appStore from '../../../store/appStore.js'
+
 // new
 // import detailInfo from './detailInfo'
 
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
+@withRouter @inject('appStore') @observer
 class ListDemo extends React.Component {
   constructor(props) {
     super(props);
@@ -146,7 +154,7 @@ class ListDemo extends React.Component {
     // .catch(error => {
     // });
 
-    axios.get('http://20.46.117.148:8001/StuffInfo/')
+    axios.get('http://20.46.117.148:8001/StuffInfo/', appStore.loginUser.userid)
       .then(function (response) {
         // 绝了，data在response.data.data中
         console.log(typeof (response.data.data), response.data.data)
