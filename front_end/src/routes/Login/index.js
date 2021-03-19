@@ -11,7 +11,7 @@ import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import StaffLoginForm from './staffLogin'
 
-const url = 'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
+const url = 'http://sf3-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/video-poster_1576231362701.png'//'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
 const imgs = [
   'http://47.99.130.140/imgs/wallhaven-p8r1e9.jpg',
   'http://47.99.130.140/imgs/wallhaven-e7zyy8.jpg',
@@ -99,7 +99,10 @@ class Login extends React.Component {
               <Loading2/>
             </div>:
             <div>
-              <div id='backgroundBox' style={styles.backgroundBox}/>
+              <div id='backgroundBox' style={styles.backgroundBox}>
+              {/* <video class="video-react-video" preload="auto" loop="loop" playsinline="" autoplay="autoplay" poster="//sf3-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/video-poster_1576231362701.png" src="//sf1-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/gongquhunjian_1080.min.mp4" tabindex="-1"></video> */}
+              {/* <video autoplay="autoplay" loop="loop" preload="" muted="muted" src="https://cdn.multilingualres.hr.tencent.com/careersmlr/video-bg1.mp4" class="video1 video"></video> */}
+              </div>
               <div className='container'>
                 <LoginForm
                   className={showBox === 'login' ? 'box showBox' : 'box hiddenBox'}
@@ -108,6 +111,7 @@ class Login extends React.Component {
                   className={showBox === 'stafflogin' ? 'box showBox' : 'box hiddenBox'}
                   switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
               </div>
+              
             </div>
         }
       </div>

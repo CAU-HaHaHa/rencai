@@ -91,7 +91,6 @@ class StaffLoginForm extends React.Component {
           );
         axios.all([data]).then(
           res => {
-            console.log(res[0].data);
             if(res[0].data.status=="2"){  // 用户名不存在
               this.props.form.setFields({
                 username: {
@@ -111,7 +110,10 @@ class StaffLoginForm extends React.Component {
               return
             }
             else if(res[0].data.status=="0"){ // 未知错误
-              alert("未知错误");
+              notification.open({
+                message: '登录失败',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
               return;
             }
             if(usertype=="1"){
@@ -138,7 +140,11 @@ class StaffLoginForm extends React.Component {
           }
         ).catch(
           ()=>{
-            alert("未知错误")
+            notification.open({
+              message: '数据请求失败',
+              description: '数据请求失败，请检查网络环境',
+              icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+            });
           }
         )
       
@@ -164,7 +170,7 @@ class StaffLoginForm extends React.Component {
     
     return (
       <div className={this.props.className}>
-        <h3 className='title'>员工登录</h3>
+        <h3 className='title'>卓越人才管理系统-员工登录</h3>
         <Form onSubmit={this.loginSubmit}>
           <Form.Item help={getFieldError('username') &&
           <PromptBox info={getFieldError('username')} width={calculateWidth(getFieldError('username'))}/>}>
@@ -246,15 +252,15 @@ const CollectionsPage = () => {
     const [visible, setVisible] = useState(false);
   
     const onCreate = (values) => {
-      console.log('Received values of form: ', values);
       if(values.affirmpassword!=values.password){
         alert("两次输入的密码不同！")
       }
       else{
         let data = staffRegister(values.username, values.password, values.telephone, values.email);
+        console.log(values.username)
+        console.log(values.password)
         axios.all([data]).then(
           res => {
-            console.log(res);
             if(res[0].data.status=="1"){  // 注册成功，请登录邮箱激活该账号
               notification.open({
                 message: '注册成功',
@@ -277,10 +283,16 @@ const CollectionsPage = () => {
                   icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
               }
+              else if(res[0].data.message=="id card is not valid"){
+                notification.open({
+                  message: '请输入正确的身份证号',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
               else{
                 notification.open({
-                  message: '未知错误',
-                  description: '未知错误',
+                  message: '注册信息错误',
+                  description: '请填写正确的注册信息！',
                   icon: <CloseCircleOutlined style={{ color: "red"}}/>,
                 });
               }
@@ -289,8 +301,8 @@ const CollectionsPage = () => {
         ).catch(
           () =>{
             notification.open({
-              message: '未知错误',
-              description: '未知错误',
+              message: '数据请求失败',
+              description: '数据请求失败，请检查网络环境',
               icon: <CloseCircleOutlined style={{ color: "red"}}/>,
             });
           }

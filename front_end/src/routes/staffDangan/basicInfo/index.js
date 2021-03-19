@@ -97,24 +97,35 @@ export default class personInfo extends React.Component{
           axios.all([data]).then(
             (res) => {
               console.log(res);
-              this.setState({
-                name: values.name,
-                sex: values.sex,
-                identitycard: values.identitycard,
-                politicsstatus: values.politicsstatus,
-                edubackground: values.edubackground,
-                eduschool: values.eduschool,
-                tel: values.tel,
-                email: values.email,
-                address: values.address,
-                postcode: values.postcode,
-                briefintro: values.briefintro,
-              })
-              message.success('修改个人信息成功');
+              if(res[0].data.status==0){
+                if(res[0].data.message=="id card is not valid"){
+                  message.error("请输入正确的身份证号码！")
+                }
+                else{
+                  message.error("请输入正确的个人信息！")
+                }
+              }
+              else{
+                this.setState({
+                  name: values.name,
+                  sex: values.sex,
+                  identitycard: values.identitycard,
+                  politicsstatus: values.politicsstatus,
+                  edubackground: values.edubackground,
+                  eduschool: values.eduschool,
+                  tel: values.tel,
+                  email: values.email,
+                  address: values.address,
+                  postcode: values.postcode,
+                  briefintro: values.briefintro,
+                })
+                message.success('修改个人信息成功');
+              }
+              
             }
           ).catch(
             () => {
-              message.error("请求数据出错，请重试")
+              message.error("请求数据出错，请检查网络环境")
             }
           )
           console.log('OK')
