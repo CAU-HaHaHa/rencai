@@ -153,10 +153,10 @@ class ListDemo extends React.Component {
     //   })
     // .catch(error => {
     // });
-
-    axios.get('http://20.46.117.148:8001/StuffInfo/', appStore.loginUser.userid)
+    
+    axios.get('http://45.76.99.155/StuffInfo/',  { params : { hr_id : appStore.loginUser.userid }})
+    // axios.get('http://45.76.99.155/StuffInfo/')
       .then(function (response) {
-        // 绝了，data在response.data.data中
         console.log(typeof (response.data.data), response.data.data)
         _this.setState({
           dataSource: response.data.data,
@@ -164,8 +164,6 @@ class ListDemo extends React.Component {
           dataSpecific2: response.data.data,
           isLoaded: true
         });
-        // for (const temp of response.data)
-        //   console.log(temp)
       })
       .catch(error => {
         _this.setState({

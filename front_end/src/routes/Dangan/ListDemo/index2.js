@@ -31,6 +31,7 @@ class ListDemo2 extends React.Component {
       "email": "邮箱",
       "legalrepresentative": "法人",
       "location": "地址",
+      "corporation_name": "公司名",
       "name": "公司名",
       "otherinfo": "公司其他信息",
       "overall_depart": "部门总览",
@@ -49,8 +50,8 @@ class ListDemo2 extends React.Component {
     columns: [
       {
         title: '公司名',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'corporation_name',
+        key: 'corporation_name',
         align: 'center'
       },
       {
@@ -360,7 +361,7 @@ class ListDemo2 extends React.Component {
                       return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >女</Descriptions.Item>
                     }
                   }
-                  else {
+                  else if(key in this.state.dictTitle){
                     return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >{this.state.detailRow[key]}</Descriptions.Item>
                   }
                 })
@@ -371,7 +372,7 @@ class ListDemo2 extends React.Component {
             <Descriptions column={1} title="公司详情" bordered>
               {
                 Object.keys(this.state.detailCorp).map((key) => {
-                  if(this.state.dictTitle[key] != "公司结构")
+                  if(this.state.dictTitle[key] != "公司结构" && key in this.state.dictTitle)
                     return <Descriptions.Item label={this.state.dictTitle[key]} >{this.state.detailCorp[key]}</Descriptions.Item>
                 })
               }
