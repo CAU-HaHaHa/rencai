@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import { Row, Col, Card, Form, Cascader, Button, InputNumber, Input, notification } from 'antd';
 import axios from "axios"
+import { withRouter } from 'react-router-dom'
+import { inject, observer } from 'mobx-react/index'
 
 const { TextArea } = Input;
+axios.defaults.baseURL = "http://45.76.99.155"
 
 // 搜索栏
 const AdvancedSearchForm = (props) => {
@@ -120,6 +123,7 @@ const AdvancedSearchForm = (props) => {
 };
 
 
+@withRouter @inject('appStore') @observer
 export default class JobRelease extends React.Component {
     // 构造函数：
     constructor(props) {
@@ -133,7 +137,7 @@ export default class JobRelease extends React.Component {
     SetTableData = (department, posttype, number, description) => {
         // 请求字段
         var params = new URLSearchParams();
-        params.append('corporation_id', 1);
+        params.append('corporation_id', this.props.appStore.loginUser.corporationid);
         params.append('department', department);
         params.append('posttype', posttype);
         params.append('number', (number ? number : 1));
@@ -151,7 +155,7 @@ export default class JobRelease extends React.Component {
                 notification['success']({
                     message: '添加成功',
                     description:
-                        '您已成功将' + description + "/" + posttype + '的招聘信息！',
+                        '您已成功将' + department + "/" + posttype + '的招聘信息！',
                 });
             })
             // 显示失败信息
