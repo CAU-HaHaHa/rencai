@@ -218,10 +218,15 @@ class ListDemo2 extends React.Component {
   handleOk = () => {
     // 显示undefined    
     console.log(this.props.appStore.loginUser.userid);
+    console.log(this.state.submitInfo.recruitpost_id)
     this.setState({
       isModalVisible: false,
     });
-    axios.post("http://45.76.99.155/RecruitpostInfo/SubmitInfo",{params : {recruitpost_id : this.state.submitInfo.recruitpost_id, user_id : appStore.loginUser.userid}})
+    var params = new URLSearchParams();
+    params.append('recruitpost_id', this.state.submitInfo.recruitpost_id);
+    params.append('user_id', this.props.appStore.loginUser.userid);
+
+    axios.post("http://45.76.99.155/RecruitpostInfo/SubmitInfo", params)
     .then(function (response) {
       if(response.data.status == "1"){
         Message.success({
