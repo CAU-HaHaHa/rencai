@@ -1,12 +1,20 @@
 import React from 'react'
 import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Badge } from 'antd'
 import axios from 'axios'
+import {withRouter} from 'react-router';
+import {
+  observer,
+  inject,
+} from 'mobx-react'
+import appStore from '../../../store/appStore.js'
+
 // new
 // import detailInfo from './detailInfo'
 
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import TypingCard from '../../../components/TypingCard'
 
+@withRouter @inject('appStore') @observer
 class ListDemo extends React.Component {
   constructor(props) {
     super(props);
@@ -145,10 +153,10 @@ class ListDemo extends React.Component {
     //   })
     // .catch(error => {
     // });
-
-    axios.get('http://45.76.99.155/StuffInfo/')
+    
+    axios.get('http://45.76.99.155/StuffInfo/',  { params : { hr_id : appStore.loginUser.userid }})
+    // axios.get('http://45.76.99.155/StuffInfo/')
       .then(function (response) {
-        // 绝了，data在response.data.data中
         console.log(typeof (response.data.data), response.data.data)
         _this.setState({
           dataSource: response.data.data,
@@ -156,8 +164,6 @@ class ListDemo extends React.Component {
           dataSpecific2: response.data.data,
           isLoaded: true
         });
-        // for (const temp of response.data)
-        //   console.log(temp)
       })
       .catch(error => {
         _this.setState({
