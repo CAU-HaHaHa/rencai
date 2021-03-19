@@ -135,7 +135,7 @@ export default class StfLiZhiDemo extends React.Component {
     return (
       <div>
         <div className="site-page-header-ghost-wrapper">
-        <CustomBreadcrumb arr={['个人信息处理', '离职申请']} />
+        <CustomBreadcrumb arr={['职业生涯发展', '离职申请']} />
           <Card hoverable title="离职申请" className='card-item' block>
             <Descriptions size="middle" column={5}>
                 <Descriptions.Item label="姓名">{this.state.dataSource["user_name"]} </Descriptions.Item>

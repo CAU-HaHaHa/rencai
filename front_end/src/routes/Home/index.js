@@ -21,7 +21,7 @@ class Home extends React.Component {
 
         <div>
           <div style={styles.backgroundBox}>
-          <video autoplay="autoplay" loop="loop" preload="" muted="muted" src="https://cdn.multilingualres.hr.tencent.com/careersmlr/video-bg1.mp4" class="video1 video">
+          <video autoplay="autoplay" loop="loop" preload="" muted="muted" src="http://45.76.99.155/static/welcome.mp4" class="video1 video">
             {/* <h3 style={styles.contentStyle}>1</h3> */}
           </video>
           </div>

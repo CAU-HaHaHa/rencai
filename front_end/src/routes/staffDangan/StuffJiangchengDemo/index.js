@@ -87,7 +87,7 @@ export default class StuffJiangchengDemo extends React.Component {
         return (
             <div>
                 {/* 顶部导航信息 */}
-                <CustomBreadcrumb arr={['个人档案管理', '奖惩查看']} />
+                <CustomBreadcrumb arr={['档案管理', '我的奖惩']} />
                 <Card>
                 <Row gutter={[16, 16]}>
                     {/* 员工信息卡片 */}

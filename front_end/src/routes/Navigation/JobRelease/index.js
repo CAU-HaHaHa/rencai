@@ -180,7 +180,7 @@ export default class JobRelease extends React.Component {
     render() {
         return (
             <div>
-                <CustomBreadcrumb arr={['人才招聘工作台', '发布招聘广告']} />、
+                <CustomBreadcrumb arr={['人才招聘工作台', '发布招聘岗位']} />、
                 <Card title="发布新的岗位" bordered={false}>
                     <AdvancedSearchForm SetTableData={this.SetTableData} disabled={this.state.form_disabled} />
                 </Card>

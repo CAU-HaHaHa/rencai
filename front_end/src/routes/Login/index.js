@@ -11,7 +11,7 @@ import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import StaffLoginForm from './staffLogin'
 
-const url = 'http://sf3-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/video-poster_1576231362701.png'//'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
+const url = 'http://45.76.99.155/static/welcome_pic.png' //'http://sf3-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/video-poster_1576231362701.png'//'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
 const imgs = [
   'http://47.99.130.140/imgs/wallhaven-p8r1e9.jpg',
   'http://47.99.130.140/imgs/wallhaven-e7zyy8.jpg',

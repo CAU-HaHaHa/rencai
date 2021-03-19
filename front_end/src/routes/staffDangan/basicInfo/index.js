@@ -249,7 +249,7 @@ export default class personInfo extends React.Component{
   render() {
     return (
       <div>
-        <CustomBreadcrumb arr={['个人档案管理', '基本信息管理']} />
+        <CustomBreadcrumb arr={['档案管理', '基本信息']} />
         <Card>
         <Radio.Group onChange={this.onChange} value={this.state.size}>
           <Radio value="default">default</Radio>

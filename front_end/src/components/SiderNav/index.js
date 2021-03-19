@@ -66,7 +66,7 @@ class SiderNav extends React.Component {
       return (
         <div style={{height: '100vh',overflowY:'scroll'}}>
           <div style={styles.logo}>
-            <h3 style={styles.contentStyle}>卓越人才管理系统</h3>
+            <h3 style={styles.contentStyle}>ZY</h3>
           </div>
           <CustomMenu menus={menus1}/>
         </div>
@@ -76,7 +76,7 @@ class SiderNav extends React.Component {
       return (
         <div style={{height: '100vh',overflowY:'scroll'}}>
           <div style={styles.logo}>
-            <h3 style={styles.contentStyle}>卓越人才管理系统</h3>
+            <h3 style={styles.contentStyle}>ZY</h3>
           </div>
           <CustomMenu menus={menus2}/>
         </div>

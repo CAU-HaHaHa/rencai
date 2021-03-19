@@ -157,7 +157,7 @@ export default class HRLiZhiDemo extends React.Component {
     return (
       <div>
         <div>
-        <CustomBreadcrumb arr={['员工档案管理', '离职管理']} />
+        <CustomBreadcrumb arr={['档案管理', '离职管理']} />
           <Card hoverable title="离职管理" className='card-item' block>
             <Space direction="vertical">
               <Row gutter={20}>

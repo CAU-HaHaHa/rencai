@@ -232,7 +232,7 @@ class JixiaoDemo extends React.Component {
     return (
       <div>
         <div>
-        <CustomBreadcrumb arr={['员工档案管理', '绩效评价']} />
+        <CustomBreadcrumb arr={['档案管理', '绩效管理']} />
           <Card hoverable title="绩效评价" className='card-item' block>
             <Space direction="vertical">
               <Row gutter={20}>

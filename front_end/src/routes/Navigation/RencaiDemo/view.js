@@ -3,7 +3,7 @@ import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
 import { Table, Button, Form, DatePicker, Input, Row, Col, Card, Select, Drawer,message,Modal } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import axios from 'axios'
-import {ExclamationCircleOutlined} from '@ant-design/icons';
+import {ExclamationCircleOutlined,CheckOutlined,CloseOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -69,7 +69,7 @@ export default class RencaiViewDemo extends React.Component {
       {
         key: 'action1',
         render: (row) => (
-          <Button type="primary" icon={<SearchOutlined />} onClick={this.onClick1.bind(this, row.applylist_id)} shape="round">
+          <Button type="primary" icon={<CheckOutlined />} onClick={this.onClick1.bind(this, row.applylist_id)} shape="round">
             批准
           </Button>
         )
@@ -86,7 +86,7 @@ export default class RencaiViewDemo extends React.Component {
       {
         key: 'action3',
         render: (row) => (
-          <Button type="primary" icon={<SearchOutlined />} onClick={this.onClick2.bind(this, row.applylist_id)} shape="round">
+          <Button type="primary" icon={<CloseOutlined />} onClick={this.onClick2.bind(this, row.applylist_id)} shape="round">
             拒绝
           </Button>
 

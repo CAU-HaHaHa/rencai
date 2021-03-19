@@ -173,7 +173,7 @@ export default class Reward extends React.Component {
     params.append('user_name', this.state.user_name);
     params.append('department', this.state.department)
     params.append('dutytype', this.state.dutytype)
-    var rewordtype = (value.rewardTpye == "reward" ? 1 : 0);
+    var rewordtype = (value.rewardTpye == "Reward" ? 1 : 0);
     params.append('rewardTpye', rewordtype);
     params.append('rewardName', value.rewardName);
     params.append('description', value.detial);
@@ -347,7 +347,7 @@ export default class Reward extends React.Component {
     return (
       <div>
         {/* 顶部导航信息 */}
-        <CustomBreadcrumb arr={['员工档案管理', '员工奖惩']} />
+        <CustomBreadcrumb arr={['档案管理', '奖惩管理']} />
         {/* 高级搜索框 */}
         <Card hoverable bordered={false} className='card-item' title="搜索栏">
           <AdvancedSearchForm SetTableData={this.SetTableData} />

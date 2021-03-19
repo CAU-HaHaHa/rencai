@@ -195,7 +195,7 @@ export default class JixiaoCheckDemo extends React.Component {
     return (
       <div>
         <div className="site-page-header-ghost-wrapper">
-        <CustomBreadcrumb arr={['个人信息处理', '绩效查看']} />
+        <CustomBreadcrumb arr={['档案管理', '我的绩效']} />
           <Card hoverable title="绩效查看" className='card-item' block>
             <Row gutter = {30}>
                 <Col span={4}>
