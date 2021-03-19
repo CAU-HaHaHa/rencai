@@ -324,7 +324,7 @@ class ListDemo2 extends React.Component {
         <Modal title="提示" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
           <p>确认提交简历吗？</p>
         </Modal>
-        <CustomBreadcrumb arr={['招聘信息']} />
+        <CustomBreadcrumb arr={['职业生涯发展', '岗位池']} />
         <Row gutter={16, 8} block>
           <Col span={24}>
             <Card hoverable bordered={false} title={cardContent} className='card-item' block>
