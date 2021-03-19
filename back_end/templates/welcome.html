@@ -162,6 +162,26 @@
                 /RecruitpostInfo/
             </a>
         </div>
+             <div>
+            &ensp;&ensp;&ensp;&ensp;/SubmitInfo &ensp;
+            post方法访问，form形式传递参数，插入一条applylist数据
+            <br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            传入参数：user_id, recruitpost_id
+            <br>
+            <div>
+                <div style="float:left;width:100px">&ensp;</div>
+                <div style="float:left">
+                    <form action="/RecruitpostInfo/SubmitInfo" method="post">
+                        <p>user_id: <input type="text" name="user_id" value="1"/></p>
+                        <p>recruitpost_id: <input type="text" name="recruitpost_id" value="1"/></p>
+                        <input type="submit" value="/RecruitpostInfo/SubmitInfo"/>
+                    </form>
+                </div>
+                <div style="clear:both">
+                    &ensp;
+                </div>
+            </div>
+        </div>
     </ul>
     <ul id="CorpInfo">
         <li>/CorpInfo</li>
