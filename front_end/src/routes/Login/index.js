@@ -61,7 +61,7 @@ class Login extends React.Component {
       this.particle = new BGParticle('backgroundBox')
       this.particle.init()
       notification.open({
-        message:<ul><li>初始账号：admin</li><li>初始密码：admin</li></ul>,
+        message:<ul><li>HR账号：hr01</li><li>HR密码：123456</li><li>员工账号：user01</li><li>员工密码：123456</li></ul>,
         duration:0,
         className:'login-notification'
       })
@@ -103,10 +103,10 @@ class Login extends React.Component {
               <div className='container'>
                 <LoginForm
                   className={showBox === 'login' ? 'box showBox' : 'box hiddenBox'}
-                  switchShowBox={this.switchShowBox}/>
+                  switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
                 <StaffLoginForm
                   className={showBox === 'stafflogin' ? 'box showBox' : 'box hiddenBox'}
-                  switchShowBox={this.switchShowBox}/>
+                  switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
               </div>
             </div>
         }

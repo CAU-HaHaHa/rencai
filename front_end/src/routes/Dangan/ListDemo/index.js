@@ -146,7 +146,7 @@ class ListDemo extends React.Component {
     // .catch(error => {
     // });
 
-    axios.get('http://20.46.117.148:8001/StuffInfo/')
+    axios.get('http://45.76.99.155/StuffInfo/')
       .then(function (response) {
         // 绝了，data在response.data.data中
         console.log(typeof (response.data.data), response.data.data)
@@ -182,7 +182,7 @@ class ListDemo extends React.Component {
 
   // new
   inputChange = (event, flag) => {
-    console.log(event, "***", flag)
+    // console.log(event, "***", flag)
     if (flag == "user_id")
       this.setState({
         searchUserId: event.target.value
@@ -306,6 +306,16 @@ class ListDemo extends React.Component {
     })
 
   }
+
+  onClickCancel = (event) =>{
+    this.setState({
+      searchEdubackground: "",
+      searchEduschool: "",
+      searchName: "",
+      searchUserId: "",
+    })
+  }
+
   // new
   onClick = (event) => {
     let newdata = []
@@ -330,7 +340,7 @@ class ListDemo extends React.Component {
       this.setState({
         dataSpecific2: newdata
       })
-      console.log(this.state.dataSpecific2)
+      // console.log(this.state.dataSpecific2)
     }
   }
   render() {
@@ -359,83 +369,50 @@ class ListDemo extends React.Component {
         <CustomBreadcrumb arr={['员工档案管理', '员工列表']} />
         <Row gutter={16, 8}>
           <Col span={24}>
-            <Card hoverable bordered={false} title={cardContent} className='card-item' block></Card>
+            <Card hoverable title={cardContent} className='card-item' block>
+                <Row gutter={16, 8}>
+                  <Col span={5}>
+                    <Input ref= "searchBaruser_id" addonBefore="ID:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "user_id") }} />
+                  </Col>
+                  <Col span={5}>
+                    <Input ref= "searchBarname" addonBefore="姓名:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "name") }} />
+                  </Col>
+                  {/* <Col span={4}>
+                    <Input addonBefore="电话:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "tel") }} />
+                  </Col>
+                  <Col span={4}>
+                    <Input addonBefore="Email:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "email") }} />
+                  </Col> */}
+                  <Col span={5}>
+                    <Input ref= "searchBareduschool" addonBefore="学校:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "eduschool") }} />
+                  </Col>
+                  <Col span={5}>
+                    <Input ref= "searchBaredubackground" addonBefore="学历:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "edubackground") }} />
+                  </Col>
+                  <Col span={1}>
+                    {/* <Button shape="round" type="primary" onClick={this.onClickCancel} block>
+                      清空
+                    </Button> */}
+                  </Col>
+                  <Col span={2}>
+                    <Button shape="round" type="primary" onClick={this.onClick} block>
+                      查询
+                    </Button>
+                  </Col>
+                  <Col span={1}></Col>
+                </Row>
+            </Card>
           </Col>
         </Row>
-        <Row gutter={16, 8}>
-          <Card hoverable bordered={false} title="单项查询：" className='card-item'>
-            <Space direction="vertical" size={20}>
-              <Row gutter={16, 8}>
-                <Col span={4}>
-                  <Search addonBefore="ID:" placeholder="input search text" onSearch={(value) => { this.onSearch(value, "user_id") }} enterButton />
-                </Col>
-                <Col span={4}>
-                  <Search addonBefore="姓名:" placeholder="input search text" onSearch={(value) => { this.onSearch(value, "name") }} enterButton />
-                </Col>
-                <Col span={4}>
-                  <Search addonBefore="电话:" placeholder="input search text" onSearch={(value) => { this.onSearch(value, "tel") }} enterButton />
-                </Col>
-                <Col span={4}>
-                  {/* <Search addonBefore="Search By City:" placeholder="input search text" onSearch={this.onSearch} enterButton /> */}
-                  <Search addonBefore="邮箱:" placeholder="input search text" onSearch={(value) => { this.onSearch(value, "email") }} enterButton />
-                </Col>
-                <Col span={4}>
-                  <Search addonBefore="学校:" placeholder="input search text" onSearch={(value) => { this.onSearch(value, "eduschool") }} enterButton />
-                </Col>
-                <Col span={4}>
-                  {/* <Search addonBefore="Search By City:" placeholder="input search text" onSearch={this.onSearch} enterButton /> */}
-                  <Search addonBefore="学历:" placeholder="input search text" onSearch={(value) => { this.onSearch(value, "edubackground") }} enterButton />
-                </Col>
-              </Row>
-              <Card hoverable>
-                <Table dataSource={this.state.dataSpecific} columns={this.state.columns} pagination={{
-                  total: this.state.dataSpecific.length,
-                  pageSize: 10,
-                  loading
-                }} />
-              </Card>
-            </Space>
-          </Card>
-          <Card hoverable title="多条目查询：" className='card-item' block>
-            <Space direction="vertical" size={20}>
-              <Row gutter={16, 8}>
-                <Col span={4}>
-                  <Input addonBefore="ID:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "user_id") }} />
-                </Col>
-                <Col span={4}>
-                  <Input addonBefore="姓名:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "name") }} />
-                </Col>
-                <Col span={4}>
-                  <Input addonBefore="电话:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "tel") }} />
-                </Col>
-                <Col span={4}>
-                  {/* <Search addonBefore="Search By City:" placeholder="input search text" onSearch={this.onSearch} enterButton /> */}
-                  <Input addonBefore="Email:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "email") }} />
-                </Col>
-                <Col span={4}>
-                  <Input addonBefore="学校:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "eduschool") }} />
-                </Col>
-                <Col span={4}>
-                  {/* <Search addonBefore="Search By City:" placeholder="input search text" onSearch={this.onSearch} enterButton /> */}
-                  <Input addonBefore="学历:" placeholder="input search text" onChange={(event) => { this.inputChange(event, "edubackground") }} />
-                </Col>
-              </Row>
-              <Row justify="end">
-                <Col span={2}>
-
-                  <Button shape="round" type="primary" onClick={this.onClick} block>
-                    查询
-                    </Button>
-                </Col>
-              </Row>
-              <Card hoverable>
-                <Table dataSource={this.state.dataSpecific2} columns={this.state.columns} pagination={{
-                  total: this.state.dataSpecific2.length,
-                  pageSize: 10,
-                }} />
-              </Card>
-            </Space>
-          </Card>
+        <Row>
+          <Col span={24}>
+            <Card hoverable>
+              <Table dataSource={this.state.dataSpecific2} columns={this.state.columns} pagination={{
+                total: this.state.dataSpecific2.length,
+                pageSize: 10,
+              }} />
+            </Card>
+          </Col>
         </Row>
 
         <Drawer
@@ -451,17 +428,22 @@ class ListDemo extends React.Component {
             <Descriptions column={2} title="" bordered>
               {
                 Object.keys(this.state.detailRow).map((key) => {
-                  if (this.state.dictTitle[key] == "性别") {
-                    if (this.state.detailRow[key]) {
-                      return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >男</Descriptions.Item>
+                  // if (key in this.state.dictTitle) {
+                    if (this.state.dictTitle[key] == "性别") {
+                      if (this.state.detailRow[key]) {
+                        return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >男</Descriptions.Item>
+                      }
+                      else {
+                        return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >女</Descriptions.Item>
+                      }
+                    }
+                    else if (this.state.dictTitle[key] == "用户名" || this.state.dictTitle[key] == "ID" || this.state.dictTitle[key] == "密码"){
+
                     }
                     else {
-                      return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >女</Descriptions.Item>
+                      return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >{this.state.detailRow[key]}</Descriptions.Item>
                     }
-                  }
-                  else {
-                    return <Descriptions.Item align='center' label={this.state.dictTitle[key]} >{this.state.detailRow[key]}</Descriptions.Item>
-                  }
+                  // }
                 })
               }
             </Descriptions>

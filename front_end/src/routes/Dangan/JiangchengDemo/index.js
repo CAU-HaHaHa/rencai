@@ -5,6 +5,8 @@ import { PlusOutlined, SearchOutlined, ExclamationCircleOutlined } from '@ant-de
 import Text from 'antd/lib/typography/Text';
 import axios from "axios"
 import moment from "moment"
+import { withRouter } from 'react-router-dom'
+import { inject, observer } from 'mobx-react/index'
 
 // 起一个别名，防止混淆
 const { TextArea } = Input;
@@ -130,6 +132,7 @@ const AdvancedSearchForm = (props) => {
 };
 
 // 大组件
+@withRouter @inject('appStore') @observer
 export default class Reward extends React.Component {
 
   // 构造函数：初始换子组件、初始化状态，发送get请求拿到默认数据
@@ -164,9 +167,9 @@ export default class Reward extends React.Component {
   AddRewardAPI = (value) => {
     // 整合post的请求字段
     var params = new URLSearchParams();
-    params.append('corp_id', 1);
+    params.append('corp_id', this.props.appStore.loginUser.corporationid);
     params.append('user_id', this.state.user_id);
-    params.append('hr_id', 1);
+    params.append('hr_id', this.props.appStore.loginUser.userid);
     params.append('user_name', this.state.user_name);
     params.append('department', this.state.department)
     params.append('dutytype', this.state.dutytype)
@@ -251,7 +254,6 @@ export default class Reward extends React.Component {
     name = (name ? name : '')
     dept = (dept ? dept : '')
     duty = (duty ? duty : '')
-    console.log(id, name, dept, duty)
 
     // 查询前表格显示加载中。。。
     this.setState({
@@ -264,10 +266,11 @@ export default class Reward extends React.Component {
     // 发送get请求，从后端读取数据
     axios.get('/jiangcheng/search', {
       params: {
-        id: id,
-        name: name,
-        dept: dept,
-        duty: duty,
+        corp_id: this.props.appStore.loginUser.corporationid,
+        id: (id ? id : ''),
+        name: (name ? name : ''),
+        dept: (dept ? dept : ''),
+        duty: (duty ? duty : '')
       }
     })
       .then(function (response) {
@@ -285,6 +288,12 @@ export default class Reward extends React.Component {
           tableloading: false
         })
       )
+  }
+
+  // 该函数用来显示时间选择框的日期范围
+  disabledDate(current) {
+    // Can not select days before today and today
+    return current > moment().endOf('day');
   }
 
   render() {
@@ -315,7 +324,7 @@ export default class Reward extends React.Component {
         width: '20%',
       },
       {
-        title: '操作',
+        title: '',
         key: 'action',
         render: (text, record) => (
           <div>
@@ -395,7 +404,7 @@ export default class Reward extends React.Component {
               <Input placeholder="请输入奖惩名称" />
             </Form.Item>
             <Form.Item label="奖惩时间" name="rewardTime">
-              <DatePicker format="YYYY-MM-DD" />
+              <DatePicker format="YYYY-MM-DD" disabledDate={this.disabledDate}/>
             </Form.Item>
             <Form.Item label="详细说明" name='detial'>
               <TextArea autoSize={{ minRows: 5 }} showCount maxLength={100} placeholder="详细描述奖惩情况，在100字以内" />

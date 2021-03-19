@@ -4,28 +4,40 @@ import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Row, Col,Modal, Button, Form as Form4, Radio   } from 'antd';
+import { Input, Row, Col,Modal, Button, Form as Form4, Radio, Alert, notification   } from 'antd';
 import PromptBox from '../../components/PromptBox'
-import loginRequest from '../../api/loginRequest'
+import { loginRequest, staffRegister } from '../../api/loginRequest'
 import axios from "axios";
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 @withRouter @inject('appStore') @observer @Form.create()
 class StaffLoginForm extends React.Component {
   state = {
+    load: false,
     focusItem: -1,   //保存当前聚焦的input
     code: '',         //验证码
     usertype: "2"    // 用户类型
   }
 
   componentDidMount () {
-    this.createCode()
+
   }
+
+  componentWillUpdate(){
+    if(this.state.load==false){
+      this.createCode();
+      this.setState({
+        load: true,
+      })
+    }
+  }
+
 
   /**
    * 生成验证码
    */
   createCode = () => {
-    const ctx = this.canvas.getContext('2d')
+    const ctx = this.canvas.getContext('2d')//document.getElementById("myCanvas").getContext('2d')
     const chars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     let code = ''
     ctx.clearRect(0, 0, 80, 39)
@@ -118,7 +130,7 @@ class StaffLoginForm extends React.Component {
                 {username: values.username, 
                   password: values.password, 
                   usertype: "2",
-                  userid: res[0].data.data.hr_id,
+                  userid: res[0].data.data.user_id,
                   corporationid: res[0].data.data.corporation_id,
               });
               this.props.history.push("/#/homeStaff");
@@ -138,12 +150,18 @@ class StaffLoginForm extends React.Component {
   }
   register = () => {
     this.props.switchShowBox('login')
+    var c=this.canvas
+    c.height=c.height;  
+    this.setState({
+      load: false
+    })
     setTimeout(() => this.props.form.resetFields(), 500)
   }
 
   render () {
     const {getFieldDecorator, getFieldError} = this.props.form
     const {focusItem, code} = this.state
+    
     return (
       <div className={this.props.className}>
         <h3 className='title'>员工登录</h3>
@@ -202,7 +220,7 @@ class StaffLoginForm extends React.Component {
                                        style={focusItem === 2 ? styles.focus : {}}/>}/>
                 </Col>
                 <Col span={9}>
-                  <canvas onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
+                    <canvas id="myCanvas" onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
                 </Col>
               </Row>
             )}
@@ -229,7 +247,57 @@ const CollectionsPage = () => {
   
     const onCreate = (values) => {
       console.log('Received values of form: ', values);
-      setVisible(false);
+      if(values.affirmpassword!=values.password){
+        alert("两次输入的密码不同！")
+      }
+      else{
+        let data = staffRegister(values.username, values.password, values.telephone, values.email);
+        axios.all([data]).then(
+          res => {
+            console.log(res);
+            if(res[0].data.status=="1"){  // 注册成功，请登录邮箱激活该账号
+              notification.open({
+                message: '注册成功',
+                description: '请登录邮箱激活该账号',
+                icon:<CheckCircleOutlined style={{ color: "green"}}/>,
+              });
+              setVisible(false);
+            }
+            else if(res[0].data.status=="2"){ // 注册失败，该账号已存在
+              notification.open({
+                message: '注册失败',
+                description: '该账号已存在',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
+            }
+            else{
+              if(res[0].data.message=="phone number is not valid"){
+                notification.open({
+                  message: '请输入正确的电话号码',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+              else{
+                notification.open({
+                  message: '未知错误',
+                  description: '未知错误',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+            }
+          }
+        ).catch(
+          () =>{
+            notification.open({
+              message: '未知错误',
+              description: '未知错误',
+              icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+            });
+          }
+        )
+        
+      }
+      
     };
   
     return (
@@ -252,12 +320,11 @@ const CollectionsPage = () => {
       <Modal
         visible={visible}
         title="员工注册"
-        okText="Create"
-        cancelText="Cancel"
+        okText="注册"
+        cancelText="取消"
         onCancel={onCancel}
         onOk={() => {
           form.validateFields().then((values) => {
-              form.resetFields();
               onCreate(values);
             }).catch((info) => {
               console.log('Validate Failed:', info);
@@ -280,13 +347,13 @@ const CollectionsPage = () => {
                 required: true,
                 message: 'Please input the password!',
               },]}>
-            <Input type="textarea" />
+            <Input.Password />
           </Form4.Item>
           <Form4.Item name="affirmpassword" label="再次输入密码" rules={[{
                 required: true,
                 message: 'Please input the password again!',
               },]}>
-            <Input type="textarea" />
+            <Input.Password />
           </Form4.Item>
           <Form4.Item name="telephone" label="电话" rules={[{
                 required: true,
@@ -297,6 +364,7 @@ const CollectionsPage = () => {
           <Form4.Item name="email" label="邮箱" rules={[{
                 required: true,
                 message: 'Please input the email!',
+                type: 'email',
               },]}>
             <Input type="textarea" />
           </Form4.Item>

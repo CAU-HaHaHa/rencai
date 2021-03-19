@@ -4,14 +4,16 @@ import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react/index'
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Input, Row, Col, Select,Modal, Button  } from 'antd';
+import { Input, Row, Col, Select,Modal, Button, Form as Form4, notification } from 'antd';
 import PromptBox from '../../components/PromptBox'
-import loginRequest from '../../api/loginRequest'
+import { loginRequest, corporationRegister, hrRegister } from '../../api/loginRequest'
 import axios from "axios";
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 @withRouter @inject('appStore') @observer @Form.create()
 class LoginForm extends React.Component {
   state = {
+    load: true,
     focusItem: -1,   //保存当前聚焦的input
     code: '',         //验证码
     usertype: "1"    // 用户类型
@@ -19,6 +21,15 @@ class LoginForm extends React.Component {
 
   componentDidMount () {
     this.createCode()
+  }
+
+  componentWillUpdate(){
+    if(this.state.load==false){
+      this.createCode();
+      this.setState({
+        load: true,
+      })
+    }
   }
 
   /**
@@ -138,14 +149,13 @@ class LoginForm extends React.Component {
   }
   register = () => {
     this.props.switchShowBox('stafflogin')
+    var c=this.canvas
+    c.height=c.height;  
+    this.setState({
+      load: false
+    })
     setTimeout(() => this.props.form.resetFields(), 500)
   }
-
-  // handleChange = (value) =>{
-  //   this.setState({
-  //     usertype: value
-  //   })
-  // }
 
   render () {
     const {getFieldDecorator, getFieldError} = this.props.form
@@ -209,25 +219,20 @@ class LoginForm extends React.Component {
                                        style={focusItem === 2 ? styles.focus : {}}/>}/>
                 </Col>
                 <Col span={9}>
-                  <canvas onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
+                  <canvas id="myCanvas" onClick={this.createCode} width="80" height='39' ref={el => this.canvas = el}/>
                 </Col>
               </Row>
             )}
           </Form.Item>
-          {/* <Select defaultValue="1" className='selectBtn' style={{ width: 120, color: "#4FA1D9" }} onChange={this.handleChange}>
-            <Option value="1">HR</Option>
-            <Option value="2">员工</Option>
-          </Select> */}
           <div className='bottom'>
             <input className='loginBtn' type="submit" value='登录'/>
             <span className='registerBtn' onClick={this.register}>转员工登录</span>
           </div>
         </Form>
         <div className='bottom'>
-          <App1 />
-          <App2 />
+          <CollectionsPage1 />
+          <CollectionsPage2 />
         </div>
-        
         
         {/* <div className='footer'>
           <div>欢迎登陆后台管理系统</div>
@@ -237,49 +242,312 @@ class LoginForm extends React.Component {
   }
 }
 
-const App1 = () => {
+const CollectionsPage1 = () => {
   const [visible, setVisible] = useState(false);
+
+  const onCreate = (values) => {
+    console.log('Received values of form: ', values);
+
+    let data = corporationRegister(values.name, values.registeredCapital,
+       values.legalRepresentative, values.telephone, values.email, values.webAddress, values.address);
+        axios.all([data]).then(
+          res => {
+            console.log(res);
+            if(res[0].data.status=="1"){  // 注册成功
+              notification.open({
+                message: '注册成功',
+                description: '请耐心等待审核',
+                icon:<CheckCircleOutlined style={{ color: "green"}}/>,
+              });
+              setVisible(false);
+            }
+            else if(res[0].data.status=="2"){ // 注册失败，该公司正在注册审核中
+              notification.open({
+                message: '注册失败',
+                description: '该公司正在注册审核中',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
+            }
+            else if(res[0].data.status=="3"){ // 注册失败，该公司已注册
+              notification.open({
+                message: '注册失败',
+                description: '该公司已注册',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
+            }
+            else{
+              if(res[0].data.message=="phone number is not valid"){
+                notification.open({
+                  message: '请输入正确的电话号码',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+              else{
+                notification.open({
+                  message: '未知错误',
+                  description: '未知错误',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+            }
+          }
+        ).catch(
+          () =>{
+            notification.open({
+              message: '未知错误',
+              description: '未知错误',
+              icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+            });
+          }
+        )
+    
+    
+  };
+
   return (
     <div>
-      <Button type="primary" onClick={() => setVisible(true)}>
+      <Button type="primary" onClick={() => { setVisible(true);}}>
         公司注册
       </Button>
-      <Modal
-        title="Modal 1000px width"
-        centered
+      <CollectionCreateForm1
         visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
+        onCreate={onCreate}
+        onCancel={() => { setVisible(false);}}
+      />  
     </div>
   );
 };
 
-const App2 = () => {
+const CollectionCreateForm1 = ({ visible, onCreate, onCancel }) => {
+  const [form] = Form4.useForm();
+  return (
+    <Modal
+      visible={visible}
+      title="公司注册"
+      okText="注册"
+      cancelText="取消"
+      onCancel={onCancel}
+      onOk={() => {
+        form.validateFields().then((values) => {
+            onCreate(values);
+          }).catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+    >
+      <Form4 form={form} layout="vertical" name="form_in_modal"
+        initialValues={{
+          modifier: 'public',
+        }}
+      >
+        <Form4.Item name="name" label="公司名称"
+          rules={[{
+              required: true,
+              message: 'Please input the name!',
+            },]}>
+          <Input />
+        </Form4.Item>
+        <Form4.Item name="registeredCapital" label="注册资本" rules={[{
+              required: true,
+              message: 'Please input the registeredCapital!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="legalRepresentative" label="法人代表" rules={[{
+              required: true,
+              message: 'Please input the legalRepresentative!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="telephone" label="联系电话" rules={[{
+              required: true,
+              message: 'Please input the telephone!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="email" label="邮箱" rules={[{
+              required: true,
+              message: 'Please input the email!',
+              type: 'email',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="webAddress" label="公司官网" rules={[{
+              required: true,
+              message: 'Please input the webAddress!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="address" label="公司地址" rules={[{
+              required: true,
+              message: 'Please input the address!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+      </Form4>
+    </Modal>
+  );
+};
+
+const CollectionsPage2 = () => {
   const [visible, setVisible] = useState(false);
+
+  const onCreate = (values) => {
+    console.log('Received values of form: ', values);
+    if(values.affirmpassword!=values.password){
+      alert("两次输入的密码不同！")
+    }
+    else{
+      let data = hrRegister(values.name, values.username,
+        values.password, values.realName, values.sex, values.idCard);
+         axios.all([data]).then(
+           res => {
+             console.log(res);
+             if(res[0].data.status=="1"){  // 注册成功
+               notification.open({
+                 message: '注册成功',
+                 description: '请耐心等待审核',
+                 icon:<CheckCircleOutlined style={{ color: "green"}}/>,
+               });
+               setVisible(false);
+             }
+             else if(res[0].data.status=="2"){ // 注册失败
+               notification.open({
+                 message: '注册失败',
+                 description: '该公司尚未审核通过',
+                 icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+               });
+             }
+             else if(res[0].data.status=="3"){ // 注册失败，
+               notification.open({
+                 message: '注册失败',
+                 description: '该公司未注册',
+                 icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+               });
+             }
+             else if(res[0].data.status=="4"){ // 注册失败，
+              notification.open({
+                message: '注册失败',
+                description: '您已提交申请待审核，勿重复提交',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
+            }
+            else if(res[0].data.status=="5"){ // 注册失败，
+              notification.open({
+                message: '注册失败',
+                description: '该身份证已被hr注册',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
+            }
+             else{
+              if(res[0].data.message=="phone number is not valid"){
+                notification.open({
+                  message: '请输入正确的电话号码',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+              else{
+                notification.open({
+                  message: '未知错误',
+                  description: '未知错误',
+                  icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+                });
+              }
+             }
+           }
+         ).catch(
+           () =>{
+             notification.open({
+               message: '未知错误',
+               description: '未知错误',
+               icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+             });
+           }
+         )
+    }
+  };
+
   return (
     <div>
-      <Button type="primary" onClick={() => setVisible(true)}>
+      <Button type="primary" onClick={() => { setVisible(true);}}>
         HR注册
       </Button>
-      <Modal
-        title="Modal 1000px width"
-        centered
+      <CollectionCreateForm2
         visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
+        onCreate={onCreate}
+        onCancel={() => { setVisible(false);}}
+      />  
     </div>
+  );
+};
+
+const CollectionCreateForm2 = ({ visible, onCreate, onCancel }) => {
+  const [form] = Form4.useForm();
+  return (
+    <Modal
+      visible={visible}
+      title="HR注册"
+      okText="注册"
+      cancelText="取消"
+      onCancel={onCancel}
+      onOk={() => {
+        form.validateFields().then((values) => {
+            onCreate(values);
+          }).catch((info) => {
+            console.log('Validate Failed:', info);
+          });
+      }}
+    >
+      <Form4 form={form} layout="vertical" name="form_in_modal"
+        initialValues={{
+          modifier: 'public',
+        }}
+      >
+        <Form4.Item name="name" label="公司名称"
+          rules={[{
+              required: true,
+              message: 'Please input the name!',
+            },]}>
+          <Input />
+        </Form4.Item>
+        <Form4.Item name="username" label="用户名" rules={[{
+              required: true,
+              message: 'Please input the username!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="password" label="密码" rules={[{
+              required: true,
+              message: 'Please input the password!',
+            },]}>
+          <Input.Password />
+        </Form4.Item>
+        <Form4.Item name="affirmpassword" label="再次输入密码" rules={[{
+              required: true,
+              message: 'Please input the password again!',
+            },]}>
+          <Input.Password />
+        </Form4.Item>
+        <Form4.Item name="realName" label="真实姓名" rules={[{
+              required: true,
+              message: 'Please input the real name!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="sex" label="性别" rules={[{
+              required: true,
+              message: 'Please input the sex!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+        <Form4.Item name="idCard" label="身份证号" rules={[{
+              required: true,
+              message: 'Please input the idCard!',
+            },]}>
+          <Input type="textarea" />
+        </Form4.Item>
+      </Form4>
+    </Modal>
   );
 };
 

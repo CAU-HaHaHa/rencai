@@ -4,49 +4,41 @@ import LoadableComponent from '../../utils/LoadableComponent'
 import PrivateRoute from '../PrivateRoute'
 import { inject, observer } from 'mobx-react/index'
 import { getCookie } from '../../utils/Session'
-import loginRequest from '../../api/loginRequest'
+import {loginRequest} from '../../api/loginRequest'
 import axios from "axios";
 
 const Home = LoadableComponent(()=>import('../../routes/Home/index'))  //参数一定要是函数，否则不会懒加载，只会代码拆分
-
 //档案Demo
 const ListDemo = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/index'))
 const JixiaoDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/index'))
 const JiangchengDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/index'))
 const JiangchengviweDemo = LoadableComponent(()=>import('../../routes/Dangan/JiangchengDemo/view'))
+const HRLiZhiDemo = LoadableComponent(()=>import('../../routes/Dangan/HRLiZhiDemo/index'))
+const corpStructure = LoadableComponent(()=>import('../../routes/Dangan/corpStructure/index'))
 
-const JobReleaseDemo =  LoadableComponent(()=>import('../../routes/Dangan/JobRelease/index'))
 
 //导航组件Demo
-const DropdownDemo = LoadableComponent(()=>import('../../routes/Navigation/DropdownDemo/index'))
-const MenuDemo = LoadableComponent(()=>import('../../routes/Navigation/MenuDemo/index'))
-const StepsDemo = LoadableComponent(()=>import('../../routes/Navigation/StepsDemo/index'))
+const RencaiDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/index'))
+const RencaiViewDemo = LoadableComponent(()=>import('../../routes/Navigation/RencaiDemo/view'))
+const StuffJiangchengDemo = LoadableComponent(()=>import('../../routes/staffDangan/StuffJiangchengDemo/index'))
+const JobRelease = LoadableComponent(()=>import('../../routes/Navigation/JobRelease/index'))
 
-//输入组件Demo
-const FormDemo1 = LoadableComponent(()=>import('../../routes/Entry/FormDemo/FormDemo1'))
-const FormDemo2 = LoadableComponent(()=>import('../../routes/Entry/FormDemo/FormDemo2'))
-const UploadDemo = LoadableComponent(()=>import('../../routes/Entry/UploadDemo/index'))
 //new
 const JixiaoAddDemo = LoadableComponent(()=>import('../../routes/Dangan/JixiaoDemo/add'))
 
-//员工页面测试Demo
-const Test1 = LoadableComponent(()=>import('../../routes/Test/Test1/index'))
-const Test2 = LoadableComponent(()=>import('../../routes/Test/Test2/index'))
-
-// //显示组件Demo
-// const CarouselDemo = LoadableComponent(()=>import('../../routes/Display/CarouselDemo/index'))
-// const CollapseDemo = LoadableComponent(()=>import('../../routes/Display/CollapseDemo/index'))
-// const ListDemo = LoadableComponent(()=>import('../../routes/Display/ListDemo/index'))
-// const TableDemo = LoadableComponent(()=>import('../../routes/Display/TableDemo/index'))
-// const TabsDemo = LoadableComponent(()=>import('../../routes/Display/TabsDemo/index'))
-
+//职业生涯发展
+const jixiaocheckDemo = LoadableComponent(()=>import('../../routes/Test/JixiaoCheckDemo/index'))
+const StfLiZhiDemo = LoadableComponent(()=>import('../../routes/Test/stfLiZhiDemo/index'))
 
 //关于
 const About = LoadableComponent(()=>import('../../routes/About/index'))
 
+const gangwei = LoadableComponent(()=>import('../../routes/Dangan/ListDemo/index2'))
+const basicInfo = LoadableComponent(()=>import('../../routes/staffDangan/basicInfo/index'))
+const Myzhaopin = LoadableComponent(()=>import('../../routes/Test/Myzhaopin/index'))
+
 @withRouter @inject('appStore') @observer
 class ContentMain extends React.Component {
-
   refresh(){
     ///  请求数据库返回结果
     let cookie = getCookie();
@@ -57,69 +49,80 @@ class ContentMain extends React.Component {
       );
     axios.all([data]).then(
       res => {
-      this.props.appStore.toggleLogin(true, 
-        {
-          username: cookie[0], 
-          password: cookie[1], 
-          usertype: cookie[2], 
-          userid: res[0].data.data.hr_id,
-          corporationid: res[0].data.data.corporation_id,
-        });
+        if(cookie[2]=="1"){
+          this.props.appStore.toggleLogin(true, 
+            {
+              username: cookie[0], 
+              password: cookie[1], 
+              usertype: cookie[2], 
+              userid: res[0].data.data.hr_id,
+              corporationid: res[0].data.data.corporation_id,
+            });
+        }
+        else{
+          this.props.appStore.toggleLogin(true, 
+            {
+              username: cookie[0], 
+              password: cookie[1], 
+              usertype: cookie[2], 
+              userid: res[0].data.data.user_id,
+              corporationid: res[0].data.data.corporation_id,
+            });
+        }
       }).catch(
         ()=>{
           alert("未知错误")
         }
       )
   }
-
   render () {
-    return (
-      <div style={{padding: 16, position: 'relative'}}>
-        <Switch>
-          <PrivateRoute exact path='/home' component={Home}/>
+    if(this.props.appStore.loginUser.usertype==null){
+      this.refresh();
+    }
+    if(this.props.appStore.loginUser.usertype=="1"){
+      return (
+        <div style={{padding: 16, position: 'relative'}}>
+          <Switch>
+            <PrivateRoute exact path='/homeHr' component={Home}/>
 
-          <PrivateRoute exact path='/home/dangan/list' component={ListDemo}/>
-          <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
-          <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
-          <PrivateRoute exact path='/home/dangan/jiangcheng/view/:id' component={JiangchengviweDemo}/>
+            {/* 档案管理 */}
+            <PrivateRoute exact path='/home/dangan/corporation' component={corpStructure}/>
+            <PrivateRoute exact path='/home/dangan/list' component={ListDemo}/>
+            <PrivateRoute exact path='/home/dangan/jixiao' component={JixiaoDemo}/>
+            <PrivateRoute exact path='/home/dangan/jiangcheng' component={JiangchengDemo}/>
+            <PrivateRoute exact path='/home/dangan/jiangcheng/view/:id' component={JiangchengviweDemo}/>
+            <PrivateRoute exact path='/home/dangan/hrlizhi' component={HRLiZhiDemo}/>
+            <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
+            {/* 人才招聘 */}
+            <PrivateRoute exact path='/home/navigation/rencai' component={RencaiDemo}/>
+            <PrivateRoute exact path='/home/navigation/rencai/view/:id/:department/:posttype' component={RencaiViewDemo}/>
+            <PrivateRoute exact path='/home/navigation/fabu' component={JobRelease}/>
+            
+            <PrivateRoute exact path='/home/about' component={About}/>
+            <Redirect exact from='/' to='/homeHr' component={Home}/>
+          </Switch>
+        </div>
+      )
+    }
+    else{
+      return (
+        <div style={{padding: 16, position: 'relative'}}>
+          <Switch>
+            <PrivateRoute exact path='/homeStaff' component={Home}/>
+            {/* 个人档案管理 */}
+            <PrivateRoute exact path='/home/staffdangan/basicinfo' component={basicInfo}/>
+            <PrivateRoute exact path='/home/staffdangan/jixiao' component={jixiaocheckDemo}/>
+            <PrivateRoute exact path='/home/staffdangan/jiangcheng' component={StuffJiangchengDemo}/>
 
-          <PrivateRoute exact path='/home/navigation/dropdown' component={DropdownDemo}/>
-          <PrivateRoute exact path='/home/navigation/menu' component={MenuDemo}/>
-          <PrivateRoute exact path='/home/navigation/steps' component={StepsDemo}/>
-
-          <PrivateRoute exact path='/home/entry/form/basic-form' component={FormDemo1}/>
-          <PrivateRoute exact path='/home/entry/form/step-form' component={FormDemo2}/>
-          <PrivateRoute exact path='/home/entry/upload' component={UploadDemo}/>
-
-          {/* new */}
-          <PrivateRoute exact path='/add/:id' component={JixiaoAddDemo}/>
-          <PrivateRoute exact path='/home/dangan/jobrelease' component={JobReleaseDemo}/>
-
-          {/* <PrivateRoute exact path='/home/display/carousel' component={CarouselDemo}/>
-          <PrivateRoute exact path='/home/display/collapse' component={CollapseDemo}/>
-          <PrivateRoute exact path='/home/display/list' component={ListDemo}/>
-          <PrivateRoute exact path='/home/display/table' component={TableDemo}/>
-          <PrivateRoute exact path='/home/display/tabs' component={TabsDemo}/> */}
-
-          {/* <PrivateRoute exact path='/home/feedback/modal' component={ModalDemo}/>
-          <PrivateRoute exact path='/home/feedback/notification' component={NotificationDemo}/>
-          <PrivateRoute exact path='/home/feedback/spin' component={SpinDemo}/> */}
-
-          {/* <PrivateRoute exact path='/home/other/animation' component={AnimationDemo}/>
-          <PrivateRoute exact path='/home/other/gallery' component={GalleryDemo}/>
-          <PrivateRoute exact path='/home/other/draft' component={DraftDemo}/>
-          <PrivateRoute exact path='/home/other/chart' component={ChartDemo}/>
-          <PrivateRoute exact path='/home/other/loading' component={LoadingDemo}/>
-          <PrivateRoute exact path='/home/other/404' component={ErrorPage}/>
-          <PrivateRoute exact path='/home/other/springText' component={SpringText}/> */}
-
-          <PrivateRoute exact path='/home/about' component={About}/>
-
-          <Redirect exact from='/' to='/home'/>
-        </Switch>
-      </div>
-    )
+            {/* 职业生涯发展 */}
+            <PrivateRoute exact path='/home/zhiye/gangwei' component={gangwei}/>
+            <PrivateRoute exact path='/home/zhiye/myzhaopin' component={Myzhaopin}/>
+            <PrivateRoute exact path='/home/zhiye/lizhi' component={StfLiZhiDemo}/>
+            <Redirect exact from='/' to='/homeStaff' component={Home}/>
+          </Switch>
+        </div>
+      )
+    }
   }
 }
-
 export default ContentMain
