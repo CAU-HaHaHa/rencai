@@ -29,16 +29,20 @@ def performance_datauserid():
         retrieve_list = ["performance_id", "corporation_id", "user_id",
                          "hr_id", "value", "description", "registerdate", "department", "post"]
         querylist = Performance.get_obj(retrieve_list)
-        msg = db.session.query(*querylist). \
+        msg = db.session.query(*querylist, Person.user_id, Person.name). \
             filter(Performance.corporation_id == corporation_id). \
             filter(Performance.user_id == user_id). \
+            filter(Performance.user_id == Person.user_id). \
             order_by(Performance.registerdate.desc())
 
+        return_list = ["performance_id", "corporation_id", "user_id",
+                         "hr_id", "value", "description", "registerdate", "department", "post", "name"]
         return_msg = []
         for line in msg:
             line = list(line)
             line[6] = line[6].strftime('%Y-%m-%d')
-            temp = zip(retrieve_list, line)
+            del line[9]
+            temp = zip(return_list, line)
             return_msg.append(dict(temp))
         return dict(
             status=1,
@@ -291,12 +295,17 @@ def performance_dataSource():
         retrieve_list = ["performance_id", "corporation_id", "user_id",
                          "hr_id", "value", "description", "registerdate", "department", "post"]
         querylist = Performance.get_obj(retrieve_list)
-        msg = db.session.query(*querylist)
+        msg = db.session.query(*querylist, Person.user_id, Person.name).\
+            filter(Performance.user_id == Person.user_id)
         return_msg = []
+
+        return_list = ["performance_id", "corporation_id", "user_id",
+                         "hr_id", "value", "description", "registerdate", "department", "post", "name"]
         for line in msg:
             line = list(line)
             line[6] = line[6].strftime('%Y-%m-%d')
-            temp = zip(retrieve_list, line)
+            del line[9]
+            temp = zip(return_list, line)
             return_msg.append(dict(temp))
 
         return dict(
@@ -326,7 +335,10 @@ def newdataSource_dataSource():
         retrieve_list = ["performance_id", "corporation_id", "user_id",
                          "hr_id", "value", "description", "registerdate", "department", "post"]
         querylist = Performance.get_obj(retrieve_list)
-        msg = db.session.query(*querylist).filter(Performance.corporation_id == corporation_id)
+        msg = db.session.query(*querylist, Person.user_id, Person.name).\
+            filter(Performance.corporation_id == corporation_id).\
+            filter(Performance.user_id == Person.user_id)
+
         tempmessage = dict()
         for line in msg:
             user_id = line[retrieve_list.index("user_id")]
@@ -339,11 +351,14 @@ def newdataSource_dataSource():
                     tempmessage[user_id] = line
 
         return_msg = []
+        return_list = ["performance_id", "corporation_id", "user_id",
+                       "hr_id", "value", "description", "registerdate", "department", "post", "name"]
 
         for line in tempmessage.values():
             line = list(line)
             line[6] = line[6].strftime('%Y-%m-%d')
-            temp = zip(retrieve_list, line)
+            del line[9]
+            temp = zip(return_list, line)
             return_msg.append(dict(temp))
 
         return dict(

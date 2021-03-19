@@ -49,7 +49,7 @@ def login():
             raise Exception("username/password/usertype must not be empty")
         if usertype == "1":  # 这里是hr登录
             retrieve_list = ["hr_id", "corporation_id", "name", "sex",
-                             "identitycard", "username", "password", ]
+                             "identitycard", "username", "password", "is_register"]
             querylist = Hr.get_obj(retrieve_list)
             msg = db.session.query(*querylist)
             have_user = msg.filter(Hr.username == username).first()
@@ -60,6 +60,9 @@ def login():
             if not passcheck:
                 status = 3
                 raise Exception("password error")
+            if passcheck.is_register == 0:
+                status = 4
+                raise Exception("hr account is checking now, please waiting")
             session["user_id"] = have_user[0]
             session["user_type"] = 1
             return dict(
@@ -142,7 +145,7 @@ def create():
         config["to_mail"] = email
         sender = Sendcheck(config)
         emailcheck = sender.send()
-        person = Person(username=username, password=username,
+        person = Person(username=username, password=password,
                         tel=tel, email=email, emailcheck=emailcheck)
         person.save()
         return dict(

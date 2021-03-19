@@ -181,6 +181,8 @@ def create():
             registeredcapital = int(registeredcapital)
         except:
             raise Exception("registeredcapital must be a int type")
+        with open("static/default_structure.txt") as file:
+            structure = file.readlines()[0]
 
         corporation = Corporation(
             name=name,
@@ -189,7 +191,8 @@ def create():
             tel=tel,
             email=email,
             website=website,
-            location=location
+            location=location,
+            structure=structure
         )
         corporation.save()
         return dict(

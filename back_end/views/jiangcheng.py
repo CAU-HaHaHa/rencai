@@ -14,11 +14,11 @@ def search():
     try:
         if request.method == "POST":
             raise Exception("method must be get")
-        corp_id = request.values.get("corp_id", "")
-        uid = request.values.get("id", "")
-        name = request.values.get("name", "")
-        dep = request.values.get("dep", "")
-        duty = request.values.get("duty", "")
+        corp_id = request.values.get("corp_id")
+        uid = request.values.get("id")
+        name = request.values.get("name")
+        dep = request.values.get("dep")
+        duty = request.values.get("duty")
         page_size = int(request.values.get("page_size", 10000))
         page_num = int(request.values.get("page_num", 0))
 
@@ -29,18 +29,18 @@ def search():
         querylist = Stafflist.get_obj(retrieve_list)
         querylist = db.session.query(*querylist)
         querylist = querylist.filter(Stafflist.user_or_hr == 0)
-
-        if corp_id != "":
-            querylist = querylist.filter(Stafflist.corporation_id == int(uid))
-        if uid != "":
+        if corp_id:
+            querylist = querylist.filter(Stafflist.corporation_id == int(corp_id))
+        if uid:
             querylist = querylist.filter(Stafflist.user_id == int(uid))
-        if name != "":
+        if name:
             querylist = querylist.filter(Stafflist.user_name.like("%{}%".format(name)))
-        if dep != "":
+        if dep:
             querylist = querylist.filter(Stafflist.department.like("%{}%".format(dep)))
-        if duty != "":
+        if duty:
             querylist = querylist.filter(Stafflist.dutytype.like("%{}%".format(duty)))
 
+        querylist = querylist.order_by(Stafflist.user_id)
 
         return_msg = []
         for line in querylist:

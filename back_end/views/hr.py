@@ -43,17 +43,18 @@ def create():
         if hrlist.filter(Hr.username == username, Hr.is_register == 1).first():
             status = 5
             raise Exception('hr account is already exist, do not register again')
-        try:
-            sex = int(sex)
-            if sex not in [0, 1]:
-                raise Exception("")
-        except:
-            raise Exception("sex value must be integer type and 1 for man, 0 for woman")
+        if sex not in ["男", "女"]:
+            raise Exception("sex value must be 男 or 女")
+        if sex == "男":
+            sex = 1
+        else:
+            sex = 0
+
         if valid.checkIdcard(idCard) != "验证通过!":
             raise Exception("id card is not valid")
 
         hr = Hr(
-            name=name,
+            name=realName,
             corporation_id=corporationobj.corporation_id,
             username=username,
             password=password,

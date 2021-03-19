@@ -3,6 +3,7 @@ from flaskapp.create_flask import app
 from mysql.create_db import db
 from models.recuritpost import Recruitpost
 import tools.login_check as login_check
+from models.corporation import Corporation
 
 blue_print_name = "/RecruitpostInfo"
 user_blueprint = Blueprint(blue_print_name, __name__)
@@ -17,10 +18,17 @@ def recruitpostInfo():
         retrieve_list = ["recruitpost_id", "corporation_id", "department", "posttype",
                          "number", "description", "isposted", "registerdate"]
         querylist = Recruitpost.get_obj(retrieve_list)
-        msg = db.session.query(*querylist)
+        msg = db.session.query(*querylist, Corporation.corporation_id, Corporation.name).\
+            filter(Recruitpost.corporation_id == Corporation.corporation_id)
+
+        return_list = ["recruitpost_id", "corporation_id", "department", "posttype",
+                         "number", "description", "isposted", "registerdate", "corporation_name"]
         return_msg = []
+
         for line in msg:
-            temp = zip(retrieve_list, line)
+            line = list(line)
+            del line[8]
+            temp = zip(return_list, line)
             return_msg.append(dict(temp))
         return dict(
             status=1,
