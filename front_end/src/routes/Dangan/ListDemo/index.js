@@ -372,7 +372,7 @@ class ListDemo extends React.Component {
     };
     return (
       <div>
-        <CustomBreadcrumb arr={['员工档案管理', '员工列表']} />
+        <CustomBreadcrumb arr={['档案管理', '人力总览']} />
         <Row gutter={16, 8}>
           <Col span={24}>
             <Card hoverable title={cardContent} className='card-item' block>

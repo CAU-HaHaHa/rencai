@@ -15,10 +15,10 @@ const menus1 = [
     icon: 'laptop',
     key: '/home/dangan',
     subs: [
-      {key: '/home/dangan/corporation', title: '公司架构', icon: '',},
-      {key: '/home/dangan/list', title: '员工列表', icon: '',},
-      {key: '/home/dangan/jixiao', title: '绩效评价', icon: '',},
-      {key: '/home/dangan/jiangcheng', title: '员工奖惩', icon: '',},
+      {key: '/home/dangan/corporation', title: '公司档案', icon: '',},
+      {key: '/home/dangan/list', title: '人力总览', icon: '',},
+      {key: '/home/dangan/jixiao', title: '绩效管理', icon: '',},
+      {key: '/home/dangan/jiangcheng', title: '奖惩管理', icon: '',},
       {key: '/home/dangan/hrlizhi', title: '离职管理', icon: '',},
     ]
   },
@@ -39,13 +39,13 @@ const menus2 = [
     key: '/homeStaff'
   },
   {
-    title: '个人档案管理',
+    title: '档案管理',
     icon: 'laptop',
     key: '/home/staffdangan',
     subs: [
-      {key: '/home/staffdangan/basicinfo', title: '基本信息管理', icon: '',},
-      {key: '/home/staffdangan/jixiao', title: '绩效查看', icon: '',},
-      {key: '/home/staffdangan/jiangcheng', title: '奖惩查看', icon: '',},
+      {key: '/home/staffdangan/basicinfo', title: '基本信息', icon: '',},
+      {key: '/home/staffdangan/jixiao', title: '我的绩效', icon: '',},
+      {key: '/home/staffdangan/jiangcheng', title: '我的奖惩', icon: '',},
     ]
   },
   {
@@ -53,7 +53,7 @@ const menus2 = [
     icon: 'laptop',
     key: '/home/zhiye',
     subs: [
-      {key: '/home/zhiye/gangwei', title: '招聘岗位', icon: '',},
+      {key: '/home/zhiye/gangwei', title: '岗位池', icon: '',},
       {key: '/home/zhiye/myzhaopin', title: '我的招聘', icon: '',},
       {key: '/home/zhiye/lizhi', title: '离职申请', icon: '',},
     ]

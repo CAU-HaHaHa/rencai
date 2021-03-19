@@ -202,7 +202,7 @@ export default class corpInfo extends React.Component{
   render() {
     return (
       <div>
-        <CustomBreadcrumb arr={['档案管理', '公司架构']} />
+        <CustomBreadcrumb arr={['档案管理', '公司档案']} />
         <Card>
         <Radio.Group onChange={this.onChange} value={this.state.size}>
           <Radio value="default">default</Radio>
