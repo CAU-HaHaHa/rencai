@@ -2,15 +2,15 @@ import os
 import mysql.mysql_config as mysql_config
 from mysql.create_db import db
 from flaskapp.create_flask import app
+from tools.readini import get_server_ini
 
-
-def create_app():
+def create_app(sever_ini):
     # 加载mysql配置文件
     app.config.from_object(mysql_config)
 
     # 设置执行sql语句不产生警告提示
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+    app.config['JSON_AS_ASCII'] = False
     # db初始化flask
     # db的操作要在flask服务器运行状态下才可以执行，因为db的操作需要上下文支持
     db.init_app(app)
@@ -24,6 +24,8 @@ def create_app():
     # 设置session密钥
     app.config['SECRET_KEY'] = 'secret_key'
 
+    # 设置服务器配置
+    app.config['SERVER_INI'] = get_server_ini(sever_ini)
     return app
 
 

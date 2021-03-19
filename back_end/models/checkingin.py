@@ -4,13 +4,33 @@ from mysql.create_db import db
 
 class Checkingin(db.Model):
     __tablename__ = 'checkingin'
-    checkingin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    corporation_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
-    recordmonth = db.Column(db.Integer)
-    record = db.Column(db.String(255))
+    checkingin_id = db.Column(db.Integer, primary_key=True, autoincrement=True,
+                              comment="用户签到情况表")
+    corporation_id = db.Column(db.Integer, comment="用户目前的公司id")
+    user_id = db.Column(db.Integer, comment="用户id")
+    recordmonth = db.Column(db.Integer, comment="记录月份，时间戳形式，2020年1月为第一个月")
+    record = db.Column(db.String(255), comment="编码形式，长度31，每个位代表一天，"
+                                               "0表示缺勤，1表示签到，2表示迟到")
 
-    def __init__(self, corporation_id,user_id,
+    name_register = dict(
+        checkingin_id=checkingin_id,
+        corporation_id=corporation_id,
+        user_id=user_id,
+        recordmonth=recordmonth,
+        record=record,
+    )
+
+    @staticmethod
+    def get_obj(namelist):
+        obj_list = []
+        for name in namelist:
+            obj = Checkingin.name_register.get(name, 0)
+            if obj == 0:
+                raise Exception("column name not found: " + name)
+            obj_list.append(obj)
+        return obj_list
+
+    def __init__(self, corporation_id, user_id,
                  recordmonth=0, record="0000000000000000000000000000000"):
         self.corporation_id = corporation_id
         self.user_id = user_id

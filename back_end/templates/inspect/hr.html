@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hr审核</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>hr_id</th>
+        <th>corporation_id</th>
+        <th>name</th>
+        <th>sex</th>
+        <th>identitycard</th>
+        <th>accept</th>
+        <th>decline</th>
+    </tr>
+    {% for info in hr_list %}
+    <tr>
+        <td>{{info.hr_id}}</td>
+        <td>{{info.corporation_id}}</td>
+        <td>{{info.name}}</td>
+        {% if info.sex == 1 %}
+            <td> 男 </td>
+        {% endif  %}
+        {% if info.sex != 1 %}
+            <td> 女 </td>
+        {% endif  %}
+        <td>{{info.identitycard}}</td>
+        <td>
+            <a href="hr_accept?hr_id={{info.hr_id}}"> accept </a>
+        </td>
+        <td>
+            <a href="hr_decline?hr_id={{info.hr_id}}"> decline&delete </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

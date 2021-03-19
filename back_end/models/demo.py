@@ -11,9 +11,10 @@ class Demo(db.Model):
     # 新建数据表的名称
     __tablename__ = 'demo'
     # 新建数据表的数据项
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment="demo")
+    title = db.Column(db.String(100), nullable=False, comment="demo title")
+    content = db.Column(db.Text, nullable=False, comment="demo content")
+
 
     def __init__(self, id):
         self.id = id
