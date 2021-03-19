@@ -1,47 +1,19 @@
 import React from 'react'
 import {BackTop} from 'antd'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import { Table, Space ,Col,Row} from 'antd';
-import { Button,Modal,InputNumber,Card } from 'antd';
-import './ui.less'
+import {Table, Space ,Col,Row,Form,Card,message} from 'antd';
+import { Button,Modal,InputNumber } from 'antd';
 import { Input } from 'antd';
 import { DatePicker} from 'antd';
 import axios from 'axios';
+import { observer, inject } from "mobx-react"
+import { withRouter } from 'react-router-dom'
+
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 
-function onChange(value, dateString) {
-  console.log('Selected Time: ', value);
-  console.log('Formatted Selected Time: ', dateString);
-}
-function onOk(value) {
-  console.log('onOk: ', value);
-}
-function onChange(value) {
-  console.log('changed', value);
-}
-
-// //数据库插入信息语句（插入绩效信息）
-// router.post("/",(req,res) =>{
-//   const { errors,isValid } = validatorInput(req.body);
-//   // 接受数据库语句
-//   var sql = "insert into user values (?,?,?,?,?,?,?)";
-//   var arr = [req.body.performance_id,req.body.corporation_id,req.body.user_id,req.body.hr_id,req.body.value,req.body.description,req.body.registerdate];
-//   if(isValid){
-//       sqlFn(sql,arr,function(data){
-//           if(data.affectedRows){
-//               res.send({success:true})
-//           }else{
-//               res.status(400).json({error:'插入失败'});
-//           }
-//       })
-//   }else{
-//       res.status(400).json(errors);
-//   }
-// })
-
-
+@withRouter @inject('appStore') @observer
 //开始
 class JixiaoDemo extends React.Component {
   constructor(props){
@@ -49,20 +21,27 @@ class JixiaoDemo extends React.Component {
 
     this.state = {
       modalAddInfoVisible: false, //新增信息Modal的显示属性
+     
       dataselect:[],
-      searchid: "",
+      datasource: [],
+      searchcorporation_id: "",     
       searchname: "",
-      searchage: "",
-      searchposition: "",
-      adddate:"",
-      adddescription:"",
+      searchhr_id: "",
+      searchvalue: "",
+      searchpost: "",
+      searchdepartment: "",
+      addcorporation_id:"",
+      adduser_id:"",
+      addhr_id:"",
       addvalue:"",
-      addid:"",
-      addname:"",
-      addposition:"",
+      adddescription:"",
+      addpost:"",
+      adddepartment:"",
       addage:""
     }
     this.handleclickbtn = this.handleclickbtn.bind(this);
+    
+    this.addnew = this.addnew.bind(this);
   }
 
   //查看详情按钮事件——点击跳转并传参
@@ -72,23 +51,29 @@ class JixiaoDemo extends React.Component {
 
   //设置一个弹出框可见,type为传入的变量，用于标识点了哪个按钮,并记录基本信息
   openModalAddInfo = (type,record)=>{
-    this.setState({[type+"Visible"]: true})
+    console.log(1111123132132)
     this.setState({
-      addid:record.id,
-      addage:record.age,
-      addname:record.name,
-      addposition:record.position
+      
+      addcorporation_id: record.corporation_id,
+      adduser_id: record.user_id,
+      addhr_id: record.hr_id,
+      addpost: record.post,
+      adddepartment: record.department,
+      [type+"Visible"]: true
     })
+    console.log(record.user_id)
+    console.log(record.hr_id)
+    console.log(record.corporation_id)
+    console.log(this.state.addcorporation_id)
+    console.log(this.state.adduser_id)
+    console.log(this.state.addhr_id)
   }
 
   //获取添加绩效框中填写的数据
   inputChange1 = (event, flag) => {
-    console.log(event, "***", flag)
-    if (flag == "regisdates")
-      this.setState({
-        adddate: event.target.value
-      })
-    else if (flag == "value")
+    console.log(98989998)
+    console.log(event.target.value)
+    if (flag == "value")
       this.setState({
         addvalue: event.target.value
       })
@@ -100,42 +85,54 @@ class JixiaoDemo extends React.Component {
       alert("Wrong input!")
   }
    // 获取检索条目
-   inputChange = (event, flag) => {
+  inputChange = (event, flag) => {
     console.log(event, "***", flag)
-    if (flag == "id")
+    if (flag == "post")
       this.setState({
-        searchid: event.target.value
+        searchpost: event.target.value
       })
     else if (flag == "name")
       this.setState({
         searchname: event.target.value
       })
-    else if (flag == "age")
+    else if (flag == "department")
       this.setState({
-        searchage: event.target.value
+        searchdepartment: event.target.value
       })
-    else if (flag == "position")
+    else if (flag == "value")
       this.setState({
-        searchposition: event.target.value
+        searchvalue: event.target.value
       })
     else
       alert("Wrong input!")
+    console.log(this.state.searchdepartment)
   } 
  //点击查询按钮，进行多条件检索
   Search = (event) => {
     let testdata = []
-    for (const temp of this.state.dataSource) {
-      if (temp.id == this.state.searchid || this.state.searchid == "") {
+    for (const temp of this.state.datasource) {
+      temp.corporation_id+=''
+      temp.name+=''
+      temp.value+=''
+      temp.user_id+=''
+      temp.department+=''
+      temp.post+=''
+      console.log(temp.department, typeof (temp.department))
+      if (temp.post == this.state.searchpost || this.state.searchpost == "") {
         if (temp.name == this.state.searchname || this.state.searchname == "")
-          if (temp.age == this.state.searchage || this.state.searchage == "")
-            if (temp.position == this.state.searchposition || this.state.searchposition == "") {
-              console.log(temp)
-              testdata.push({
-                id: temp.id,
-                name: temp.name,
-                age: temp.age,
-                position: temp.position
-              })
+          if (temp.hr_id == this.state.searchhr_id || this.state.searchhr_id == "")
+            if (temp.value == this.state.searchvalue || this.state.searchvalue == "") 
+              if (temp.department == this.state.searchdepartment || this.state.searchdepartment == ""){
+                console.log(temp)
+                testdata.push({
+                  corporation_id: temp.corporation_id,
+                  name: temp.name,
+                  hr_id: temp.hr_id,
+                  value: temp.value,
+                  department: temp.department,
+                  post: temp.post,
+                  registerdate:temp.registerdate
+                })
             }
       }
       this.setState({
@@ -146,144 +143,159 @@ class JixiaoDemo extends React.Component {
   }
 
   //添加到数据库
-  add(){
-// //数据库插入信息语句（插入绩效信息）
-// router.post("/",(req,res) =>{
-//   const { errors,isValid } = validatorInput(req.body);
-//   // 接受数据库语句
-//   var sql = "insert into user values (?,?,?,?)";
-//   var arr = [addid,addvalue,adddescription,adddate];
-//   if(isValid){
-//       sqlFn(sql,arr,function(data){
-//           if(data.affectedRows){
-//               res.send({success:true})
-//           }else{
-//               res.status(400).json({error:'插入失败'});
-//           }
-//       })
-//   }else{
-//       res.status(400).json(errors);
-//   }
-// })
+  addnew= (type)=>{
+    // console.log(this.state.adddescription)
+    // console.log(this.state.addvalue)
+    // console.log(this.state.addcorporation_id)
+    // console.log(this.state.adduser_id)
+    // console.log(this.state.addhr_id)  
+    // console.log(this.state.addpost) 
+    // console.log(this.state.adddepartment)
+    // if (this.state.addvalue.isnumeric()!=1){
+    //   message.error('请输入1-10的数字！');
+    // }
+    if (this.state.addvalue>10 ||this.state.addvalue<=0){
+      message.error('请输入1-10的数字！');
+    }
+    var re = /^[0-9]+.?[0-9]*/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/
+　　if (!re.test(this.state.addvalue)) {
+  　　message.error('请输入1-10的数字！');
+　　}
+    const _this = this;  
+    this.setState({
+      [type+"Visible"]: false
+    })
+    var params =new URLSearchParams();
+    params.append('user_id',this.state.adduser_id);
+    params.append('corporation_id',this.state.addcorporation_id);
+    params.append('value',this.state.addvalue);
+    params.append('post',this.state.addpost);
+    params.append('description',this.state.adddescription);
+    params.append('department',this.state.adddepartment);
+    params.append('hr_id',this.state.addhr_id);
+    for (var [a, b] of params.entries()) {
+      console.log(a, b);
+    }
+    axios.post('http://45.76.99.155/dangan/jixiao/insert',params).then((res)=>{console.log(res.data)});
+
+    axios({
+      method:'get',
+      url: 'http://45.76.99.155/dangan/performance/newdataSource',
+      params :{
+        corporation_id: this.props.appStore.loginUser.corporationid
+        //corporation_id: 1
+      }
+    }).then(function(response){
+      console.log(response.data)
+      _this.setState({
+               datasource: response.data.data,
+               dataselect: response.data.data,
+               isLoaded: true
+      });
+    })
+
   }
   
   //api
   componentDidMount() {
-    const _this = this;
-    axios.get('https://60418bef7f50e000173aa942.mockapi.io/api/vi/dataSource')
-    .then(function(response) {
-        _this.setState({
-            dataSource: response.data,
-            isLoaded: true
-        });
-    });
+     const _this = this;
+    // axios.get('http://45.76.99.155/dangan/performance/newdataSource')
+    //   .then(function(response) {
+    //     _this.setState({
+    //       datasource: response.data.data,
+    //       dataselect: response.data.data,
+    //       isLoaded: true
+    //     });
+    // });
+
+    console.log(this.props.appStore.loginUser.corporationid)
+    axios({
+      method:'get',
+      url: 'http://45.76.99.155/dangan/performance/newdataSource',
+      params :{
+        corporation_id: this.props.appStore.loginUser.corporationid
+        //corporation_id: 1
+      }
+    }).then(function(response){
+      console.log(response.data)
+      
+      _this.setState({
+               datasource: response.data.data,
+               dataselect: response.data.data,
+               isLoaded: true
+      });
+    })
   } 
 
   render() {
-    const {
-      dataSource,
-    } = this.state;
+    console.log(this.props.appStore.loginUser) 
     return (
       <div>
-        <CustomBreadcrumb arr={['员工档案管理','绩效评价']}/>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Card bordered={false} className='card-item'>
-              <h1  > 绩效总览：</h1>
-              <Table dataSource={dataSource}>
-                <Column title="Name" dataIndex="name" key="name" />
-                <Column title="ID" dataIndex="id" key="id" />
-                <Column title="Age" dataIndex="age" key="age" />
-                <Column title="Position" dataIndex="position" key="position" />
-                <Column
-                  title="Action"
-                  key="action"
-                  render={(text, record) => (
-                    <Space size="middle">
-                      <Button type="primary" onClick={()=>this.openModalAddInfo("modalAddInfo",record)}>增加绩效</Button>
-                      <Button type="primary" onClick={()=>this.handleclickbtn(record.id)}>查看绩效</Button>
-                    </Space>
-                  )}
-                />
-              <BackTop visibilityHeight={200} style={{right: 50}}/>
-              </Table>
-            </Card>
-          </Col>
-        
-        <Col span={12}>
-            <Card bordered={false} className='card-item'>
-              <p>
-                <Row>
-                <Col span={12}>
-                    <Input addonBefore="根据ID查询:" placeholder="请输入ID" onChange={(event) => { this.inputChange(event, "id") }} />
+        <div>
+        <CustomBreadcrumb arr={['员工档案管理', '绩效评价']} />
+          <Card hoverable title="绩效评价" className='card-item' block>
+            <Space direction="vertical">
+              <Row gutter={20}>
+                <Col span={5}>
+                  <Input addonBefore="员工姓名:" placeholder="" onChange={(event) => { this.inputChange(event, "name") }} />
                 </Col>
-                <Col span={12}>
-                    <Input addonBefore="根据姓名查询：" placeholder="请输入姓名" onChange={(event) => { this.inputChange(event, "name") }} />
+                <Col span={5}>
+                  <Input addonBefore="绩效:" placeholder=" " onChange={(event) => { this.inputChange(event, "value") }} />
                 </Col>
-                <Col span={12}>
-                    <Input addonBefore="根据年龄查询" placeholder="请输入年龄" onChange={(event) => { this.inputChange(event, "age") }} />
+                <Col span={5}>
+                  <Input addonBefore="部门:" placeholder="" onChange={(event) => { this.inputChange(event, "department") }} />
                 </Col>
-                <Col span={12}>
-                    <Input addonBefore="根据职位查询" placeholder="请输入职位" onChange={(event) => { this.inputChange(event, "position") }} />
+                <Col span={5}>
+                  <Input addonBefore="职位:" placeholder=" " onChange={(event) => { this.inputChange(event, "post") }} />
                 </Col>
-                </Row>
+                <Col span={2}>
+                  <Button type="primary" onClick={this.Search} block>
+                       查询
+                  </Button>
+                </Col>
+              </Row>
+            </Space>
+          </Card>
+        </div>
+        <Card hoverable>
+          <Table dataSource={this.state.dataselect}>
+            <Column title="员工姓名" dataIndex="name" key="name" />
+            <Column title="最新绩效" dataIndex="value" key="value" />
+            <Column title="部门" dataIndex="department" key="department" />
+            <Column title="职位" dataIndex="post" key="post" />
+            <Column title="记录时间" dataIndex="registerdate" key="registerdate" />
+            <Column
+              title=""
+              key="action"
+              render={(text, record) => (
                 <Space size="middle">
-                  <Button type="primary" icon="查询" onClick={this.Search}></Button>
+                  <Button type="primary" onClick={()=>this.openModalAddInfo("modalAddInfo",record)}>增加绩效</Button>
+                  <Button type="primary" onClick={()=>this.handleclickbtn(record.user_id)}>查看绩效</Button>
                 </Space>
-                <Table dataSource={this.state.dataselect}>
-                    <Column title="Name" dataIndex="name" key="name" />
-                    <Column title="ID" dataIndex="id" key="id" />
-                    <Column title="Age" dataIndex="age" key="age" />
-                    <Column title="Position" dataIndex="position" key="position" />
-                    <Column
-                      title="Action"
-                      key="action"
-                      render={(text, record) => (
-                        <Space size="middle">
-                          <Button type="primary" onClick={()=>this.openModalAddInfo("modalAddInfo",record)}>增加绩效</Button>
-                          <Button type="primary" onClick={()=>this.handleclickbtn(record.id)}>查看绩效</Button>
-                        </Space>
-                      )}
-                    />
-                <BackTop visibilityHeight={200} style={{right: 50}}/>
-                </Table>       
-            </p>
-            </Card>
-        </Col>
-        </Row>
-        <Modal title="增加绩效"
-                visible={this.state.modalAddInfoVisible}
-                wrapClassName="vertical-center-modal"
-                onCancel={()=>{
-                this. setState({modalAddInfoVisible: false})
-                }} 
-                //onOk={()=>this. add} 
-                onOk={()=>{
-                  this. setState({modalAddInfoVisible: false}) + this.add
-                }} 
-        >
-          <Space direction="vertical" size={12}>
-          <span>填写时间：</span><DatePicker showTime onChange={onChange} onOk={onOk} />
-          {/* <span>填写时间：</span><DatePicker showTime onChange={(event) => { this.inputChange1(event, "regisdates") }} onOk={onOk} /> */}
-          <span>绩效评定起止时间：</span>
-            <RangePicker
-              showTime={{ format: 'HH:mm' }}
-              format="YYYY-MM-DD HH:mm"
-              onChange={onChange}
-              onOk={onOk}
-              //onChange={(event) => { this.inputChange(event, "dates") }}
+              )}
             />
-          </Space>
-          <br />
-          <br />
-          <span>绩效评分：</span><InputNumber min={1} max={10} defaultValue={3} onChange={onChange} />
+            {/* <BackTop visibilityHeight={200} style={{right: 50}}/> */}
+          </Table>
+          </Card>
+        <Modal title="增加绩效"
+          visible={this.state.modalAddInfoVisible}
+          wrapClassName="vertical-center-modal"
+          onCancel={()=>{
+          this. setState({modalAddInfoVisible: false})
+          }} 
+                //onOk={()=>this. add} 
+          onOk={()=>{
+          this. addnew("modalAddInfo");
+          }} 
+        >
+          <span>绩效评分：</span><Input onChange={(event) => { this.inputChange1(event, "value") }} />
           {/* <span>绩效评分：</span><InputNumber min={1} max={10} defaultValue={3} onChange={(event) => { this.inputChange1(event, "value") }} /> */}
           <br />
-          <span>绩效描述：</span><TextArea rows={4} />
+          <span>绩效描述：</span><TextArea rows={4} onChange={(event) => { this.inputChange1(event, "description") }}/>
           {/* <span>绩效描述：</span><TextArea rows={4} onChange={(event) => { this.inputChange1(event, "description") }} /> */}
         </Modal> 
       </div>
-    )
+    );
   }
 }
 
@@ -306,5 +318,4 @@ const styles = {
     with: 170
   }
 }
-
 export default JixiaoDemo

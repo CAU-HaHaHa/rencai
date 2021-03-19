@@ -47,6 +47,15 @@
     color: #4FA1D9;
     transition: all .2s;
 }
+#login-page .selectBtn{
+    /* padding: 10px 50px; */
+    /* border: 2px solid #4FA1D9; */
+    border-radius: 50px;
+    background: transparent;
+    font-size: 11px;
+    color: #4FA1D9;
+    transition: all .2s;
+}
 #login-page .bottom{
     display: flex;
     height: 42px;
@@ -118,7 +127,7 @@
     border:1px solid #D3D7F7;
     color:#D3D7F7;
     width: 250px;
-    height: 80px;
+    height: 120px;
     float: right;
     margin-right: 20px;
 }

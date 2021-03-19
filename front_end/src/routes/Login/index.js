@@ -9,8 +9,9 @@ import {preloadingImages} from '../../utils/utils'
 import 'animate.css'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
+import StaffLoginForm from './staffLogin'
 
-const url = 'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
+const url = 'http://sf3-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/video-poster_1576231362701.png'//'http://47.99.130.140/imgs/wallhaven-g83v2e.jpg'
 const imgs = [
   'http://47.99.130.140/imgs/wallhaven-p8r1e9.jpg',
   'http://47.99.130.140/imgs/wallhaven-e7zyy8.jpg',
@@ -49,7 +50,7 @@ class Login extends React.Component {
     this.setState({
       loading:true
     })
-    this.props.appStore.initUsers()
+    // this.props.appStore.initUsers()
     this.loadImageAsync(url).then(url=>{
       this.setState({
         loading:false,
@@ -60,7 +61,7 @@ class Login extends React.Component {
       this.particle = new BGParticle('backgroundBox')
       this.particle.init()
       notification.open({
-        message:<ul><li>初始账号：admin</li><li>初始密码：admin</li></ul>,
+        message:<ul><li>HR账号：hr01</li><li>HR密码：123456</li><li>员工账号：user01</li><li>员工密码：123456</li></ul>,
         duration:0,
         className:'login-notification'
       })
@@ -98,15 +99,19 @@ class Login extends React.Component {
               <Loading2/>
             </div>:
             <div>
-              <div id='backgroundBox' style={styles.backgroundBox}/>
+              <div id='backgroundBox' style={styles.backgroundBox}>
+              {/* <video class="video-react-video" preload="auto" loop="loop" playsinline="" autoplay="autoplay" poster="//sf3-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/video-poster_1576231362701.png" src="//sf1-ttcdn-tos.pstatp.com/obj/ttfe/ATSX/mainland/gongquhunjian_1080.min.mp4" tabindex="-1"></video> */}
+              {/* <video autoplay="autoplay" loop="loop" preload="" muted="muted" src="https://cdn.multilingualres.hr.tencent.com/careersmlr/video-bg1.mp4" class="video1 video"></video> */}
+              </div>
               <div className='container'>
                 <LoginForm
                   className={showBox === 'login' ? 'box showBox' : 'box hiddenBox'}
-                  switchShowBox={this.switchShowBox}/>
-                <RegisterForm
-                  className={showBox === 'register' ? 'box showBox' : 'box hiddenBox'}
-                  switchShowBox={this.switchShowBox}/>
+                  switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
+                <StaffLoginForm
+                  className={showBox === 'stafflogin' ? 'box showBox' : 'box hiddenBox'}
+                  switchShowBox={this.switchShowBox} showBox={this.state.showBox}/>
               </div>
+              
             </div>
         }
       </div>
