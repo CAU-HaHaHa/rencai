@@ -1,9 +1,17 @@
-import React from 'react'
-import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Select, Modal, Message } from 'antd'
-import axios from 'axios'
-import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
+import React from 'react';
+import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Select, Modal, Message } from 'antd';
+import axios from 'axios';
+import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index';
 import Item from 'antd/lib/list/Item';
 
+import {withRouter} from 'react-router';
+import {
+  observer,
+  inject,
+} from 'mobx-react';
+import appStore from '../../../store/appStore.js';
+
+@withRouter @inject('appStore') @observer
 class ListDemo2 extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +32,7 @@ class ListDemo2 extends React.Component {
     dataOfCorp: [],
     dataSearch: [],
     detailRow: {},
+    submitInfo: {},
     detailCorp: {},
     dictTitle: {
       "recruitpost_id": "招聘序号",
@@ -110,6 +119,7 @@ class ListDemo2 extends React.Component {
   // componentWillMount () 
 
   componentDidMount() {
+
     const _this = this;
     // http://20.46.117.148:8001/RecruitpostInfo/
     axios.get('http://45.76.99.155/CorpInfo/')
@@ -196,17 +206,50 @@ class ListDemo2 extends React.Component {
     this.setState({
       isModalVisible: true,
     });
+    for(const item of this.state.dataSource){
+      if(item.recruitpost_id == row.recruitpost_id){
+        this.setState({
+          submitInfo: Object.assign({}, row),
+        })
+        break;
+      }
+    }
   }
   handleOk = () => {
+    // 显示undefined    
+    console.log(this.props.appStore.loginUser.userid);
     this.setState({
       isModalVisible: false,
     });
-    Message.success({
-      content: '简历提交成功！',
-      className: 'custom-class',
-      style: {
-        marginTop: '20vh',
-      },
+    axios.post("http://45.76.99.155/RecruitpostInfo/SubmitInfo",{params : {recruitpost_id : this.state.submitInfo.recruitpost_id, user_id : appStore.loginUser.userid}})
+    .then(function (response) {
+      if(response.data.status == "1"){
+        Message.success({
+        content: '简历提交成功！',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+          },
+        });
+      }
+      else{
+        Message.error({
+          content: '简历提交失败！',
+          className: 'custom-class',
+          style: {
+            marginTop: '20vh',
+            },
+          });
+      }
+    })
+    .catch(error => {
+      Message.error({
+        content: '简历提交失败，请确认网络状态！',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+      });
     });
   };
 
