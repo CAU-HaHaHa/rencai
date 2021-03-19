@@ -27,14 +27,9 @@ class JixiaoAddDemo extends React.Component {
             dataSourcep : [],
             columns: [
                 {
-                    title: "公司ID",
-                    dataIndex: "corporation_id",
-                    key: "corporation_id"
-                },
-                {
-                    title: "用户ID",
-                    dataIndex: "user_id",
-                    key: "user_id"
+                    title: "员工姓名",
+                    dataIndex: "name",
+                    key: "name"
                 },
                 {
                     title: '评价HR',

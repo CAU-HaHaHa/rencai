@@ -1,7 +1,7 @@
 import React from 'react'
 import {BackTop} from 'antd'
 import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
-import {Table, Space ,Col,Row,Form,Card} from 'antd';
+import {Table, Space ,Col,Row,Form,Card,message} from 'antd';
 import { Button,Modal,InputNumber } from 'antd';
 import { Input } from 'antd';
 import { DatePicker} from 'antd';
@@ -25,7 +25,7 @@ class JixiaoDemo extends React.Component {
       dataselect:[],
       datasource: [],
       searchcorporation_id: "",     
-      searchuser_id: "",
+      searchname: "",
       searchhr_id: "",
       searchvalue: "",
       searchpost: "",
@@ -91,9 +91,9 @@ class JixiaoDemo extends React.Component {
       this.setState({
         searchpost: event.target.value
       })
-    else if (flag == "user_id")
+    else if (flag == "name")
       this.setState({
-        searchuser_id: event.target.value
+        searchname: event.target.value
       })
     else if (flag == "department")
       this.setState({
@@ -112,21 +112,21 @@ class JixiaoDemo extends React.Component {
     let testdata = []
     for (const temp of this.state.datasource) {
       temp.corporation_id+=''
-      temp.hr_id+=''
+      temp.name+=''
       temp.value+=''
       temp.user_id+=''
       temp.department+=''
       temp.post+=''
       console.log(temp.department, typeof (temp.department))
       if (temp.post == this.state.searchpost || this.state.searchpost == "") {
-        if (temp.user_id == this.state.searchuser_id || this.state.searchuser_id == "")
+        if (temp.name == this.state.searchname || this.state.searchname == "")
           if (temp.hr_id == this.state.searchhr_id || this.state.searchhr_id == "")
             if (temp.value == this.state.searchvalue || this.state.searchvalue == "") 
               if (temp.department == this.state.searchdepartment || this.state.searchdepartment == ""){
                 console.log(temp)
                 testdata.push({
                   corporation_id: temp.corporation_id,
-                  user_id: temp.user_id,
+                  name: temp.name,
                   hr_id: temp.hr_id,
                   value: temp.value,
                   department: temp.department,
@@ -150,7 +150,17 @@ class JixiaoDemo extends React.Component {
     // console.log(this.state.adduser_id)
     // console.log(this.state.addhr_id)  
     // console.log(this.state.addpost) 
-    // console.log(this.state.adddepartment) 
+    // console.log(this.state.adddepartment)
+    // if (this.state.addvalue.isnumeric()!=1){
+    //   message.error('请输入1-10的数字！');
+    // }
+    if (this.state.addvalue>10 ||this.state.addvalue<=0){
+      message.error('请输入1-10的数字！');
+    }
+    var re = /^[0-9]+.?[0-9]*/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/;//判断字符串是否为数字//判断正整数/[1−9]+[0−9]∗]∗/
+　　if (!re.test(this.state.addvalue)) {
+  　　message.error('请输入1-10的数字！');
+　　}
     const _this = this;  
     this.setState({
       [type+"Visible"]: false
@@ -227,7 +237,7 @@ class JixiaoDemo extends React.Component {
             <Space direction="vertical">
               <Row gutter={20}>
                 <Col span={5}>
-                  <Input addonBefore="员工ID:" placeholder="" onChange={(event) => { this.inputChange(event, "user_id") }} />
+                  <Input addonBefore="员工姓名:" placeholder="" onChange={(event) => { this.inputChange(event, "name") }} />
                 </Col>
                 <Col span={5}>
                   <Input addonBefore="绩效:" placeholder=" " onChange={(event) => { this.inputChange(event, "value") }} />
@@ -249,8 +259,7 @@ class JixiaoDemo extends React.Component {
         </div>
         <Card hoverable>
           <Table dataSource={this.state.dataselect}>
-            <Column title="公司ID" dataIndex="corporation_id" key="corporation_id" />
-            <Column title="用户ID" dataIndex="user_id" key="user_id" />
+            <Column title="员工姓名" dataIndex="name" key="name" />
             <Column title="最新绩效" dataIndex="value" key="value" />
             <Column title="部门" dataIndex="department" key="department" />
             <Column title="职位" dataIndex="post" key="post" />
@@ -265,7 +274,7 @@ class JixiaoDemo extends React.Component {
                 </Space>
               )}
             />
-            <BackTop visibilityHeight={200} style={{right: 50}}/>
+            {/* <BackTop visibilityHeight={200} style={{right: 50}}/> */}
           </Table>
           </Card>
         <Modal title="增加绩效"
