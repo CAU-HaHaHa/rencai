@@ -1,9 +1,17 @@
-import React from 'react'
-import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Select, Modal, Message } from 'antd'
-import axios from 'axios'
-import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index'
+import React from 'react';
+import { Button, Row, Col, Card, Icon, Radio, Dropdown, Menu, message, Table, Search, Input, List, Drawer, BackTop, Space, Descriptions, Select, Modal, Message } from 'antd';
+import axios from 'axios';
+import CustomBreadcrumb from '../../../components/CustomBreadcrumb/index';
 import Item from 'antd/lib/list/Item';
 
+import {withRouter} from 'react-router';
+import {
+  observer,
+  inject,
+} from 'mobx-react';
+import appStore from '../../../store/appStore.js';
+
+@withRouter @inject('appStore') @observer
 class ListDemo2 extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +32,7 @@ class ListDemo2 extends React.Component {
     dataOfCorp: [],
     dataSearch: [],
     detailRow: {},
+    submitInfo: {},
     detailCorp: {},
     dictTitle: {
       "recruitpost_id": "招聘序号",
@@ -110,6 +119,7 @@ class ListDemo2 extends React.Component {
   // componentWillMount () 
 
   componentDidMount() {
+
     const _this = this;
     // http://20.46.117.148:8001/RecruitpostInfo/
     axios.get('http://45.76.99.155/CorpInfo/')
@@ -196,17 +206,55 @@ class ListDemo2 extends React.Component {
     this.setState({
       isModalVisible: true,
     });
+    for(const item of this.state.dataSource){
+      if(item.recruitpost_id == row.recruitpost_id){
+        this.setState({
+          submitInfo: Object.assign({}, row),
+        })
+        break;
+      }
+    }
   }
   handleOk = () => {
+    // 显示undefined    
+    console.log(this.props.appStore.loginUser.userid);
+    console.log(this.state.submitInfo.recruitpost_id)
     this.setState({
       isModalVisible: false,
     });
-    Message.success({
-      content: '简历提交成功！',
-      className: 'custom-class',
-      style: {
-        marginTop: '20vh',
-      },
+    var params = new URLSearchParams();
+    params.append('recruitpost_id', this.state.submitInfo.recruitpost_id);
+    params.append('user_id', this.props.appStore.loginUser.userid);
+
+    axios.post("http://45.76.99.155/RecruitpostInfo/SubmitInfo", params)
+    .then(function (response) {
+      if(response.data.status == "1"){
+        Message.success({
+        content: '简历提交成功！',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+          },
+        });
+      }
+      else{
+        Message.error({
+          content: '简历提交失败！',
+          className: 'custom-class',
+          style: {
+            marginTop: '20vh',
+            },
+          });
+      }
+    })
+    .catch(error => {
+      Message.error({
+        content: '简历提交失败，请确认网络状态！',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+      });
     });
   };
 
@@ -276,7 +324,7 @@ class ListDemo2 extends React.Component {
         <Modal title="提示" visible={this.state.isModalVisible} onOk={this.handleOk} onCancel={this.handleCancel}>
           <p>确认提交简历吗？</p>
         </Modal>
-        <CustomBreadcrumb arr={['职业生涯发展', '岗位池']} />
+        <CustomBreadcrumb arr={['招聘信息']} />
         <Row gutter={16, 8} block>
           <Col span={24}>
             <Card hoverable bordered={false} title={cardContent} className='card-item' block>
