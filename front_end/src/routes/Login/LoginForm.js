@@ -109,8 +109,19 @@ class LoginForm extends React.Component {
               })
               return
             }
-            else if(res[0].data.status=="0"){ // 未知错误
-              alert("登录失败");
+            else if(res[0].data.status=="4"){ // HR审核未通过
+              notification.open({
+                message: '该HR审核暂未通过',
+                description: '请耐心等待审核',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
+              return
+            }
+            else if(res[0].data.status=="0"){ // 登录失败
+              notification.open({
+                message: '登录失败',
+                icon: <CloseCircleOutlined style={{ color: "red"}}/>,
+              });
               return;
             }
             if(usertype=="1"){
