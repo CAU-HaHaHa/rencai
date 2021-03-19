@@ -65,7 +65,9 @@ class SiderNav extends React.Component {
     if(getCookie()[2]=="1"){
       return (
         <div style={{height: '100vh',overflowY:'scroll'}}>
-          <div style={styles.logo}></div>
+          <div style={styles.logo}>
+            <h3 style={styles.contentStyle}>卓越人才管理系统</h3>
+          </div>
           <CustomMenu menus={menus1}/>
         </div>
       )
@@ -73,7 +75,9 @@ class SiderNav extends React.Component {
     else{
       return (
         <div style={{height: '100vh',overflowY:'scroll'}}>
-          <div style={styles.logo}></div>
+          <div style={styles.logo}>
+            <h3 style={styles.contentStyle}>卓越人才管理系统</h3>
+          </div>
           <CustomMenu menus={menus2}/>
         </div>
       )
@@ -81,9 +85,13 @@ class SiderNav extends React.Component {
   }
 }
 const styles = {
+  contentStyle: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
   logo: {
     height: '32px',
-    background: 'rgba(255, 255, 255, .2)',
     margin: '16px'
   }
 }
